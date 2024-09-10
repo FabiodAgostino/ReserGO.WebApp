@@ -1,0 +1,88 @@
+﻿@using MudBlazor
+
+<MudDialog Class="registerDialogCss">
+    <TitleContent>
+        <span class="dialogTitleRegister">Registrazione Utente</span>
+    </TitleContent>
+    <DialogContent>
+
+        <div class="d-flex dialogRegisterContainer p-1">
+
+
+            @* Colonna 1 input *@
+            <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:40%; padding-block:5vh;">
+
+                <span class="textInputRegister">Nome utente:</span>
+                <input type="text" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+                <span class="textInputRegister">Luogo di nascita:</span>
+                <input type="text" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+                <span class="textInputRegister">Recapito telefonico:</span>
+                <input type="text" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+            </div>
+
+
+            @* Colonna 2 input *@
+            <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:40%;padding-block:5vh;">
+
+                <span class="textInputRegister">Cognome:</span>
+                <input type="text" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+                <span class="textInputRegister">Data di nascita:</span>
+                <input type="text" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+                <span class="textInputRegister">Email:</span>
+                <input type="email" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+            </div>
+
+
+            @* Register divider *@
+            <div class="d-flex flex-column justify-content-center h-100">
+                <div class="registerDivider"></div>
+            </div>
+
+            @* Actions *@
+            <div class="d-flex flex-column columnFormRegister" style="width:30%;">
+
+                <div class="d-flex flex-column align-items-center" style="padding-inline:2vw; margin-left:3vw;">
+                    <MudIcon Icon="@Icons.Material.Filled.PersonAddAlt" Class="iconDialogRegister"></MudIcon>
+                </div>
+
+                <div class="d-flex justify-content-center align-items-center p-2" style="height:40%; margin-left: 2vw;">
+                    <MudButton OnClick="Cancel" class="cancelButton btn-primary" style="width:15vw;" type="submit">Annulla</MudButton>
+                </div>
+
+                <div class="d-flex justify-content-center align-items-center p-2" style="height:20%;margin-left: 2vw;">
+                    <MudButton OnClick="Cancel" class="registerButton btn-primary" style="width:15vw;" type="submit">Salva</MudButton>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </DialogContent>
+
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+
+    private void Cancel() => MudDialog.Close();
+}
+
+
+<style>
+    .registerDialogCss {
+        width: 50vw;
+        height: 55vh;
+        max-width: 50vw !important;
+        border-radius: 30px !important;
+    }
+</style>

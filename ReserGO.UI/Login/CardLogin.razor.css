@@ -1,0 +1,140 @@
+﻿.cardLogin {
+    width: 70vw;
+    height: 65vh;
+    border-radius: 30px;
+    border: 1px solid lightgray;
+    background-color: #0066FF;
+}
+
+::deep .iconCardLogin {
+    color: #FFFFFF;
+    font-size: 20vh;
+}
+
+::deep .iconCardRegister {
+    color: #FFFFFF;
+    font-size: 10vh;
+}
+
+.loginSide {
+    width: 49%;
+    height: 100%;
+}
+
+.registerSide {
+    width: 49%;
+    height: 100%;
+}
+
+.loginDivider {
+    height: 90%;
+    width: 1px;
+    border: 1px solid #ffffff;
+    padding-block: 10px;
+}
+
+.titleCardLogin {
+    font-family: Arial;
+    font-size: 2.5vw;
+    color: #FFFFFF;
+    padding-inline: 3vw;
+}
+
+.textInputCardLogin {
+    font-family: Arial;
+    font-size: 1.5vw;
+    color: #FFFFFF;
+    padding-block: 0.5vw;
+}
+
+.inputCss {
+    padding-block: 0.5vw;
+    display: block;
+    width: 25vw;
+    height: 4vh;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.loginButton {
+    display: inline-block;
+    width: 10vw;
+    height: 4vh;
+    color: #404040;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    background-color: #EEEEEE;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1vw;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+    .loginButton:hover {
+        background-color: #FFFFFF;
+    }
+
+.titleCardRegister {
+    font-family: Arial;
+    font-size: 2vw;
+    color: #FFFFFF;
+    padding-inline: 3vw;
+}
+
+.descRegister {
+    font-family: Arial;
+    font-size: 1.2vw;
+    color: #FFFFFF;
+    padding-inline: 3vw;
+}
+
+.descGuest {
+    font-family: Arial;
+    font-size: 1.5vw;
+    color: #FFFFFF;
+    padding-inline: 3vw;
+}
+
+
+@media (max-width: 800px) {
+
+    .loginButton {
+        display: inline-block;
+        width: 10vw;
+        height: 4vh;
+        color: red;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        background-color: #EEEEEE;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        font-size: 1vw;
+        border-radius: .25rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+}

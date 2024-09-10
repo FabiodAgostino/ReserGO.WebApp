@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReserGO.Service\ReserGO.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ReserGO.DTO">
+      <HintPath>..\..\ReserGo\ReserGO.DTO\obj\Debug\net8.0\ReserGO.DTO.dll</HintPath>
+    </Reference>
+    <Reference Include="ReserGO.Utils.Events">
+      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.Events\obj\Debug\net8.0\ReserGO.Utils.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="ReserGO.Utils.MVM">
+      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.MVM\obj\Debug\net8.0\ReserGO.Utils.MVM.dll</HintPath>
+    </Reference>
+    <Reference Include="ReserGO.Utils.Service">
+      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.Service\obj\Debug\net8.0\ReserGO.Utils.Service.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

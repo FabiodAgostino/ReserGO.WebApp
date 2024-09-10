@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ReserGO.Service\**" />
+    <Compile Remove="ReserGO.UI\**" />
+    <Compile Remove="ReserGO.ViewModel\**" />
+    <Content Remove="ReserGO.Service\**" />
+    <Content Remove="ReserGO.UI\**" />
+    <Content Remove="ReserGO.ViewModel\**" />
+    <EmbeddedResource Remove="ReserGO.Service\**" />
+    <EmbeddedResource Remove="ReserGO.UI\**" />
+    <EmbeddedResource Remove="ReserGO.ViewModel\**" />
+    <None Remove="ReserGO.Service\**" />
+    <None Remove="ReserGO.UI\**" />
+    <None Remove="ReserGO.ViewModel\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+    <PackageReference Include="MudBlazor" Version="7.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="ReserGO.Service\ReserGO.Service.csproj" />
+    <ProjectReference Include="ReserGO.UI\ReserGO.UI.csproj" />
+    <ProjectReference Include="ReserGO.ViewModel\ReserGO.ViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ReserGO.DTO">
+      <HintPath>..\ReserGo\ReserGO.DTO\obj\Debug\net8.0\ReserGO.DTO.dll</HintPath>
+    </Reference>
+    <Reference Include="ReserGO.Utils.Events">
+      <HintPath>..\ReserGO.Utils\ReserGO.Utils.Events\obj\Debug\net8.0\ReserGO.Utils.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="ReserGO.Utils.MVM">
+      <HintPath>..\ReserGO.Utils\ReserGO.Utils.MVM\obj\Debug\net8.0\ReserGO.Utils.MVM.dll</HintPath>
+    </Reference>
+    <Reference Include="ReserGO.Utils.UI">
+      <HintPath>..\ReserGO.Utils\ReserGO.Utils.UI\bin\Debug\net8.0\ReserGO.Utils.UI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

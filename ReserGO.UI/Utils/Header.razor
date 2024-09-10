@@ -1,0 +1,36 @@
+﻿@using MudBlazor
+
+<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader">
+
+    <div class="d-flex flex-row align-items-center">
+        <MudIcon Icon="@Icon" Class="iconCss"></MudIcon>
+        <span class="titleLogin">@Title</span>
+    </div>
+
+    <div class="px-2">
+        @if (RightTitleEnabled)
+        {
+            <span class="rightTextHeader">@RightTitle</span>
+        }
+    </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public string Icon { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string RightTitle { get; set; }
+
+    [Parameter]
+    public bool RightTitleEnabled { get; set; }
+
+    [Parameter]
+    public bool DraweEnabled { get; set; }
+
+}
+

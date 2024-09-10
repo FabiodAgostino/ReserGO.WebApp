@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+@using ReserGO.DTO
+@using ReserGO.Utils.Event
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.Home
+@using ReserGO.UI.Authentication;
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+
+<AuthorizeView>
+    <Authorized>
+        @Body
+    </Authorized>
+    <NotAuthorized>
+        <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
+            <Content>
+                <div class="pageContainer">
+                    <Login />
+                </div>
+            </Content>
+        </BaseComponent>
+    </NotAuthorized>
+</AuthorizeView>
+

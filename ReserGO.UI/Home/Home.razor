@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using MudBlazor;
+@using ReserGO.DTO
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.Home;
+@using Microsoft.AspNetCore.Components.Authorization
+
+
+@inject NavigationManager NaviMngr;
+@inherits BaseComponentChild<IHomeViewModel, object>
+
+<MudLayout>
+    <MudDrawer @bind-Open="CurrentViewModel.DrawerVisibility"
+               Anchor="Anchor.Start"
+               Class="navBar">
+        <MudNavMenu>
+            @foreach (var item in CurrentViewModel.ItemsMenu)
+            {
+                <MudNavLink Href="#"
+                            Icon="@item.Icon"
+                            OnClick="() => CurrentViewModel.ChangeComponent()">
+                </MudNavLink>
+            }
+        </MudNavMenu>
+    </MudDrawer>
+
+    @*     <MudMainContent>
+    <div class="background">
+    @CurrentViewModel.Content
+    </div>
+    </MudMainContent>
+    *@
+
+</MudLayout>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentViewModel.ItemsMenu = new List<DTOSettingMenu>
+        {
+            new DTOSettingMenu { Text = "Home", Icon = Icons.Material.Filled.Home },
+            new DTOSettingMenu { Text = "Settings", Icon = Icons.Material.Filled.Settings },
+            new DTOSettingMenu { Text = "Profile", Icon = Icons.Material.Filled.Person }
+        };
+
+    }
+}
