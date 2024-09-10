@@ -13,19 +13,26 @@ namespace ReserGO.ViewModel.ViewModel.Home
         public LoginViewModel(IEvent aggregator, ILogger<LoginViewModel> logger, IAuthenticationService authService) : base(aggregator, logger)
         {
             _authService = authService;
+            IsLoading = false;
         }
-
-        public async Task Login()
+        public bool LoginError { get; set; } = false;
+        public async Task Login(DTOLoginRequest user)
         {
+            IsLoading = true;
             try
             {
-                var login = new DTOLoginRequest() { Username = "danielone", Password = "123stella." };
-                await _authService.Login(login);
+                LoginError = ! await _authService.Login(user);
             }
             catch (Exception ex)
             {
 
             }
+            finally
+            {
+                IsLoading = false;
+                OnPropertyChanged();
+            }
+
         }
     }
 }

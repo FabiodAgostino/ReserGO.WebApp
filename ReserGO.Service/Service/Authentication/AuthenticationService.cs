@@ -22,20 +22,21 @@ namespace ReserGO.Service.Service.Authentication
             _authProvider = authProvider;
         }
 
-        public async Task Login(DTOLoginRequest loginRequest)
+        public async Task<bool> Login(DTOLoginRequest loginRequest)
         {
             var token = await _sessionStorage.GetItemAsync<string>("authToken");
             if (String.IsNullOrEmpty(token))
             {
                 var response = await PostItem<string>(loginRequest, AuthenticationServiceType.Login);
 
-                if (response.Success)
+                if (response.Success && response.Data!=null)
                 {
                     await _sessionStorage.SetItemAsync("authToken", response.Data);
                     _authProvider.NotifyUserAuthentication(response.Data);
                 }
-
+                return response.Success;
             }
+            return false;
         }
     }
 }

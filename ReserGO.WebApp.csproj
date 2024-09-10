@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,15 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ReserGO.Models\**" />
     <Compile Remove="ReserGO.Service\**" />
     <Compile Remove="ReserGO.UI\**" />
     <Compile Remove="ReserGO.ViewModel\**" />
+    <Content Remove="ReserGO.Models\**" />
     <Content Remove="ReserGO.Service\**" />
     <Content Remove="ReserGO.UI\**" />
     <Content Remove="ReserGO.ViewModel\**" />
+    <EmbeddedResource Remove="ReserGO.Models\**" />
     <EmbeddedResource Remove="ReserGO.Service\**" />
     <EmbeddedResource Remove="ReserGO.UI\**" />
     <EmbeddedResource Remove="ReserGO.ViewModel\**" />
+    <None Remove="ReserGO.Models\**" />
     <None Remove="ReserGO.Service\**" />
     <None Remove="ReserGO.UI\**" />
     <None Remove="ReserGO.ViewModel\**" />

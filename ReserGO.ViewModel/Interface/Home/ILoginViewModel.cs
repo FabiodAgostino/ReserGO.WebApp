@@ -4,6 +4,7 @@ namespace ReserGO.ViewModel.Interface.Home
 {
     public interface ILoginViewModel : ILightReserGOViewModel<DTOLoginRequest>
     {
-        Task Login();
+        Task Login(DTOLoginRequest user);
+        public bool LoginError { get; set; }
     }
 }

@@ -5,6 +5,6 @@ namespace ReserGO.Service.Interface.Authentication
 {
     public interface IAuthenticationService : IClientBaseService<object>
     {
-        Task Login(DTOLoginRequest loginRequest);
+        Task<bool> Login(DTOLoginRequest loginRequest);
     }
 }

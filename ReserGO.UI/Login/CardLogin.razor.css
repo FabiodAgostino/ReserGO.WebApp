@@ -66,7 +66,7 @@
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-.loginButton {
+::deep .loginButton {
     display: inline-block;
     width: 10vw;
     height: 4vh;
@@ -88,7 +88,7 @@
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-    .loginButton:hover {
+    ::deep .loginButton:hover {
         background-color: #FFFFFF;
     }
 

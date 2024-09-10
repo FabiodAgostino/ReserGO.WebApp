@@ -6,7 +6,6 @@
 @using ReserGO.DTO;
 @using ReserGO.UI.Login
 
-
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<ILoginViewModel, DTOLoginRequest>
 
@@ -14,18 +13,16 @@
 <div class="d-flex flex-column loginContainter">
     <Header Icon="@Icon" Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true"></Header>
     <div class="d-flex justify-content-center align-items-center loginContent">
-        <CardLogin></CardLogin>
+        <CardLogin Callback="@(async (DTOLoginRequest user) => await LogIn(user))" LoginError="CurrentViewModel.LoginError"/>
     </div>
 </div>
-
 @code
 {
     private string Icon = Icons.Material.Filled.HealthAndSafety;
-
-    private async Task LogIn()
+    private async Task LogIn(DTOLoginRequest user)
     {
-        await CurrentViewModel.Login();
-        NaviMngr.NavigateTo("/", true);
+        await CurrentViewModel.Login(user);
+        if(!CurrentViewModel.LoginError)
+            NaviMngr.NavigateTo("/", true);
     }
-
 }
