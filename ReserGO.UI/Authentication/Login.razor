@@ -5,40 +5,27 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using ReserGO.DTO;
 @using ReserGO.UI.Login
- 
- 
+
+
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<ILoginViewModel, DTOLoginRequest>
- 
- 
+
+
 <div class="d-flex flex-column loginContainter">
-<Header Icon="@Icon" Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true"></Header>
-<div class="d-flex justify-content-center align-items-center loginContent">
-<CardLogin></CardLogin>
+    <Header Icon="@Icon" Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true"></Header>
+    <div class="d-flex justify-content-center align-items-center loginContent">
+        <CardLogin></CardLogin>
+    </div>
 </div>
-</div>
- 
+
 @code
 {
     private string Icon = Icons.Material.Filled.HealthAndSafety;
- 
+
     private async Task LogIn()
     {
         await CurrentViewModel.Login();
         NaviMngr.NavigateTo("/", true);
     }
- 
+
 }
-
-
-<style>
-    .loginContainter {
-        width: 100%;
-        height: 100%;
-    }
-
-    .loginContent {
-        width: 100%;
-        height: 100%;
-    }
-</style>
