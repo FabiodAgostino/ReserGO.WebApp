@@ -1,5 +1,55 @@
-﻿<h3>ItemCardReserGo</h3>
+﻿@using MudBlazor
+
+<div class="d-flex flex-row shadow cardItem" @onclick="@(()=> Click())">
+
+    @* ICONA RISORSA *@
+    <div class="d-flex align-items-center justify-content-start cardItemIcon">
+            <MudIcon Icon="@Icons.Material.Filled.NoteAlt" Class="iconCardCss"></MudIcon>
+    </div>
+
+    @* DESCRIZIONE RISORSA *@
+    <div class="d-flex flex-column cardItemData">
+        <span class="cardItemTitle" title="@Title">@Title</span>
+        <label class="cardItemDesc" title="@Description">@Description</label>
+        <label class="cardItemDetails" title="@Details"><i>@Details</i></label>
+    </div>
+</div>
 
 @code {
 
+    [Parameter]
+    public EventCallback Callback { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = "Titolo";
+
+    [Parameter]
+    public string Description { get; set; } = "Descrizione...";
+
+    [Parameter]
+    public string Details { get; set; } = "Dettagli...";
+
+    [Parameter]
+    public string Icon { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+    }
+
+    private async Task Click()
+    {
+        if (Callback.HasDelegate)
+        {
+            await Callback.InvokeAsync();
+        }
+    }
 }
+
+<style>
+    .iconCardCss {
+        color: #0066FF;
+        width:100% !important;
+        height:100% !important;
+        opacity: 0.7;
+    }
+</style>

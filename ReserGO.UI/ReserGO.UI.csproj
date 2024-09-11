@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <None Remove="UIComponents\CardReserGo.razor.css" />
+    <None Remove="UIComponents\ItemCardReserGo.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="UIComponents\CardReserGo.razor.css" />
+    <Content Include="UIComponents\ItemCardReserGo.razor.css" />
   </ItemGroup>
 
 

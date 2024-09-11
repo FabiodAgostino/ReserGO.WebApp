@@ -14,7 +14,8 @@
 <div class="d-flex flex-column loginContainter">
     <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFF"></Header>
     <div class="d-flex justify-content-center align-items-center loginContent">
-        <CardLogin Callback="@(async (DTOLoginRequest user) => await LogIn(user))" LoginError="CurrentViewModel.LoginError"/>
+        @* <CardLogin Callback="@(async (DTOLoginRequest user) => await LogIn(user))" LoginError="CurrentViewModel.LoginError"/> *@
+            <ItemCardReserGo/>
     </div>
 </div>
 

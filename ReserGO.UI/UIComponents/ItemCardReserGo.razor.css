@@ -1,0 +1,55 @@
+﻿.cardItem {
+    width: 21vw;
+    height: 21vh;
+    border-radius: 30px;
+    border: 1px solid #EEEEEE;
+    cursor: pointer;
+}
+
+
+.cardItemData {
+    width: 60%;
+    height: 100%;
+    padding:1vw;
+}
+
+.cardItemIcon {
+    width: 40%;
+    height: 100%;
+}
+
+.itemText {
+    color: #404040;
+    font-size: large;
+    font-family: var(--mud-typography-button-family);
+    line-height: var(--mud-typography-button-lineheight);
+    letter-spacing: var(--mud-typography-button-letterspacing);
+}
+
+.cardItemTitle {
+    height: 30%;
+    font-size: x-large;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.cardItemDesc {
+    height: 70%;
+    width: 100%;
+    font-size: large;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: auto;
+    cursor: pointer;
+}
+
+.cardItemDetails {
+    font-size: medium;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
