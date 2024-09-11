@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ReserGO.ViewModel.Interface.Authentication;
 using ReserGO.ViewModel.Interface.Home;
+using ReserGO.ViewModel.ViewModel.Authentication;
 using ReserGO.ViewModel.ViewModel.Home;
 
 namespace ReserGO.ViewModel.Extensions

@@ -14,5 +14,6 @@ namespace ReserGO.ViewModel.Interface.Home
         RenderFragment Content { get; set; }
         void ChangeComponent();
         bool DrawerVisibility { get; set; }
+        Task OnInitialize();
     }
 }

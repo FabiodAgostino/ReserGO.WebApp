@@ -2,9 +2,9 @@
 using ReserGO.DTO;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Utils.Event;
-using ReserGO.ViewModel.Interface.Home;
+using ReserGO.ViewModel.Interface.Authentication;
 
-namespace ReserGO.ViewModel.ViewModel.Home
+namespace ReserGO.ViewModel.ViewModel.Authentication
 {
     public class LoginViewModel : LightReserGOViewModel<DTOLoginRequest>, ILoginViewModel
     {
@@ -21,7 +21,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
             IsLoading = true;
             try
             {
-                LoginError = ! await _authService.Login(user);
+                LoginError = !await _authService.Login(user);
             }
             catch (Exception ex)
             {

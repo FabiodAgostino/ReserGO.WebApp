@@ -1,6 +1,6 @@
 ﻿using ReserGO.DTO;
 
-namespace ReserGO.ViewModel.Interface.Home
+namespace ReserGO.ViewModel.Interface.Authentication
 {
     public interface ILoginViewModel : ILightReserGOViewModel<DTOLoginRequest>
     {

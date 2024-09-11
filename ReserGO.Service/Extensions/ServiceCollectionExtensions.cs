@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReserGO.Service.Interface.Authentication;
+using ReserGO.Service.Interface.Home;
 using ReserGO.Service.Service.Authentication;
+using ReserGO.Service.Service.Home;
 
 namespace ReserGO.Service.Extensions
 {
@@ -10,6 +12,7 @@ namespace ReserGO.Service.Extensions
         {
             services.AddScoped<IJwtAuthenticationStateProvider, JwtAuthenticationStateProvider>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IHomeService, HomeService>();
 
             return services;
         }

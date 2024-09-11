@@ -4,46 +4,92 @@
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.Home;
 @using Microsoft.AspNetCore.Components.Authorization
-
+@using ReserGO.UI.Utils
 
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<IHomeViewModel, object>
 
-<MudLayout>
-    <MudDrawer @bind-Open="CurrentViewModel.DrawerVisibility"
-               Anchor="Anchor.Start"
-               Class="navBar">
-        <MudNavMenu>
-            @foreach (var item in CurrentViewModel.ItemsMenu)
-            {
-                <MudNavLink Href="#"
-                            Icon="@item.Icon"
-                            OnClick="() => CurrentViewModel.ChangeComponent()">
-                </MudNavLink>
-            }
-        </MudNavMenu>
-    </MudDrawer>
+<div class="d-flex flex-column loginContainter">
+    <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="white" ColorFont="#0066FF"></Header>
+    @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
+    {
+        <MudPaper>
+            <MudDrawerContainer>
+                <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Width="200px">
+                    <MudNavMenu Class="mudDrawer">
+                        @foreach (var item in CurrentViewModel.ItemsMenu)
+                        {
+                                        <MudNavLink Href="#"
+                                                    OnClick="() => CurrentViewModel.ChangeComponent()">
+                                <MudIcon Icon="@item.Icon" Style="font-size: 3rem;color:white;" />
+                                @if (_open)
+                                {
+                                     <div class="textNavMenu">
+                                        @item.Text
+                                     </div>
+                                }
+                                        </MudNavLink>
+                        }
+                        </MudNavMenu>
+                    </MudDrawer>
+            </MudDrawerContainer>
+        </MudPaper>
 
-    @*
-    <MudMainContent>
-    <div class="background">
-    @CurrentViewModel.Content
-    </div>
-    </MudMainContent>
-    *@
+    }
+</div>
 
-</MudLayout>
 
 
 @code {
+    private bool _open = true;
+
+    private void ToggleDrawer()
+    {
+        _open = !_open;
+    }
     protected override async Task OnInitializedAsync()
     {
-        CurrentViewModel.ItemsMenu = new List<DTOSettingMenu>
-        {
-            new DTOSettingMenu { Text = "Home", Icon = Icons.Material.Filled.Home },
-            new DTOSettingMenu { Text = "Settings", Icon = Icons.Material.Filled.Settings },
-            new DTOSettingMenu { Text = "Profile", Icon = Icons.Material.Filled.Person }
-        };
-
+        await CurrentViewModel.OnInitialize();
     }
 }
+
+<style>
+    .loginContainter {
+        width: 100%;
+        height: 100%;
+    }
+
+    .textNavMenu
+    {
+        color:white;
+        display: inline;
+        position: relative;
+        bottom: 12px;
+        font-size: 1.5em;
+        padding-left:10px;
+    }
+
+    .mud-nav-link.mud-ripple {
+        padding-left:0;
+    }
+
+    .mudDrawer
+    {
+        background-color: #0066FF;
+    }
+
+    .mud-drawer-content {
+        background-color: #0066FF;
+    }
+
+    .mud-drawer.mud-drawer-pos-left.mud-drawer--open.mud-drawer--initial.mud-drawer-md.mud-drawer-clipped-never.mud-elevation-1.mud-drawer-mini
+    {
+        border-radius:25px;
+        height:91%;
+    }
+
+    .iconDrawer
+    {
+        color:white;
+    }
+</style>

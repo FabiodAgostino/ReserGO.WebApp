@@ -3,10 +3,12 @@
 @using ReserGO.DTO
 @using ReserGO.Utils.Event
 @using ReserGO.Utils.UI
-@using ReserGO.ViewModel.Interface.Home
+@using ReserGO.ViewModel.Interface.Authentication
 @using ReserGO.UI.Authentication;
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider;
+
+<div class="pageContainer">
 
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -21,11 +23,10 @@
     <NotAuthorized>
         <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
             <Content>
-                <div class="pageContainer">
                     <Login />
-                </div>
             </Content>
         </BaseComponent> 
     </NotAuthorized>
 </AuthorizeView>
 
+</div>
