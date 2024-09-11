@@ -53,7 +53,12 @@ namespace ReserGO.ViewModel.ViewModel.Home
             {
                 var result = await _service.GetSettingsMenu();
                 if (result.Success)
+                {
                     ItemsMenu = result.Data;
+                    SelectedItem = result.Data.FirstOrDefault();
+                    ChangeComponent();
+                }
+
             }
             catch (Exception ex)
             {
@@ -71,6 +76,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
                 builder.OpenComponent(0, Type.GetType(SelectedItem.ComponentType));
                 builder.CloseComponent();
             });
+            OnPropertyChanged();
 
         }
 

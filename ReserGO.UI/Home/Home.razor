@@ -13,14 +13,14 @@
     <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="white" ColorFont="#0066FF"></Header>
     @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
     {
-        <MudPaper>
+        <MudPaper Height="100%">
             <MudDrawerContainer>
                 <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Width="200px">
                     <MudNavMenu Class="mudDrawer">
                         @foreach (var item in CurrentViewModel.ItemsMenu)
                         {
-                                        <MudNavLink Href="#"
-                                                    OnClick="() => CurrentViewModel.ChangeComponent()">
+                                        <MudNavLink 
+                                                    OnClick="() => ChangeComponent(item)">
                                 <MudIcon Icon="@item.Icon" Style="font-size: 3rem;color:white;" />
                                 @if (_open)
                                 {
@@ -32,6 +32,9 @@
                         }
                         </MudNavMenu>
                     </MudDrawer>
+                    <MudMainContent>
+                        @CurrentViewModel.Content
+                    </MudMainContent>
             </MudDrawerContainer>
         </MudPaper>
 
@@ -50,6 +53,12 @@
     protected override async Task OnInitializedAsync()
     {
         await CurrentViewModel.OnInitialize();
+    }
+
+    public void ChangeComponent(DTOSettingMenu menu)
+    {
+        CurrentViewModel.SelectedItem = menu;
+        CurrentViewModel.ChangeComponent();
     }
 }
 
