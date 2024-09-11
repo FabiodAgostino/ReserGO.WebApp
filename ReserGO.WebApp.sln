@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReserGO.ViewModel", "ReserG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReserGO.UI", "ReserGO.UI\ReserGO.UI.csproj", "{CE1A7B34-CAB1-4086-A507-FCC1B2FA2983}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReserGO.Miscellaneous", "ReserGO.Miscellaneous\ReserGO.Miscellaneous.csproj", "{31DE1B39-4A35-4ADF-A844-1235385B75B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{CE1A7B34-CAB1-4086-A507-FCC1B2FA2983}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE1A7B34-CAB1-4086-A507-FCC1B2FA2983}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE1A7B34-CAB1-4086-A507-FCC1B2FA2983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31DE1B39-4A35-4ADF-A844-1235385B75B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31DE1B39-4A35-4ADF-A844-1235385B75B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31DE1B39-4A35-4ADF-A844-1235385B75B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31DE1B39-4A35-4ADF-A844-1235385B75B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

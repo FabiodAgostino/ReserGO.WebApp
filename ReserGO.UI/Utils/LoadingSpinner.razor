@@ -1,0 +1,38 @@
+﻿@using MudBlazor;
+@using ReserGO.ViewModel.Interface.Utils;
+@using ReserGO.Utils.UI
+
+@inherits BaseComponentChild<ILoadingSpinnerViewModel, object>
+@if (CurrentViewModel is object && CurrentViewModel.IsLoading)
+{
+    <div class="overlay">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="mudProgressCircular" />
+    </div>
+
+}
+
+
+<style>
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000; /* Assicurati che sia sopra gli altri elementi */
+    }
+
+    .mudProgressCircular {
+        height: 250px !important;
+        width: 250px !important;
+    }
+
+    ::deep .mud-progress-circular.mud-progress-medium {
+        height: 250px !important;
+        width: 250px !important;
+    }
+</style>

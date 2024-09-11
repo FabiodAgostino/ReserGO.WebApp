@@ -7,18 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ReserGO.Miscellaneous\**" />
     <Compile Remove="ReserGO.Models\**" />
     <Compile Remove="ReserGO.Service\**" />
     <Compile Remove="ReserGO.UI\**" />
     <Compile Remove="ReserGO.ViewModel\**" />
+    <Content Remove="ReserGO.Miscellaneous\**" />
     <Content Remove="ReserGO.Models\**" />
     <Content Remove="ReserGO.Service\**" />
     <Content Remove="ReserGO.UI\**" />
     <Content Remove="ReserGO.ViewModel\**" />
+    <EmbeddedResource Remove="ReserGO.Miscellaneous\**" />
     <EmbeddedResource Remove="ReserGO.Models\**" />
     <EmbeddedResource Remove="ReserGO.Service\**" />
     <EmbeddedResource Remove="ReserGO.UI\**" />
     <EmbeddedResource Remove="ReserGO.ViewModel\**" />
+    <None Remove="ReserGO.Miscellaneous\**" />
     <None Remove="ReserGO.Models\**" />
     <None Remove="ReserGO.Service\**" />
     <None Remove="ReserGO.UI\**" />

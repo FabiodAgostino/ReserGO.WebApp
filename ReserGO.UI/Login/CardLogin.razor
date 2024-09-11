@@ -1,5 +1,6 @@
 ﻿@using MudBlazor 
 @using ReserGO.DTO
+@using ReserGO.Miscellaneous.Enum;
 @inject IDialogService DialogService
 
 
@@ -22,7 +23,7 @@
 
 
             <div class="d-flex justify-content-center align-items-center p-3 h-100">
-                <button class="loginButton btn-primary" type="submit" @onclick="@(()=>Login(0))">Accedi</button>
+                <button class="loginButton btn-primary" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</button>
             </div>
             @if(LoginError)
             {
@@ -62,7 +63,7 @@
             </div>
 
             <div class="d-flex justify-content-center align-items-center p-2" style="height:40%">
-                <button class="loginButton btn-primary" style="width:15vw;" type="submit" @onclick="@(()=> Login(1))">Procedi come ospite</button>
+                <button class="loginButton btn-primary" style="width:15vw;" type="submit" @onclick="@(()=> Login(EnumLoginType.LOGIN_GUEST))">Procedi come ospite</button>
             </div>
 
         </div>
@@ -85,11 +86,11 @@
         return DialogService.ShowAsync<RegisterDialog>("Simple Dialog", options);
     }
 
-    private async Task Login(int typeAction)
+    private async Task Login(EnumLoginType typeAction)
     {
         if(Callback.HasDelegate)
         {
-            if (typeAction == 1)
+            if (typeAction == EnumLoginType.LOGIN_GUEST)
                 User.IsGuest = true;
                 
             await Callback.InvokeAsync(User);

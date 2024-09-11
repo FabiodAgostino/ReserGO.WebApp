@@ -3,30 +3,38 @@
 @using ReserGO.DTO
 @using ReserGO.Utils.Event
 @using ReserGO.Utils.UI
+@using ReserGO.UI.Utils
 @using ReserGO.ViewModel.Interface.Authentication
+@using ReserGO.ViewModel.Interface.Utils
 @using ReserGO.UI.Authentication;
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
 <div class="pageContainer">
+    <BaseComponent TViewModel="ILoadingSpinnerViewModel" TModel="object">
+        <Content>
+            <LoadingSpinner />
+        </Content>
+    </BaseComponent>
+    <MudThemeProvider />
+    <MudPopoverProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
 
-<MudThemeProvider />
-<MudPopoverProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
 
-
-<AuthorizeView>
-    <Authorized>
-        @Body
-    </Authorized>
-    <NotAuthorized>
-        <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
-            <Content>
+    <AuthorizeView>
+        <Authorized>
+            @Body
+        </Authorized>
+        <NotAuthorized>
+            <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
+                <Content>
                     <Login />
-            </Content>
-        </BaseComponent> 
-    </NotAuthorized>
-</AuthorizeView>
+                </Content>
+            </BaseComponent>
+        </NotAuthorized>
+    </AuthorizeView>
 
 </div>
+
+

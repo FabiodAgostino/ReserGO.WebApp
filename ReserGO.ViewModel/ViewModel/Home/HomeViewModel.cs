@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using ReserGO.DTO;
-using ReserGO.Service.Interface.Authentication;
+using ReserGO.Miscellaneous.Message;
 using ReserGO.Service.Interface.Home;
 using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Home;
+using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.ViewModel.Home
 {
@@ -49,8 +50,10 @@ namespace ReserGO.ViewModel.ViewModel.Home
 
         public async Task OnInitialize()
         {
+            IsLoading = true;
             try
             {
+                Loading();
                 var result = await _service.GetSettingsMenu();
                 if (result.Success)
                 {
@@ -65,6 +68,8 @@ namespace ReserGO.ViewModel.ViewModel.Home
             }
             finally
             {
+                IsLoading = false;
+                Loading();
                 OnPropertyChanged();
             }
         }
@@ -78,6 +83,11 @@ namespace ReserGO.ViewModel.ViewModel.Home
             });
             OnPropertyChanged();
 
+        }
+
+        private void Loading()
+        {
+            Aggregator.Publish<bool,ObjectMessage<bool>>(new ObjectMessage<bool>(IsLoading), typeof(LoadingSpinnerViewModel));
         }
 
     }

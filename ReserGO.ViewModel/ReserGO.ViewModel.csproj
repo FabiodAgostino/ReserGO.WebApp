@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ReserGO.Miscellaneous\ReserGO.Miscellaneous.csproj" />
     <ProjectReference Include="..\ReserGO.Service\ReserGO.Service.csproj" />
   </ItemGroup>
 

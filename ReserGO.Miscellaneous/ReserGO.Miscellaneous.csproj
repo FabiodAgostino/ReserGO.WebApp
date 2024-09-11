@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="ReserGO.Utils.Events">
+      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.Events\obj\Debug\net8.0\ReserGO.Utils.Events.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
