@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-center align-items-center cardHeader">
         @if(Icon.Length > 1)
         {
-            <MudIcon Icon="@Icon" />
+            <MudIcon Icon="@Icon" Class="iconCardCss" />
         }
         <span class="text" style="padding-inline:1vw;">@Title</span>
     </div>
@@ -28,7 +28,6 @@
     public string Icon { get; set; } = "";
 
     protected override void OnInitialized(){
-        
     }
 
     private async Task Click()
@@ -39,3 +38,9 @@
         }
     }
 }
+
+<style>
+    .iconCardCss{
+        color:white;
+    }
+</style>
