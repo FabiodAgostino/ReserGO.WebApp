@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReserGO.Models\ReserGO.Models.csproj" />
     <ProjectReference Include="..\ReserGO.Service\ReserGO.Service.csproj" />
   </ItemGroup>
 
