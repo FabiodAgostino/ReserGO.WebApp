@@ -26,18 +26,23 @@
                 <div class="d-flex justify-content-center detailsHomeContiner">
                     <div class="d-flex flex-row">
                         <div class="d-flex p-2 w-100">
-                            <CardDetails />
+                            <CardDetails Title="Orari studio:" Description="@HourDesc" />
                         </div>
                     <div class="d-flex p-2 w-100">
-                            <CardDetails />
+                            <CardDetails Title="Telefono e Indirizzo:" Description="@AddresDesc" />
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <div class="rightSide">
-
+            <div class="d-flex flex-column rightSide justify-content-center align-items-center">
+                <div class="d-flex p-4">
+                    <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon"/>
+                </div>
+                <div class="d-flex p-4">
+                    <CardReserGo Title="Informazioni" Description="Tutte le informazioni sullo studio medico" Icon="@InformationIcon" />
+                </div>
             </div>
         </div>
 
@@ -50,5 +55,22 @@
 
 
 @code {
+    private string ReservationIcon = "";
+    private string InformationIcon = "";
+    private string HourDesc = "";
+    private string AddresDesc = "";
+
+
+    protected override void OnInitialized()
+    {
+        ReservationIcon = Icons.Material.Filled.AddCircleOutline;
+        InformationIcon = Icons.Material.Filled.Info;
+        
+        AddresDesc = "Via Roma, 123, 00100 Roma, Italia.     Dr.Rossi: 06 / xxxxxxx    Segreteria: 06 / xxxxxxx";
+        HourDesc = "Lunedì: 09:00 - 13:00 / 16:00 - 18:30 Martedì: 09:00 - 13:00 / 16:00 - 18:30 Mercoledì:09:00 - 13:00 / 16:00 - 18:30 Giovedì:09:00 - 13:00 / 16:00 - 18:30 Venerdì:09:00 - 13:00 / 16:00 - 18:30 Sabato/Domenica:studio chiuso";
+
+    }
+
+    
 
 }
