@@ -1,4 +1,5 @@
 ﻿@using MudBlazor
+@using ReserGO.UI.UIComponents
 
 <MudDialog Class="registerDialogCss">
     <TitleContent>
@@ -9,30 +10,20 @@
         <div class="d-flex dialogRegisterContainer p-1">
 
 
-            <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:40%; padding-block:5vh;">
+            <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:40%;">
 
-                <span class="textInputRegister">Nome utente:</span>
-                <input type="text" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
-
-                <span class="textInputRegister">Luogo di nascita:</span>
-                <input type="text" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
-
-                <span class="textInputRegister">Recapito telefonico:</span>
-                <input type="text" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField> 
+                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField> 
+                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField> 
 
             </div>
 
 
-            <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:40%;padding-block:5vh;">
+            <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:40%;">
 
-                <span class="textInputRegister">Cognome:</span>
-                <input type="text" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
-
-                <span class="textInputRegister">Data di nascita:</span>
-                <input type="text" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
-
-                <span class="textInputRegister">Email:</span>
-                <input type="email" class="registerInputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
 
             </div>
 
@@ -67,6 +58,8 @@
 @code {
     [CascadingParameter]
     private MudDialogInstance MudDialog { get; set; }
+
+    public string TextValue = "";
 
     private void Submit() => MudDialog.Close(DialogResult.Ok(true));
 

@@ -7,13 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GuestHome\GuestHome.razor.css" />
     <None Remove="UIComponents\CardReserGo.razor.css" />
     <None Remove="UIComponents\ItemCardReserGo.razor.css" />
+    <None Remove="UIComponents\TextInput.razor.css" />
+    <None Remove="Utils\CardDetails.razor.css" />
+    <None Remove="Utils\CardInformation.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="GuestHome\GuestHome.razor.css" />
     <Content Include="UIComponents\CardReserGo.razor.css" />
     <Content Include="UIComponents\ItemCardReserGo.razor.css" />
+    <Content Include="Utils\CardDetails.razor.css" />
+    <Content Include="Utils\CardInformation.razor.css" />
   </ItemGroup>
 
 

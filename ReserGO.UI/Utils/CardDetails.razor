@@ -1,0 +1,48 @@
+﻿@using MudBlazor
+
+<div class="d-flex flex-column shadow cardDetails" style="@Style" @onclick="@(()=> Click())">
+    <div class="d-flex align-items-center cardDetailsHeader">
+        <span class="textDetails" style="padding-inline:1vw;">@Title</span>
+    </div>
+    <div class="d-flex p-4 cardBodyDetails">
+        @Description
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback Callback { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = "Titolo";
+
+    [Parameter]
+    public string Description { get; set; } = "Descrizione...";
+
+    [Parameter]
+    public string Icon { get; set; } = "";
+
+    [Parameter]
+    public string Width { get; set; } = "100%";
+    [Parameter]
+    public string Height { get; set; } = "100%";
+
+    private string Style = "";
+
+    protected override void OnInitialized()
+    {
+        Title = "Giovanni Rossi";
+        Icon = Icons.Material.Filled.TagFaces;
+        Style = $"width:{Width};height:{Height};";
+        Description = "Il Dott. Giovanni Rossi è un medico di base altamente qualificato, con oltre 25 anni di esperienza nella medicina generale. Dedito alla cura dei pazienti, offre un approccio personalizzato e attento, assicurandosi che ogni persona riceva le migliori cure possibili. ";
+    }
+
+    private async Task Click()
+    {
+        if (Callback.HasDelegate)
+        {
+            await Callback.InvokeAsync();
+        }
+    }
+}

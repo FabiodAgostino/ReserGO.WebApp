@@ -12,6 +12,7 @@
 
 .columnFormRegister {
     height: 100%;
+    padding:3vh;
 }
 
 .registerDivider {
@@ -106,3 +107,4 @@
         background-color: #1170FF;
         box-shadow: 0 0 10px 3px rgba(128, 128, 128, 0.5);
     }
+

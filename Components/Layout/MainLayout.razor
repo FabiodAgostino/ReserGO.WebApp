@@ -7,6 +7,7 @@
 @using ReserGO.ViewModel.Interface.Authentication
 @using ReserGO.ViewModel.Interface.Utils
 @using ReserGO.UI.Authentication;
+@using ReserGO.UI.GuestHome
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
@@ -29,7 +30,8 @@
         <NotAuthorized>
             <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
                 <Content>
-                    <Login />
+                    @* <Login /> *@
+                    <GuestHome />
                 </Content>
             </BaseComponent>
         </NotAuthorized>

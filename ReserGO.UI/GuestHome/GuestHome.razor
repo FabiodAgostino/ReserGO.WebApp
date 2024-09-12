@@ -1,0 +1,54 @@
+﻿@using MudBlazor;
+@using ReserGO.UI.Utils
+@using ReserGO.Utils.UI
+@using ReserGO.UI.UIComponents
+
+
+
+<div class="d-flex flex-column homeGuestContainer">
+    <Header 
+        Title="Studio Rossi" 
+        RightTitle="Accedi o Registrati" 
+        RightTitleEnabled="true" 
+        BackgroundColor="#0066FF" 
+        ColorFont="#FFFFF"
+        />
+
+
+        <div class="d-flex flex-row homeGuestBody">
+
+            <div class="d-felx flex-column leftSide">
+
+                <div class="d-flex justify-content-center informationHomeContiner">
+                    <CardInformation />
+                </div>
+
+                <div class="d-flex justify-content-center detailsHomeContiner">
+                    <div class="d-flex flex-row">
+                        <div class="d-flex p-2 w-100">
+                            <CardDetails />
+                        </div>
+                    <div class="d-flex p-2 w-100">
+                            <CardDetails />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="rightSide">
+
+            </div>
+        </div>
+
+
+</div>
+
+
+
+
+
+
+@code {
+
+}
