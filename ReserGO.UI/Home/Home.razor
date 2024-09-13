@@ -9,6 +9,7 @@
 @using ReserGO.UI.Login
 @using ReserGO.ViewModel.Interface.Authentication
 @using ReserGO.Miscellaneous.Enum
+@using ReserGO.Utils.DTO.Utils
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<IHomeViewModel, object>
 
@@ -18,11 +19,13 @@
             <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFF"></Header>
         </Content>
     </BaseComponent>
-    @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
+    @if(CurrentViewModel.User.Roles!=null && !CurrentViewModel.UserIs(RoleConst.GUEST))
     {
+         @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
+        {
         <MudPaper Height="100%">
             <MudDrawerContainer>
-                <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+                <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Class="mainContent">
                     <MudNavMenu Class="mudDrawer">
                         @foreach (var item in CurrentViewModel.ItemsMenu)
                         {
@@ -38,22 +41,25 @@
                         }
                     </MudNavMenu>
                 </MudDrawer>
-                <MudMainContent>
+                <MudMainContent Class="row content mudblazor-main-content mainContent">
                     @CurrentViewModel.Content
                 </MudMainContent>
             </MudDrawerContainer>
         </MudPaper>
+        }
     }
+    else
+    {
+        @CurrentViewModel.Content
+    }
+   
 </div>
-
 
  <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
         <Content>
             <CardLogin />
         </Content>
     </BaseComponent>
-
-
 @code {
     private bool _open = true;
 
@@ -111,5 +117,14 @@
 
     .mud-paper.mud-elevation-1 {
         padding-top: 5px;
+    }
+
+    .mud-main-content
+    {
+        padding:0 !important;
+    }
+    .mainContent
+    {
+        height:100% !impostant;
     }
 </style>

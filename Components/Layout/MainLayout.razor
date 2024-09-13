@@ -26,13 +26,15 @@
 
     <AuthorizeView>
         <Authorized>
-            @Body
+            @if(Render)
+            {
+                @Body
+            }
         </Authorized>
         <NotAuthorized>
             <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
                 <Content>
                     <Login />
-                    @* <Schedule /> *@
                 </Content>
             </BaseComponent>
         </NotAuthorized>

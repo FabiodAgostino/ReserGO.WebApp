@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using ReserGO.Utils.DTO.Utils;
 using System.Security.Claims;
 
 namespace ReserGO.Service.Interface.Authentication
@@ -9,5 +10,6 @@ namespace ReserGO.Service.Interface.Authentication
         IEnumerable<Claim> ParseClaimsFromJwt(string jwt);
         void NotifyUserLogout();
         Task<AuthenticationState> GetAuthenticationStateAsync();
+        public DTOUserSession User { get; set; }
     }
 }

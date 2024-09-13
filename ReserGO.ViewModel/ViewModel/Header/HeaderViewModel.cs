@@ -16,7 +16,7 @@ namespace ReserGO.ViewModel.ViewModel.Header
     {
         private readonly IAuthenticationService _authService;
 
-        public HeaderViewModel(IEvent aggregator, ILogger<HeaderViewModel> logger, INotificationService notificaition ,IAuthenticationService authService) : base(aggregator, logger, notificaition)
+        public HeaderViewModel(IEvent aggregator, ILogger<HeaderViewModel> logger, INotificationService notificaition, IUserSession session,IAuthenticationService authService) : base(aggregator, logger, notificaition, session)
         {
             _authService = authService;
         }

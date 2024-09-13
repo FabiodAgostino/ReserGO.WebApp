@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using ReserGO.Service.Interface.Authentication;
+using ReserGO.Utils.DTO.Utils;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
+using static MudBlazor.Colors;
 
 namespace ReserGO.Service.Service.Authentication
 {
@@ -14,12 +16,17 @@ namespace ReserGO.Service.Service.Authentication
         private readonly HttpClient _httpClient;
         private readonly ILogger<JwtAuthenticationStateProvider> _logger;
 
+        private DTOUserSession _user { get; set; }
+        public DTOUserSession User { get => _user; set => _user = value; }
+
+
         public JwtAuthenticationStateProvider(ISessionStorageService sessionStorage, HttpClient httpClient, ILogger<JwtAuthenticationStateProvider> logger)
         {
             _sessionStorage = sessionStorage;
             _httpClient = httpClient;
             _logger = logger;
         }
+
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -35,7 +42,10 @@ namespace ReserGO.Service.Service.Authentication
             var claims = ParseClaimsFromJwt(token);
             var identity = new ClaimsIdentity(claims, "jwtAuthType");
             var user = new ClaimsPrincipal(identity);
-
+            if (User == null) User = new();
+            User.Username = claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+            User.Roles = claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).FirstOrDefault().Trim(new char[] { '[', ']' }).Split(',').ToList().ToList();
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
             return new AuthenticationState(user);
         }
 

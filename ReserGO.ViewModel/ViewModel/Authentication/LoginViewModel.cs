@@ -17,7 +17,8 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
         private readonly IAuthenticationService _authService;
         private readonly NavigationManager _navigationManager;
 
-        public LoginViewModel(IEvent aggregator, ILogger<LoginViewModel> logger, INotificationService notification, IAuthenticationService authService, NavigationManager navigationManager) : base(aggregator, logger, notification)
+        public LoginViewModel(IEvent aggregator, ILogger<LoginViewModel> logger, INotificationService notification, IUserSession session, IAuthenticationService authService, NavigationManager navigationManager) 
+            : base(aggregator, logger, notification, session)
         { 
             _authService = authService;
             _navigationManager = navigationManager;

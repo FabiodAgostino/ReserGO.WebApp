@@ -15,7 +15,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
     {
         private readonly IHomeService _service;
 
-        public HomeViewModel(IEvent aggregator, ILogger<HomeViewModel> logger, INotificationService notification, IHomeService service) : base(aggregator, logger, notification)
+        public HomeViewModel(IEvent aggregator, ILogger<HomeViewModel> logger, INotificationService notification,IUserSession session, IHomeService service) : base(aggregator, logger, notification, session)
         {
             _service = service;
             aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
@@ -60,7 +60,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
                 if (result.Success)
                 {
                     ItemsMenu = result.Data.OrderBy(x=>x.OrderN);
-                    SelectedItem = result.Data.FirstOrDefault();
+                    SelectedItem = ItemsMenu.FirstOrDefault();
                     ChangeComponent();
                 }
 
@@ -87,7 +87,6 @@ namespace ReserGO.ViewModel.ViewModel.Home
             OnPropertyChanged();
 
         }
-
         private void Loading()
         {
             Aggregator.Publish<bool,ObjectMessage<bool>>(new ObjectMessage<bool>(IsLoading), typeof(LoadingSpinnerViewModel));

@@ -3,10 +3,15 @@
 @using ReserGO.UI.Home;
 @using ReserGO.ViewModel.Interface.Home;
 @using ReserGO.Utils.UI;
+@using Microsoft.AspNetCore.Components.Authorization
 
-<BaseComponent TViewModel="IHomeViewModel" TModel="object">
-    <Content>
-        <Home />
-    </Content>
-</BaseComponent>
+    <AuthorizeView>
+        <Authorized>
+            <BaseComponent TViewModel="IHomeViewModel" TModel="object" BaseAuthenticationState="@context">
+                <Content>
+                    <Home />
+                </Content>
+            </BaseComponent>
+        </Authorized>
+</AuthorizeView>
 
