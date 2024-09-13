@@ -1,20 +1,22 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using ReserGO.DTO;
+using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface.Authentication;
+using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Header;
 using ReserGO.ViewModel.ViewModel.Home;
 
 namespace ReserGO.ViewModel.ViewModel.Header
 {
-    public class HeaderViewModel : LightReserGOViewModel<object>, IHeaderViewModel
+    public class HeaderViewModel : CompleteReserGOViewModell<object>, IHeaderViewModel
     {
         private readonly IAuthenticationService _authService;
 
-        public HeaderViewModel(IEvent aggregator, ILogger<HeaderViewModel> logger, IAuthenticationService authService) : base(aggregator, logger)
+        public HeaderViewModel(IEvent aggregator, ILogger<HeaderViewModel> logger, INotificationService notificaition ,IAuthenticationService authService) : base(aggregator, logger, notificaition)
         {
             _authService = authService;
         }
@@ -55,7 +57,7 @@ namespace ReserGO.ViewModel.ViewModel.Header
             }
             catch (Exception ex)
             {
-
+               Notification(ex.Message, NotificationColor.Error);
             }
             finally
             {

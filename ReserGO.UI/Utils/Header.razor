@@ -66,28 +66,7 @@
     private async Task OpenDialogAsync()
     {
         await CurrentViewModel.OpenModal();
-        // DialogOptions _noHeader = new() { NoHeader = true };
-
-        // var options = new DialogOptions
-        //     {
-        //         CloseOnEscapeKey = true,
-        //         MaxWidth = MaxWidth.ExtraLarge, 
-        //         NoHeader = true
-        //     };
-
-        // var parameters = new DialogParameters();
-
-        // parameters.Add("OnConfirm", (Func<DTOLoginRequestEvent, Task>)HandleDialogConfirm);
-        // return DialogService.ShowAsync<CardLogin>(null, parameters, options);
     }
-
-    // private async Task HandleDialogConfirm(DTOLoginRequestEvent dto)
-    // {
-    //     await CurrentViewModel.Login(dto);
-    //     await CurrentViewModel.CheckUser();
-    //     StateHasChanged();
-    //     NaviMngr.NavigateTo("/", true);
-    // }
 
 }
 

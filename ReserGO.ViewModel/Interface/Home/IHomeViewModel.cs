@@ -4,7 +4,7 @@ using ReserGO.DTO;
 
 namespace ReserGO.ViewModel.Interface.Home
 {
-    public interface IHomeViewModel : ILightReserGOViewModel<object>
+    public interface IHomeViewModel : ICompleteReserGOViewModel<object>
     {
         IEnumerable<DTOSettingMenu> ItemsMenu { get; set; }
         DTOSettingMenu SelectedItem { get; set; }

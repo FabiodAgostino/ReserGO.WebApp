@@ -5,19 +5,20 @@ using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface.Authentication;
+using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Authentication;
 using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.ViewModel.Authentication
 {
-    public class LoginViewModel : LightReserGOViewModel<DTOLoginRequest>, ILoginViewModel
+    public class LoginViewModel : CompleteReserGOViewModell<DTOLoginRequest>, ILoginViewModel
     {
         private readonly IAuthenticationService _authService;
         private readonly NavigationManager _navigationManager;
 
-        public LoginViewModel(IEvent aggregator, ILogger<LoginViewModel> logger, IAuthenticationService authService, NavigationManager navigationManager) : base(aggregator, logger)
-        {
+        public LoginViewModel(IEvent aggregator, ILogger<LoginViewModel> logger, INotificationService notification, IAuthenticationService authService, NavigationManager navigationManager) : base(aggregator, logger, notification)
+        { 
             _authService = authService;
             _navigationManager = navigationManager;
             aggregator.Subscribe<ObjectMessage<GenericModalVoid>>(GetType(), OpenModal);
@@ -25,8 +26,6 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             IsFirstLoad = true;
         }
         public bool LoginError { get; set; } = false;
-        public bool ShowGUI { get; set; }
-        public bool IsLoggedIn { get; set; }
         public bool IsOpen { get; set; }
         EventCallback Callback { get; set; }
         public DTOLoginRequest User { get; set; } = new();
@@ -46,8 +45,7 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
         public async Task Login(DTOLoginRequest user = null)
         {
             IsLoading = true;
-            if(ShowGUI)
-                Loading();
+            Loading();
             try
             {
                 if(user == null)
@@ -57,14 +55,13 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             }
             catch (Exception ex)
             {
-
+                Notification(ex.Message, NotificationColor.Error);
             }
             finally
             {
                 IsFirstLoad = false;
                 IsLoading = false;
-                if (ShowGUI)
-                    Loading();
+                Loading();
                 if(Callback.HasDelegate && !LoginError)
                 {
                     IsOpen = false;
@@ -74,17 +71,6 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             }
         }
 
-        public async Task CheckUser() => IsLoggedIn=await _authService.IsLoggedIn();
-
-        public async Task Logout()
-        {
-            await _authService.Logout();
-            IsLoggedIn = false;
-            OnPropertyChanged();
-            await Login();
-            _navigationManager.NavigateTo("/", true);
-
-        }
         private void Loading()
         {
             Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(IsLoading), typeof(LoadingSpinnerViewModel));

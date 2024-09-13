@@ -1,20 +1,21 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using ReserGO.DTO;
+using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
-using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Home;
+using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Home;
 using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.ViewModel.Home
 {
-    public class HomeViewModel : LightReserGOViewModel<object>, IHomeViewModel
+    public class HomeViewModel : CompleteReserGOViewModell<object>, IHomeViewModel
     {
         private readonly IHomeService _service;
 
-        public HomeViewModel(IEvent aggregator, ILogger<HomeViewModel> logger, IHomeService service) : base(aggregator, logger)
+        public HomeViewModel(IEvent aggregator, ILogger<HomeViewModel> logger, INotificationService notification, IHomeService service) : base(aggregator, logger, notification)
         {
             _service = service;
             aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
@@ -66,6 +67,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
             }
             catch (Exception ex)
             {
+                Notification(ex.Message, NotificationColor.Error);
             }
             finally
             {
