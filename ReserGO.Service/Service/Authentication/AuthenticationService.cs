@@ -29,7 +29,7 @@ namespace ReserGO.Service.Service.Authentication
             await _sessionStorage.RemoveItemAsync("authToken");
             _authProvider.NotifyUserLogout();
         }
-        public async Task<bool> Login(DTOLoginRequest loginRequest)
+        public async Task<ServiceResponse<string>> Login(DTOLoginRequest loginRequest)
         {
             bool isGuest = false;
             var token = await _sessionStorage.GetItemAsync<string>("authToken");
@@ -50,9 +50,9 @@ namespace ReserGO.Service.Service.Authentication
                     _authProvider.NotifyUserAuthentication(response.Data);
                     await _authProvider.GetAuthenticationStateAsync();
                 }
-                return response.Success;
+                return response;
             }
-            return false;
+            return new ServiceResponse<string>();
         }
 
         private bool IsGuest(IEnumerable<Claim> claims)

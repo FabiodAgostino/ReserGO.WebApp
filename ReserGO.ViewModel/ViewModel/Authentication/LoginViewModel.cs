@@ -25,7 +25,7 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             IsLoading = false;
             IsFirstLoad = true;
         }
-        public bool LoginError { get; set; } = false;
+        public string? LoginError { get; set; }
         public bool IsOpen { get; set; }
         EventCallback Callback { get; set; }
         public DTOLoginRequest User { get; set; } = new();
@@ -51,7 +51,10 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
                 if(user == null)
                     user = new() { IsGuest = true };
 
-                LoginError = !await _authService.Login(user);
+                var data = await _authService.Login(user);
+                if(!data.Success)
+                    LoginError = data.Message;
+
             }
             catch (Exception ex)
             {
@@ -62,7 +65,7 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
                 IsFirstLoad = false;
                 IsLoading = false;
                 Loading();
-                if(Callback.HasDelegate && !LoginError)
+                if(Callback.HasDelegate && String.IsNullOrEmpty(LoginError))
                 {
                     IsOpen = false;
                     await Callback.InvokeAsync();

@@ -14,7 +14,7 @@
     protected override async Task OnInitializedAsync()
     {
         await CurrentViewModel.Login();
-        if (!CurrentViewModel.LoginError)
+        if (String.IsNullOrEmpty(CurrentViewModel.LoginError))
             NaviMngr.NavigateTo("/", true);
     }
 }

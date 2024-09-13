@@ -5,7 +5,7 @@
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.Authentication
 @inherits BaseComponentChild<ILoginViewModel, DTOLoginRequest>
-<MudDialog Class="dialogClass" Visible="CurrentViewModel.IsOpen" Options="@Options">
+<MudDialog Class="dialogClass" OnBackdropClick="@HandleBackdropClick" Visible="CurrentViewModel.IsOpen" Options="@Options">
     <DialogContent>
         <div class="d-flex justify-content-between p-2 cardLogin">
             <div class="d-flex flex-column loginSide">
@@ -17,11 +17,18 @@
 
                 <div class="d-flex flex-column p-5 w-100 h-100">
                     <span class="textInputCardLogin">Nome utente:</span>
-                    <MudTextField @bind-Value="CurrentViewModel.User.Username" class="inputText"  Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>                 
+                    <MudTextField @bind-Value="CurrentViewModel.User.Username" class="inputText"  Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                    @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("utente"))
+                    {
+                        <bold>@CurrentViewModel.LoginError</bold>
+                    }
 
                     <span class="textInputCardLogin">Password:</span>
                     <MudTextField @bind-Value="CurrentViewModel.User.Password" InputType="InputType.Password" class="inputText" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-
+                    @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("password"))
+                    {
+                        <bold>@CurrentViewModel.LoginError</bold>
+                    }
 
                     <div class="d-flex justify-content-center align-items-center p-3 h-100">
                         <button class="loginButton btn-primary" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</button>
@@ -62,12 +69,16 @@
 
 
 @code {
+    void HandleBackdropClick(MouseEventArgs eArgs)
+    {
+        CurrentViewModel.IsOpen = false;
+    }
 
     public DialogOptions Options = new DialogOptions
         {
             CloseOnEscapeKey = true,
             MaxWidth = MaxWidth.ExtraLarge,
-            NoHeader = true
+            NoHeader = true,
         };
     private async Task Login(EnumLoginType typeAction)
     {
@@ -91,5 +102,9 @@
 
     .dialogClass {
         border-radius: 25px !important;
+    }
+
+  .mud-dialog .mud-dialog-content {
+        overflow: hidden !important;
     }
 </style>
