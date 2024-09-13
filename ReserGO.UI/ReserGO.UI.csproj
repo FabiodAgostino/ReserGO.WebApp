@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="GuestHome\GuestHome.razor.css" />
+    <None Remove="Schedule\Schedule.razor.css" />
     <None Remove="UIComponents\CardReserGo.razor.css" />
     <None Remove="UIComponents\ItemCardReserGo.razor.css" />
     <None Remove="UIComponents\TextInput.razor.css" />
@@ -17,6 +18,7 @@
 
   <ItemGroup>
     <Content Include="GuestHome\GuestHome.razor.css" />
+    <Content Include="Schedule\Schedule.razor.css" />
     <Content Include="UIComponents\CardReserGo.razor.css" />
     <Content Include="UIComponents\ItemCardReserGo.razor.css" />
     <Content Include="Utils\CardDetails.razor.css" />
@@ -50,6 +52,11 @@
     <Reference Include="ReserGO.Utils.UI">
       <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.UI\obj\Debug\net8.0\ReserGO.Utils.UI.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Admin\" />
+    <Folder Include="User\" />
   </ItemGroup>
 
 </Project>

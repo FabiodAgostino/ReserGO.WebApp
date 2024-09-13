@@ -8,6 +8,7 @@
 @using ReserGO.ViewModel.Interface.Utils
 @using ReserGO.UI.Authentication;
 @using ReserGO.UI.GuestHome
+@using ReserGO.UI.Schedule
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
@@ -31,6 +32,7 @@
             <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
                 <Content>
                     <Login />
+                    @* <Schedule /> *@
                 </Content>
             </BaseComponent>
         </NotAuthorized>

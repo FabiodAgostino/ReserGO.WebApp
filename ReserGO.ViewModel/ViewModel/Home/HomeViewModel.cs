@@ -59,7 +59,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
                 var result = await _service.GetSettingsMenu();
                 if (result.Success)
                 {
-                    ItemsMenu = result.Data;
+                    ItemsMenu = result.Data.OrderBy(x=>x.OrderN);
                     SelectedItem = result.Data.FirstOrDefault();
                     ChangeComponent();
                 }
