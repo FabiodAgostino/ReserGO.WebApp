@@ -4,12 +4,12 @@
     <div class="d-flex justify-content-center align-items-center cardHeader">
         @if(Icon.Length > 1)
         {
-            <MudIcon Icon="@Icon" Class="iconCardCss" />
+            <MudIcon Icon="@Icon" Class="iconCardReserGoCss" />
         }
         <span class="text" style="padding-inline:1vw;">@Title</span>
     </div>
-    <div class="d-flex cardBody">
-    
+    <div class="d-flex align-items-center cardBodyReserGo">
+        @Description
     </div>
 </div>
 
@@ -22,7 +22,7 @@
     public string Title { get; set; } = "Titolo";
 
     [Parameter]
-    public string Descrizione { get; set; } = "Descrizione...";
+    public string Description { get; set; } = "Descrizione...";
 
     [Parameter]
     public string Icon { get; set; } = "";
@@ -40,7 +40,8 @@
 }
 
 <style>
-    .iconCardCss{
+    .iconCardReserGoCss{
         color:white;
+        font-size:2.5vw !important;
     }
 </style>
