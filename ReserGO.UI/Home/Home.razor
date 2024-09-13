@@ -2,45 +2,56 @@
 @using MudBlazor;
 @using ReserGO.DTO
 @using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.Header
 @using ReserGO.ViewModel.Interface.Home;
 @using Microsoft.AspNetCore.Components.Authorization
 @using ReserGO.UI.Utils
+@using ReserGO.UI.Login
+@using ReserGO.ViewModel.Interface.Authentication
 
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<IHomeViewModel, object>
 
 <div class="d-flex flex-column loginContainter">
-    <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="white" ColorFont="#0066FF"></Header>
+    <BaseComponent TViewModel="IHeaderViewModel" TModel="object">
+        <Content>
+            <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFF"></Header>
+        </Content>
+    </BaseComponent>
     @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
     {
         <MudPaper Height="100%">
             <MudDrawerContainer>
-                <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Width="200px">
+                <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
                     <MudNavMenu Class="mudDrawer">
                         @foreach (var item in CurrentViewModel.ItemsMenu)
                         {
-                                        <MudNavLink 
-                                                    OnClick="() => ChangeComponent(item)">
+                            <MudNavLink OnClick="() => ChangeComponent(item)">
                                 <MudIcon Icon="@item.Icon" Style="font-size: 3rem;color:white;" />
                                 @if (_open)
                                 {
-                                     <div class="textNavMenu">
+                                    <div class="textNavMenu">
                                         @item.Text
-                                     </div>
+                                    </div>
                                 }
-                                        </MudNavLink>
+                            </MudNavLink>
                         }
-                        </MudNavMenu>
-                    </MudDrawer>
-                    <MudMainContent>
-                        @CurrentViewModel.Content
-                    </MudMainContent>
+                    </MudNavMenu>
+                </MudDrawer>
+                <MudMainContent>
+                    @CurrentViewModel.Content
+                </MudMainContent>
             </MudDrawerContainer>
         </MudPaper>
-
     }
 </div>
 
+
+ <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
+        <Content>
+            <CardLogin />
+        </Content>
+    </BaseComponent>
 
 
 @code {
@@ -68,22 +79,20 @@
         height: 100%;
     }
 
-    .textNavMenu
-    {
-        color:white;
+    .textNavMenu {
+        color: white;
         display: inline;
         position: relative;
         bottom: 12px;
         font-size: 1.5em;
-        padding-left:10px;
+        padding-left: 10px;
     }
 
     .mud-nav-link.mud-ripple {
-        padding-left:0;
+        padding-left: 0;
     }
 
-    .mudDrawer
-    {
+    .mudDrawer {
         background-color: #0066FF;
     }
 
@@ -91,14 +100,16 @@
         background-color: #0066FF;
     }
 
-    .mud-drawer.mud-drawer-pos-left.mud-drawer--open.mud-drawer--initial.mud-drawer-md.mud-drawer-clipped-never.mud-elevation-1.mud-drawer-mini
-    {
-        border-radius:25px;
-        height:91%;
+    .mud-drawer.mud-drawer-pos-left.mud-drawer--open.mud-drawer--initial.mud-drawer-md.mud-drawer-clipped-never.mud-elevation-1.mud-drawer-mini {
+        border-radius: 25px;
+        height: 91%;
     }
 
-    .iconDrawer
-    {
-        color:white;
+    .iconDrawer {
+        color: white;
+    }
+
+    .mud-paper.mud-elevation-1 {
+        padding-top: 5px;
     }
 </style>

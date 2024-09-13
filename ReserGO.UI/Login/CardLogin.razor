@@ -1,100 +1,99 @@
 ﻿@using MudBlazor 
 @using ReserGO.DTO
 @using ReserGO.Miscellaneous.Enum;
-@inject IDialogService DialogService
+@using ReserGO.Miscellaneous.Model;
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.Authentication
+@inherits BaseComponentChild<ILoginViewModel, DTOLoginRequest>
+<MudDialog Class="dialogClass" Visible="CurrentViewModel.IsOpen" Options="@Options">
+    <DialogContent>
+        <div class="d-flex justify-content-between p-2 cardLogin">
+            <div class="d-flex flex-column loginSide">
+
+                <div class="d-flex flex-row align-items-center w-100">
+                    <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="iconCardLogin"></MudIcon>
+                    <span class="titleCardLogin">Log-in</span>
+                </div>
+
+                <div class="d-flex flex-column p-5 w-100 h-100">
+                    <span class="textInputCardLogin">Nome utente:</span>
+                    <input type="text" class="inputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Username" @bind-value="CurrentViewModel.User.Username" />
+
+                    <span class="textInputCardLogin">Password:</span>
+                    <input type="password" class="inputCss" style="border-radius:10px" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="Password" @bind-value="CurrentViewModel.User.Password" />
 
 
-<div class="d-flex justify-content-between p-2 cardLogin">
+                    <div class="d-flex justify-content-center align-items-center p-3 h-100">
+                        <button class="loginButton btn-primary" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</button>
+                    </div>
+                    @if (true)
+                    {
+                        <bold>Eroreeeeeeee</bold>
+                    }
+                </div>
+
+            </div>
 
 
-    <div class="d-flex flex-column loginSide">
+            <div class="d-flex flex-column justify-content-center h-100">
+                <div class="loginDivider"></div>
+            </div>
 
-        <div class="d-flex flex-row align-items-center w-100">
-            <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="iconCardLogin"></MudIcon>
-            <span class="titleCardLogin">Log-in</span>
+
+
+            <div class="d-flex flex-column registerSide">
+
+                <div class="d-flex flex-row justify-content-between w-100" style="height:50%">
+                    <div class="d-flex flex-column justify-content-end h-100">
+                        <span class="titleCardRegister">Non sei registrato?</span>
+                        <span class="descRegister">Esegui ora la registrazione in pochi passaggi</span>
+                    </div>
+
+                    <div class="d-flex flex-column justify-content-center h-100" style="padding-inline:2vw;">
+                        <MudIcon Icon="@Icons.Material.Filled.PersonAddAlt" Class="iconCardRegister"></MudIcon>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column p-1 w-100 h-100">
+                    <div class="d-flex justify-content-center align-items-center p-2" style="height:50%">
+                        <button class="loginButton btn-primary" type="submit">Registrati</button>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center p-2" style="height:10%">
+                        <span class="descGuest">Altrimenti accedi come <b>ospite</b></span>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center p-2" style="height:40%">
+                        <button class="loginButton btn-primary" style="width:15vw;" type="submit" @onclick="@(()=> Login(EnumLoginType.LOGIN_GUEST))">Procedi come ospite</button>
+                    </div>
+
+                </div>
+            </div>
         </div>
-
-        <div class="d-flex flex-column p-5 w-100 h-100">
-            <span class="textInputCardLogin">Nome utente:</span>
-            <input type="text" class="inputCss" style="border-radius:10px" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Username" @bind-value="User.Username" />
-
-            <span class="textInputCardLogin">Password:</span>
-            <input type="password" class="inputCss" style="border-radius:10px" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="Password" @bind-value="User.Password" />
-
-
-            <div class="d-flex justify-content-center align-items-center p-3 h-100">
-                <button class="loginButton btn-primary" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</button>
-            </div>
-            @if(LoginError)
-            {
-                <bold>Eroreeeeeeee</bold>
-            }
-        </div>
-
-    </div>
-
-
-    <div class="d-flex flex-column justify-content-center h-100">
-        <div class="loginDivider"></div>
-    </div>
+    </DialogContent>
+</MudDialog>
 
 
 
-    <div class="d-flex flex-column registerSide">
-
-        <div class="d-flex flex-row justify-content-between w-100" style="height:50%">
-            <div class="d-flex flex-column justify-content-end h-100">
-                <span class="titleCardRegister">Non sei registrato?</span>
-                <span class="descRegister">Esegui ora la registrazione in pochi passaggi</span>
-            </div>
-
-            <div class="d-flex flex-column justify-content-center h-100" style="padding-inline:2vw;">
-                <MudIcon Icon="@Icons.Material.Filled.PersonAddAlt" Class="iconCardRegister"></MudIcon>
-            </div>
-        </div>
-
-        <div class="d-flex flex-column p-1 w-100 h-100">
-            <div class="d-flex justify-content-center align-items-center p-2" style="height:50%">
-                <button @onclick="OpenDialogAsync" class="loginButton btn-primary" type="submit">Registrati</button>
-            </div>
-
-            <div class="d-flex justify-content-center align-items-center p-2" style="height:10%">
-                <span class="descGuest">Altrimenti accedi come <b>ospite</b></span>
-            </div>
-
-            <div class="d-flex justify-content-center align-items-center p-2" style="height:40%">
-                <button class="loginButton btn-primary" style="width:15vw;" type="submit" @onclick="@(()=> Login(EnumLoginType.LOGIN_GUEST))">Procedi come ospite</button>
-            </div>
-
-        </div>
-    </div>
-
-</div>
 
 @code {
-    [Parameter]
-    public EventCallback<DTOLoginRequest> Callback { get; set; }
-
-    [Parameter]
-    public bool LoginError { get; set; } = false;
-
-    private DTOLoginRequest User { get; set; } = new();
-    private Task OpenDialogAsync()
-    {
-        var options = new DialogOptions { CloseOnEscapeKey = true };
-
-        return DialogService.ShowAsync<RegisterDialog>("Simple Dialog", options);
-    }
-
+    public DialogOptions Options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.ExtraLarge,
+            NoHeader = true
+        };
     private async Task Login(EnumLoginType typeAction)
     {
-        if(Callback.HasDelegate)
-        {
-            if (typeAction == EnumLoginType.LOGIN_GUEST)
-                User.IsGuest = true;
-                
-            await Callback.InvokeAsync(User);
-        }
+        await CurrentViewModel.Login(CurrentViewModel.User);
     }
 
 }
+
+
+
+<style>
+    .dialogClass {
+        border-radius: 25px !important;
+    }
+</style>

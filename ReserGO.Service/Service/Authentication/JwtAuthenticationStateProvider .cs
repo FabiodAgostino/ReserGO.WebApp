@@ -55,7 +55,7 @@ namespace ReserGO.Service.Service.Authentication
             NotifyAuthenticationStateChanged(authState);
         }
 
-        private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
+        public IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64WithoutPadding(payload);

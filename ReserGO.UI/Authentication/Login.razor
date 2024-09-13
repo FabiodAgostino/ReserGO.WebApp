@@ -9,23 +9,12 @@
 
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<ILoginViewModel, DTOLoginRequest>
-
-
-<div class="d-flex flex-column loginContainter">
-    <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFF"></Header>
-    <div class="d-flex justify-content-center align-items-center loginContent">
-        <CardLogin Callback="@(async (DTOLoginRequest user) => await LogIn(user))" LoginError="CurrentViewModel.LoginError"/>
-            @* <TextInput /> *@
-    </div>
-</div>
-
 @code
 {
-    private async Task LogIn(DTOLoginRequest user)
+    protected override async Task OnInitializedAsync()
     {
-        await CurrentViewModel.Login(user);
-        if(!CurrentViewModel.LoginError)
+        await CurrentViewModel.Login();
+        if (!CurrentViewModel.LoginError)
             NaviMngr.NavigateTo("/", true);
     }
-
 }

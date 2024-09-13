@@ -1,7 +1,7 @@
 ﻿.cardLogin {
     width: 70vw;
     height: 65vh;
-    border-radius: 30px;
+    border-radius: 25px;
     border: 1px solid lightgray;
     background-color: #0066FF;
 }
@@ -112,7 +112,6 @@
     color: #FFFFFF;
     padding-inline: 3vw;
 }
-
 
 @media (max-width: 800px) {
 

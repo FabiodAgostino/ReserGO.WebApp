@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Message;
+using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Home;
 using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Home;
@@ -16,6 +17,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
         public HomeViewModel(IEvent aggregator, ILogger<HomeViewModel> logger, IHomeService service) : base(aggregator, logger)
         {
             _service = service;
+            aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
         }
 
         public IEnumerable<DTOSettingMenu> ItemsMenu { get; set; }
@@ -53,7 +55,6 @@ namespace ReserGO.ViewModel.ViewModel.Home
             IsLoading = true;
             try
             {
-                Loading();
                 var result = await _service.GetSettingsMenu();
                 if (result.Success)
                 {

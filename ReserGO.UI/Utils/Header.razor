@@ -1,5 +1,13 @@
 ﻿@using MudBlazor
-
+@using ReserGO.UI.Login
+@using ReserGO.DTO
+@using ReserGO.ViewModel.Interface.Authentication;
+@using ReserGO.Utils.UI
+@using ReserGO.Miscellaneous.Model;
+@using ReserGO.ViewModel.Interface.Header
+@inject IDialogService DialogService
+@inherits BaseComponentChild<IHeaderViewModel, object>
+@inject NavigationManager NaviMngr;
 <div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:@BackgroundColor;">
 
     <div class="d-flex flex-row align-items-center">
@@ -8,9 +16,16 @@
     </div>
 
     <div class="px-2">
-        @if (RightTitleEnabled)
+        @if (RightTitleEnabled )
         {
-            <span class="rightTextHeader">@RightTitle</span>
+            if (!CurrentViewModel.IsLoggedIn)
+            {
+                <span class="rightTextHeader" @onclick="OpenDialogAsync">@RightTitle</span>
+            }
+            else
+            {
+                <span class="rightTextHeader" @onclick="@(async () => await CurrentViewModel.Logout())">Logout</span>
+            }
         }
     </div>
 
@@ -41,6 +56,38 @@
     {
         return "color:" + ColorFont;
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CurrentViewModel.CheckUser();
+        StateHasChanged();
+    }
+
+    private async Task OpenDialogAsync()
+    {
+        await CurrentViewModel.OpenModal();
+        // DialogOptions _noHeader = new() { NoHeader = true };
+
+        // var options = new DialogOptions
+        //     {
+        //         CloseOnEscapeKey = true,
+        //         MaxWidth = MaxWidth.ExtraLarge, 
+        //         NoHeader = true
+        //     };
+
+        // var parameters = new DialogParameters();
+
+        // parameters.Add("OnConfirm", (Func<DTOLoginRequestEvent, Task>)HandleDialogConfirm);
+        // return DialogService.ShowAsync<CardLogin>(null, parameters, options);
+    }
+
+    // private async Task HandleDialogConfirm(DTOLoginRequestEvent dto)
+    // {
+    //     await CurrentViewModel.Login(dto);
+    //     await CurrentViewModel.CheckUser();
+    //     StateHasChanged();
+    //     NaviMngr.NavigateTo("/", true);
+    // }
 
 }
 
