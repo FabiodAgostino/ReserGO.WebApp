@@ -80,5 +80,9 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(IsLoading), typeof(LoadingSpinnerViewModel));
         }
 
+        public async Task OpenModal()
+        {
+            Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true));
+        }
     }
 }

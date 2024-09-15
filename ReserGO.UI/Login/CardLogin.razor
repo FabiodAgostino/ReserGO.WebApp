@@ -2,6 +2,7 @@
 @using ReserGO.DTO
 @using ReserGO.Miscellaneous.Enum;
 @using ReserGO.Miscellaneous.Model;
+@using ReserGO.ViewModel.Interface.Register
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.Authentication
 @inherits BaseComponentChild<ILoginViewModel, DTOLoginRequest>
@@ -17,17 +18,30 @@
 
                 <div class="d-flex flex-column p-5 w-100 h-100">
                     <span class="textInputCardLogin">Nome utente:</span>
-                    <MudTextField @bind-Value="CurrentViewModel.User.Username" class="inputText"  Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                    <MudTextField @bind-Value="CurrentViewModel.User.Username"
+                        class="inputText"
+                        Label="nome.cognome"
+                        Variant="Variant.Outlined"
+                        Margin="Margin.Dense"
+                        OnKeyDown="HandleKeyDown">
+                    </MudTextField>
                     @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("utente"))
                     {
-                        <bold>@CurrentViewModel.LoginError</bold>
+                        <bold style="color:white">@CurrentViewModel.LoginError!</bold>
                     }
 
                     <span class="textInputCardLogin">Password:</span>
-                    <MudTextField @bind-Value="CurrentViewModel.User.Password" InputType="InputType.Password" class="inputText" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                    <MudTextField @bind-Value="CurrentViewModel.User.Password"
+                                  InputType="InputType.Password"
+                                  Label="inserisci password"
+                                  class="inputText"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  OnKeyDown="HandleKeyDown">
+                    </MudTextField>
                     @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("password"))
                     {
-                        <bold>@CurrentViewModel.LoginError</bold>
+                        <bold style="color:white">@CurrentViewModel.LoginError!</bold>
                     }
 
                     <div class="d-flex justify-content-center align-items-center p-3 h-100">
@@ -56,14 +70,20 @@
 
                 <div class="d-flex flex-column justify-content-start p-1 w-100 h-100">
                     <div class="d-flex justify-content-center align-items-center p-2" style="height:50%">
-                        <button class="loginButton btn-primary" type="submit">Registrati</button>
+                        <button class="loginButton btn-primary" type="submit" @onclick="OpenDialogAsync">Registrati</button>
                     </div>
                 </div>
-
+                
             </div>
         </div>
     </DialogContent>
 </MudDialog>
+
+<BaseComponent TViewModel="IRegisterViewModel" TModel="object">
+        <Content>
+            <RegisterDialog />
+        </Content>
+    </BaseComponent>
 
 
 
@@ -72,6 +92,14 @@
     void HandleBackdropClick(MouseEventArgs eArgs)
     {
         CurrentViewModel.IsOpen = false;
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Login(EnumLoginType.LOGIN);
+        }
     }
 
     public DialogOptions Options = new DialogOptions
@@ -83,6 +111,11 @@
     private async Task Login(EnumLoginType typeAction)
     {
         await CurrentViewModel.Login(CurrentViewModel.User);
+    }
+
+    private async Task OpenDialogAsync()
+    {
+        await CurrentViewModel.OpenModal();
     }
 
 }

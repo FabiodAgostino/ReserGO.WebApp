@@ -1,9 +1,19 @@
 ﻿@using MudBlazor
 @using ReserGO.UI.UIComponents
+@using ReserGO.ViewModel.Interface.Register
+@using ReserGO.DTO
+@using ReserGO.Utils.UI
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
 
-<MudDialog Class="registerDialogCss">
+@inherits BaseComponentChild<IRegisterViewModel, object>
+
+<MudDialog Class="registerDialogCss" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler">
     <TitleContent>
-        <span class="dialogTitleRegister">Registrazione Utente</span>
+        <div class="d-flex flex-column" style="padding-inline: 0.5vw;">
+            <span class="dialogTitleRegister">Registrazione Utente</span>
+            <span class="dialogSubTitleRegister">L'username sarà composto da "Nome.Cognome"</span>
+        </div>
     </TitleContent>
     <DialogContent>
 
@@ -12,18 +22,36 @@
 
             <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:40%;">
 
-                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField> 
-                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField> 
-                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField> 
+                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.FirstName" Required="true" RequiredError="Inserire Nome" Label="Nome" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.Address" Required="true" RequiredError="Inserire Indirizzo" Label="Indirizzo" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.CityOfBirth" Required="true" RequiredError="Inserire Città" Label="Città di nascita" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.PhoneNumber" Required="true" RequiredError="Inserire numero di telefono" Label="Recapito telefonico" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.Password" Required="true"
+                    RequiredError="inserire password" Label="Password"
+                    @ref="pwField1" InputType="InputType.Password"
+                    Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"
+                    Variant="Variant.Outlined" Margin="Margin.Dense">
+                </MudTextField>
 
             </div>
 
 
             <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:40%;">
 
-                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.LastName" Required="true" RequiredError="Inserire Cognome" Label="Cognome" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.PlaceOfBirth" Required="true" RequiredError="Inserire luogo di nascita" Label="Luogo di nascita" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudDatePicker @bind-Date="@CurrentViewModel.UserRegister.DateOfBirth" Label="Data di nascita" Required="true" RequiredError="Inserire data di nascita" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.Email"
+                    Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required="true" RequiredError="Inserire Email corretta"
+                    Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})">
+                </MudTextField>
+                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.ConfirmPassword" Required="true"
+                    InputType="InputType.Password"
+                    Validation="@(new Func<string, string>(PasswordMatch))" 
+                    RequiredError="La password non corrisponde" Label="Conferma password" 
+                    Variant="Variant.Outlined" Margin="Margin.Dense">
+                </MudTextField>
 
             </div>
 
@@ -43,7 +71,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center p-2" style="height:20%;margin-left: 2vw;">
-                    <MudButton OnClick="Cancel" class="registerButton btn-primary" style="width:15vw;" type="submit">Salva</MudButton>
+                    <MudButton OnClick="Submit" class="registerButton btn-primary" style="width:15vw;" type="submit">Salva</MudButton>
                 </div>
 
             </div>
@@ -59,11 +87,41 @@
     [CascadingParameter]
     private MudDialogInstance MudDialog { get; set; }
 
-    public string TextValue = "";
+    private void Submit() => CurrentViewModel.Register();
 
-    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    private void Cancel() => CurrentViewModel.Close();
 
-    private void Cancel() => MudDialog.Close();
+    MudTextField<string> pwField1;
+
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Inerire password!";
+            yield break;
+        }
+        if (pw.Length < 8)
+            yield return "Inserire almeno 8 caratteri";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Inerire almeno una maiuscola";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Inerire almeno una minuscola";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Inserire almeno un numero";
+    }
+
+    private string PasswordMatch(string arg)
+    {
+        if (pwField1.Value != arg)
+            return "La passwords non corrisponde";
+        return null;
+    }
+
+    private async Task OnBackdropClickHandler(MouseEventArgs e)
+    {
+        CurrentViewModel.Close();
+    }
+
 }
 
 
@@ -73,5 +131,9 @@
         height: 55vh;
         max-width: 50vw !important;
         border-radius: 30px !important;
+    }
+
+    .mud-input > input.mud-input-root-outlined.mud-input-root-adorned-end, div.mud-input-slot.mud-input-root-outlined.mud-input-root-adorned-end {
+        padding:10px !important;
     }
 </style>

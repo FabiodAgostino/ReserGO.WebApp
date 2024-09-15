@@ -12,7 +12,7 @@
 
     <div class="d-flex flex-row align-items-center">
         <MudIcon Icon="@Icon" Class="iconCss" Style="@IconColor()"></MudIcon>
-        <span class="titleLogin" style="@ColorFont">@Title</span>
+        <span class="titleLogin" style="@TitleColor()">@Title</span>
     </div>
 
     <div class="px-2">
@@ -54,6 +54,10 @@
 
     private string IconColor()
     {
+        return "color:" + ColorFont;
+    }
+
+    private string TitleColor(){
         return "color:" + ColorFont;
     }
 

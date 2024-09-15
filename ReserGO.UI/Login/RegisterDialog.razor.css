@@ -1,8 +1,14 @@
 ﻿.dialogTitleRegister {
     font-family: Arial;
     font-size: 2vw;
-    color: #404040;
-    padding-inline: 0.5vw;
+    color: #0066FF;
+}
+
+.dialogSubTitleRegister {
+    font-family: Arial;
+    opacity: 0.5;
+    padding-inline: 0.2vw;
+    font-size: 0.8vw;
 }
 
 .dialogRegisterContainer {
