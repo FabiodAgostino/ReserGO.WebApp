@@ -27,7 +27,9 @@
                     </MudTextField>
                     @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("utente"))
                     {
-                        <bold style="color:white">@CurrentViewModel.LoginError!</bold>
+                        <div class="d-flex w-100 justify-content-end p-1">
+                            <bold style="color:white">@CurrentViewModel.LoginError!</bold>
+                        </div>
                     }
 
                     <span class="textInputCardLogin">Password:</span>
@@ -41,7 +43,9 @@
                     </MudTextField>
                     @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("password"))
                     {
-                        <bold style="color:white">@CurrentViewModel.LoginError!</bold>
+                        <div class="d-flex w-100 justify-content-end p-1">
+                            <bold style="color:white">@CurrentViewModel.LoginError!</bold>
+                        </div>
                     }
 
                     <div class="d-flex justify-content-center align-items-center p-3 h-100">

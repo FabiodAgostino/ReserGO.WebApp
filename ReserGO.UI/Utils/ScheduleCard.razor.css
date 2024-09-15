@@ -1,0 +1,33 @@
+﻿.cardScheduleContainer {
+    padding-inline: 0.8vw;
+    padding-block: 0.5vh;
+}
+
+.cardSchedule {
+    width: 16vw;
+    height: 18vh;
+    background-color: white;
+    border-radius: 15px;
+    cursor:pointer;
+    border:1px solid lightgrey;
+}
+
+.headerScheduleCard {
+    padding-inline: 0.5vw;
+    height: 30%;
+    border-bottom: 1px solid lightgrey;
+}
+
+.bodyScheduleCard {
+    padding-inline:0.5vw;
+    height:70%;
+}
+
+.textSchedule {
+    color: #404040;
+    font-size: xx-large;
+    font-family: var(--mud-typography-button-family);
+    font-weight: var(--mud-typography-button-weight);
+    line-height: var(--mud-typography-button-lineheight);
+    letter-spacing: var(--mud-typography-button-letterspacing);
+}

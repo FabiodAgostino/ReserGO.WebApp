@@ -1,0 +1,22 @@
+﻿.homeGuestScheduleContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.leftSideSchedule {
+    width: 55%;
+    height: 100%;
+    background-color: #FFFFFF;
+}
+
+.rightSideSchedule {
+    width: 45%;
+    height: 100%;
+    background-color: #EEEEEE;
+}
+
+.homeGuestScheduleBody {
+    width: 100%;
+    height: 100%;
+}
+

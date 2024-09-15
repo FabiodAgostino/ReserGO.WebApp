@@ -1,14 +1,17 @@
 ﻿@using MudBlazor
 
-<div class="d-flex flex-column shadow cardAction" @onclick="@(()=> Click())" >
+<div class="d-flex flex-column shadow cardAction" @onclick="@(()=> Click())" style="@CardStyle">
     <div class="d-flex justify-content-center align-items-center cardHeader">
         @if(Icon.Length > 1)
         {
             <MudIcon Icon="@Icon" Class="iconCardReserGoCss" />
         }
-        <span class="text" style="padding-inline:1vw;">@Title</span>
+        @if (Title.Length > 1)
+        {
+            <span class="text" style="padding-inline:1vw;">@Title</span>
+        }
     </div>
-    <div class="d-flex align-items-center cardBodyReserGo">
+    <div class="d-flex align-items-center cardBodyReserGo" style="@BodyStyle">
         @Description
     </div>
 </div>
@@ -26,6 +29,12 @@
 
     [Parameter]
     public string Icon { get; set; } = "";
+
+    [Parameter]
+    public string? CardStyle { get; set; } = "";
+    
+    [Parameter]
+    public string? BodyStyle { get; set; } = "";
 
     protected override void OnInitialized(){
     }

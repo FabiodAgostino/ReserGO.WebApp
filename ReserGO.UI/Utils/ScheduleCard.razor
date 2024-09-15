@@ -1,0 +1,61 @@
+﻿@using MudBlazor
+
+<div class="d-flex cardScheduleContainer">
+
+    <div class="d-flex flex-column shadow cardSchedule">
+        <div class="d-flex w-100 align-items-center headerScheduleCard">
+            
+            @if(Icon.Length > 1)
+            {
+                <MudIcon Icon="@Icon" Class="iconCardSchedule" />
+            }
+            @if (Title.Length > 1)
+            {
+                <span class="textSchedule" style="padding-inline:1vw;">@Title</span>
+            }
+  
+        </div>
+
+        <div class="d-flex w-100 bodyScheduleCard">
+
+        </div>
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback Callback { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = "Titolo";
+
+    [Parameter]
+    public string Description { get; set; } = "Descrizione...";
+
+    [Parameter]
+    public string Icon { get; set; } = "";
+
+
+    protected override void OnInitialized()
+    {
+    }
+
+    private async Task Click()
+    {
+        if (Callback.HasDelegate)
+        {
+            await Callback.InvokeAsync();
+        }
+    }
+
+}
+
+<style>
+    .iconCardSchedule {
+        color: #0066FF;
+        font-size: 2.5vw !important;
+    }
+</style>
+

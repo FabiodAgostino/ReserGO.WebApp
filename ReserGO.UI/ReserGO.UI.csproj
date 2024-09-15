@@ -7,22 +7,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GuestHome\GuestHome.razor.css" />
-    <None Remove="Schedule\Schedule.razor.css" />
-    <None Remove="UIComponents\CardReserGo.razor.css" />
-    <None Remove="UIComponents\ItemCardReserGo.razor.css" />
-    <None Remove="UIComponents\TextInput.razor.css" />
-    <None Remove="Utils\CardDetails.razor.css" />
-    <None Remove="Utils\CardInformation.razor.css" />
+    <Compile Remove="User\**" />
+    <Content Remove="User\**" />
+    <EmbeddedResource Remove="User\**" />
+    <None Remove="User\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="GuestHome\Containers\GuestHomeContainer.razor.css" />
+    <None Remove="GuestHome\Containers\ListSchedules.razor.css" />
+    <None Remove="GuestHome\GuestHome.razor.css" />
+    <None Remove="Schedule\Schedule.razor.css" />
+    <None Remove="Utils\CardDetails.razor.css" />
+    <None Remove="Utils\CardInformation.razor.css" />
+    <None Remove="Utils\CardReserGo.razor.css" />
+    <None Remove="Utils\ItemCardReserGo.razor.css" />
+    <None Remove="Utils\ScheduleCard.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="GuestHome\Containers\GuestHomeContainer.razor.css" />
+    <Content Include="GuestHome\Containers\ListSchedules.razor.css" />
     <Content Include="GuestHome\GuestHome.razor.css" />
     <Content Include="Schedule\Schedule.razor.css" />
-    <Content Include="UIComponents\CardReserGo.razor.css" />
-    <Content Include="UIComponents\ItemCardReserGo.razor.css" />
+    <Content Include="Utils\CardReserGo.razor.css" />
     <Content Include="Utils\CardDetails.razor.css" />
     <Content Include="Utils\CardInformation.razor.css" />
+    <Content Include="Utils\ItemCardReserGo.razor.css" />
+    <Content Include="Utils\ScheduleCard.razor.css" />
   </ItemGroup>
 
 
@@ -59,7 +71,6 @@
 
   <ItemGroup>
     <Folder Include="Admin\" />
-    <Folder Include="User\" />
   </ItemGroup>
 
 </Project>

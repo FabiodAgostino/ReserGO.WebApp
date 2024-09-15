@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using ReserGO.UI.GuestHome.Containers
+@using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 @using ReserGO.DTO
 @using ReserGO.Utils.Event
@@ -35,6 +36,7 @@
             <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
                 <Content>
                     <Login />
+                    @* <GuestHomeContainer /> *@
                 </Content>
             </BaseComponent>
         </NotAuthorized>

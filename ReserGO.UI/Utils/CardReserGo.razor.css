@@ -3,7 +3,7 @@
     height: 30vh;
     border-radius: 30px;
     border: 1px solid #EEEEEE;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .cardHeader {
@@ -25,7 +25,6 @@
     font-weight: var(--mud-typography-button-weight);
     line-height: var(--mud-typography-button-lineheight);
     letter-spacing: var(--mud-typography-button-letterspacing);
-
 }
 
 .cardBodyReserGo {

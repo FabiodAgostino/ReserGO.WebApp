@@ -1,0 +1,8 @@
+﻿.listScheduleContainer{
+
+}
+
+.gridContainer {
+    overflow: auto;
+    height: 88vh;
+}

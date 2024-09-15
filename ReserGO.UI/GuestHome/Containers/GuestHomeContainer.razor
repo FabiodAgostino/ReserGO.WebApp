@@ -1,8 +1,47 @@
-﻿@using ReserGO.UI.GuestHome
+﻿@using MudBlazor;
+@using ReserGO.UI.Utils
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.Header
 
 
-<GuestHome />
+<GuestHome/>
+
+@*  <div class="d-flex flex-column homeGuestScheduleContainer">
+
+    <BaseComponent TViewModel="IHeaderViewModel" TModel="object">
+        <Content>
+            <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFFF"></Header>
+        </Content>
+    </BaseComponent>
+        
+    <div class="d-flex flex-row homeGuestScheduleBody">
+
+     
+        <div class="d-flex flex-column rightSideSchedule justify-content-center align-items-center">
+            <CardReserGo Title=" " Description="Seleziona Risorsa" CardStyle="opacity:0.5;" BodyStyle="@CardItemEmptyStyle" Icon="@InformationIcon" />
+        </div>
+
+        <div class="d-felx flex-column leftSideSchedule">
+
+            <ListSchedules/>
+
+        </div>
+
+    </div>
+
+</div>  *@
+
 
 @code{
-}
 
+    private string InformationIcon = "";
+
+    private string CardItemEmptyStyle = "";
+
+    protected override void OnInitialized()
+    {
+        InformationIcon = Icons.Material.Filled.Today;
+        CardItemEmptyStyle = "background-color:#0066FF;color:#FFFFFF;font-size:xxx-large;justify-content: center;";
+    }
+
+}
