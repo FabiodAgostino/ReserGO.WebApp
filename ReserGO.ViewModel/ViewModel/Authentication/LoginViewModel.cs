@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
@@ -17,8 +18,8 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
         private readonly IAuthenticationService _authService;
         private readonly NavigationManager _navigationManager;
 
-        public LoginViewModel(IEvent aggregator, ILogger<LoginViewModel> logger, INotificationService notification, IUserSession session, IAuthenticationService authService, NavigationManager navigationManager) 
-            : base(aggregator, logger, notification, session)
+        public LoginViewModel(IEvent aggregator, ILogger<LoginViewModel> logger, INotificationService notification, IUserSession session, IAuthenticationService authService, NavigationManager navigationManager, IJSRuntime js) 
+            : base(aggregator, logger, notification, session, js)
         { 
             _authService = authService;
             _navigationManager = navigationManager;

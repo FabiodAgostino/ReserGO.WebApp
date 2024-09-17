@@ -10,6 +10,8 @@
 @using ReserGO.UI.Authentication;
 @using ReserGO.UI.GuestHome
 @using ReserGO.UI.Schedule
+@using Microsoft.AspNetCore.Components.Authorization;
+@using Microsoft.AspNetCore.Components;
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
@@ -27,7 +29,7 @@
 
     <AuthorizeView>
         <Authorized>
-            @if(Render)
+            @if (Render)
             {
                 @Body
             }
@@ -50,3 +52,4 @@
         margin: 0 !important;
     }
 </style>
+

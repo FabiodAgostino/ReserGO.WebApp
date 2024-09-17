@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
@@ -16,7 +17,7 @@ namespace ReserGO.ViewModel.ViewModel.Header
     {
         private readonly IAuthenticationService _authService;
 
-        public HeaderViewModel(IEvent aggregator, ILogger<HeaderViewModel> logger, INotificationService notificaition, IUserSession session,IAuthenticationService authService) : base(aggregator, logger, notificaition, session)
+        public HeaderViewModel(IEvent aggregator, ILogger<HeaderViewModel> logger, INotificationService notificaition, IUserSession session,IAuthenticationService authService, IJSRuntime js) : base(aggregator, logger, notificaition, session, js)
         {
             _authService = authService;
         }

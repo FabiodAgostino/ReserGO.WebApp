@@ -17,6 +17,7 @@ namespace ReserGO.Service.Extensions
             services.AddScoped<IHomeService, HomeService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IUserSession, UserSession>();
+            services.AddScoped<IComuneService, ComuneService>();
 
 
             return services;

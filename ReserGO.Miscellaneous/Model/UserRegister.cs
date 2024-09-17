@@ -12,7 +12,6 @@ namespace ReserGO.Miscellaneous.Model
         public string LastName { get; set; } = "";
         public string Address { get; set; } = "";
         public DateTime? DateOfBirth { get; set; } = DateTime.Today;
-        public string PlaceOfBirth { get; set; } = "";
         public string CityOfBirth { get; set; } = "";
         public string Email { get; set; } = "";
         public string? PhoneNumber { get; set; } = "";

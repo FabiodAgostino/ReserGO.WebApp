@@ -12,5 +12,10 @@ namespace ReserGO.ViewModel.ViewModel
         public LightReserGOViewModel(IEvent aggregator, ILogger logger) : base(aggregator, logger)
         {
         }
+
+        public virtual async Task Refresh()
+        {
+
+        }
     }
 }

@@ -1,0 +1,75 @@
+﻿@using MudBlazor
+@using System.Collections.Generic
+@using ReserGO.Miscellaneous.Model
+
+    <MudAutocomplete T="string"
+                     @ref ="@err"
+                     SearchFunc="@SearchRegioni"
+                     Placeholder="Seleziona una regione..."
+                     Clearable="true"
+                     ResetValueOnEmptyText="true"
+                     ValueChanged="@OnRegionChanged"
+                     MaxItems="null"
+                     Variant="Variant.Outlined"
+                     Margin="Margin.Dense"
+                 OnBlur="CheckError"
+                     Required="true"
+                     ClearIcon="null"
+                     RequiredError="Inserire regione di nascita"
+                     Class="comboRegione" />
+
+
+
+@code {
+    [Parameter]
+    public EventCallback<string> OnRegionSelected { get; set; }
+    private List<string> Regioni { get; set; } = new List<string>();
+    private MudAutocomplete<string> err;
+    private string regionSelected { get; set; }
+    private bool showCustomError;
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRegioniAsync();
+    }
+
+    private async Task LoadRegioniAsync()
+    {
+        Regioni = ItalianRegions.GetRegions().ToList();
+        await Task.CompletedTask;
+    }
+
+    private Task<IEnumerable<string>> SearchRegioni(string searchText, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return Task.FromResult<IEnumerable<string>>(Regioni);
+        }
+
+        var filteredRegioni = Regioni.Where(r => r.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+        return Task.FromResult<IEnumerable<string>>(filteredRegioni);
+    }
+    private async Task OnRegionChanged(string newValue)
+    {
+        regionSelected = newValue;
+        err.Error = string.IsNullOrEmpty(regionSelected);
+        if(OnRegionSelected.HasDelegate)
+            await OnRegionSelected.InvokeAsync(newValue);
+    }
+
+    private async Task CheckError()
+    {
+        await Task.Delay(2000);
+        err.Error = string.IsNullOrEmpty(regionSelected);
+        err.ErrorText = "Inserire regione di nascita";
+    }
+}
+
+<style>
+    .comboRegione {
+        width: 100% !important;
+    }
+
+    .mud-container.mud-container-maxwidth-lg.mud-container--gutters {
+        padding: 0;
+    }
+</style>

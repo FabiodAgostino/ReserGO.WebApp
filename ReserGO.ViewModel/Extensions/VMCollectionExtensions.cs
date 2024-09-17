@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReserGO.ViewModel.Interface.Authentication;
+using ReserGO.ViewModel.Interface.FiltersComponent;
 using ReserGO.ViewModel.Interface.Header;
 using ReserGO.ViewModel.Interface.Home;
 using ReserGO.ViewModel.Interface.Register;
 using ReserGO.ViewModel.Interface.Utils;
 using ReserGO.ViewModel.ViewModel.Authentication;
+using ReserGO.ViewModel.ViewModel.FiltersComponent;
 using ReserGO.ViewModel.ViewModel.Header;
 using ReserGO.ViewModel.ViewModel.Home;
 using ReserGO.ViewModel.ViewModel.Register;
@@ -21,6 +23,7 @@ namespace ReserGO.ViewModel.Extensions
             services.AddScoped<ILoadingSpinnerViewModel, LoadingSpinnerViewModel>();
             services.AddScoped<IHeaderViewModel, HeaderViewModel>();
             services.AddScoped<IRegisterViewModel, RegisterViewModel>();
+            services.AddScoped<IComuneComboViewModel, ComuneComboViewModel>();
 
 
             return services;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using Microsoft.VisualBasic;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Message;
@@ -24,7 +25,7 @@ namespace ReserGO.ViewModel.ViewModel.Register
 
         public UserRegister UserRegister {  get; set; }
 
-        public RegisterViewModel(IEvent aggregator, ILogger<RegisterViewModel> logger, INotificationService notification, IUserSession session, IAuthenticationService authService) : base(aggregator, logger, notification, session)
+        public RegisterViewModel(IEvent aggregator, ILogger<RegisterViewModel> logger, INotificationService notification, IUserSession session, IAuthenticationService authService, IJSRuntime js) : base(aggregator, logger, notification, session, js)
         {
             _authService = authService;
             aggregator.Subscribe<ObjectMessage<bool>>(GetType(), OpenModal);

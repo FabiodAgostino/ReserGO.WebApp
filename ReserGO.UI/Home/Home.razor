@@ -10,6 +10,7 @@
 @using ReserGO.ViewModel.Interface.Authentication
 @using ReserGO.Miscellaneous.Enum
 @using ReserGO.Utils.DTO.Utils
+@using ReserGO.UI.FiltersComponent
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<IHomeViewModel, object>
 
@@ -25,7 +26,7 @@
         {
         <MudPaper Height="100%">
             <MudDrawerContainer>
-                <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Class="mainContent">
+                    <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="8" MiniWidth="100" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Class="mainContent">
                     <MudNavMenu Class="mudDrawer">
                         @foreach (var item in CurrentViewModel.ItemsMenu)
                         {
@@ -52,9 +53,7 @@
     {
         @CurrentViewModel.Content
     }
-   
 </div>
-
  <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
         <Content>
             <CardLogin />
@@ -109,6 +108,10 @@
     .mud-drawer.mud-drawer-pos-left.mud-drawer--open.mud-drawer--initial.mud-drawer-md.mud-drawer-clipped-never.mud-elevation-1.mud-drawer-mini {
         border-radius: 25px;
         height: 91%;
+    }
+
+    .mud-drawer-close-mini-md-left.mud-drawer-left-clipped-never {
+        padding-left: 11vw;
     }
 
     .iconDrawer {

@@ -1,0 +1,89 @@
+﻿@using MudBlazor
+@using System.Collections.Generic
+@using System.Threading
+@using System.Threading.Tasks
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.FiltersComponent
+@using ReserGO.ViewModel.ViewModel.FiltersComponent
+@inherits BaseComponentChild<IComuneComboViewModel, DTOComuneProvincia>
+    <MudAutocomplete ValueChanged="@OnComuneChanged"
+                    T="DTOComuneProvincia"
+                     SearchFunc="@SearchComuni"
+                     Placeholder="Seleziona un comune..."
+                     Clearable="true"
+                     ResetValueOnEmptyText="true"
+                     ShowProgressIndicator="CurrentViewModel.IsLoading"
+                     Disabled="String.IsNullOrEmpty(Regione)"
+                     ToStringFunc=DisplayValue
+                     MaxItems="null"
+                     Variant="Variant.Outlined"
+                     Required="true"
+                     RequiredError="Inserire comune di nascita"
+                     ClearIcon="null"
+                     Class="comuneCombo"
+                     Margin="Margin.Dense"
+                     @ref="@err"
+                     OnBlur="CheckError"
+                      />
+
+@code {
+    [Parameter]
+    public string Regione { get; set; }
+
+    private string SelectedComune { get; set; }
+    private bool IsLoading { get; set; }
+    private Func<DTOComuneProvincia, string?> DisplayValue = item => item is null ? null : item.Nome;
+    private MudAutocomplete<DTOComuneProvincia> err;
+    private bool showCustomError;
+    public EventCallback<string> OnComuneSelected { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentViewModel.IsLoading = false;
+    }
+
+    private async Task LoadComuniAsync()
+    {
+        await CurrentViewModel.Refresh();
+    }
+
+    private async Task<IEnumerable<DTOComuneProvincia>> SearchComuni(string searchText, CancellationToken cancellationToken)
+    {
+        await Task.Yield();
+        if (string.IsNullOrWhiteSpace(searchText) || searchText.Length<2)
+        {
+            return Enumerable.Empty<DTOComuneProvincia>();
+        }
+        CurrentViewModel.SearchString = searchText;
+        await CurrentViewModel.Refresh();
+        return CurrentViewModel.Comuni.Where(x => x.Provincia.Regione.ToLower() == Regione.ToLower() && x.Nome.ToLower().StartsWith(searchText.ToLower())).ToList();
+    }
+
+    private async Task OnComuneChanged(DTOComuneProvincia newValue)
+    {
+        CurrentViewModel.SelectedItem = newValue;
+        err.Error = string.IsNullOrEmpty(CurrentViewModel.SelectedItem.Nome);
+        if (OnComuneSelected.HasDelegate)
+            await OnComuneSelected.InvokeAsync(newValue.Nome);
+    }
+
+    private async Task CheckError()
+    {
+        await Task.Delay(2000);
+        err.Error = CurrentViewModel.SelectedItem == null || string.IsNullOrEmpty(CurrentViewModel.SelectedItem.Nome);
+        err.ErrorText = "Inserire comune di nascita";
+    }
+
+   
+}
+
+<style>
+    .comuneCombo {
+        width: 100% !important;
+    }
+
+    .mud-container.mud-container-maxwidth-lg.mud-container--gutters {
+        padding: 0;
+    }
+</style>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
@@ -14,10 +15,12 @@ namespace ReserGO.ViewModel.ViewModel.Home
     public class HomeViewModel : CompleteReserGOViewModell<object>, IHomeViewModel
     {
         private readonly IHomeService _service;
+        private readonly IComuneService cfService;
 
-        public HomeViewModel(IEvent aggregator, ILogger<HomeViewModel> logger, INotificationService notification,IUserSession session, IHomeService service) : base(aggregator, logger, notification, session)
+        public HomeViewModel(IEvent aggregator, ILogger<HomeViewModel> logger, INotificationService notification,IUserSession session, IHomeService service, IJSRuntime js, IComuneService cfService) : base(aggregator, logger, notification, session, js)
         {
             _service = service;
+            this.cfService = cfService;
             aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
         }
 
@@ -51,8 +54,10 @@ namespace ReserGO.ViewModel.ViewModel.Home
         }
         public void ToggleDrawer() => DrawerVisibility = !DrawerVisibility;
 
+
         public async Task OnInitialize()
         {
+            var cf=await cfService.GetComuniAsync("Ba");
             IsLoading = true;
             try
             {
