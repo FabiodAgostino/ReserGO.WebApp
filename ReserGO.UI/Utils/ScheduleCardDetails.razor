@@ -1,0 +1,71 @@
+﻿@using MudBlazor
+
+<div class="d-flex flex-column shadow cardScheduleDetails" @onclick="@(()=> Click())" style="@CardStyle">
+    <div class="d-flex justify-content-center align-items-center cardScheduleDetailsHeader">
+        @if(Icon.Length > 1)
+        {
+            <MudIcon Icon="@Icon" Class="iconCardscheduleDetailsCss" />
+        }
+        @if (Title.Length > 1)
+        {
+            <span class="text" style="padding-inline:1vw;">@Title</span>
+        }
+    </div>
+    <div class="d-flex flex-column align-items-center cardScheduleDetailsBody" style="@BodyStyle">
+        @Description
+        <div>
+            <MudButton OnClick="@(async () => await ClickOpenModal(2))" class="confirmScheduleDetailsButton btn-primary" style="width:15vw;" type="submit">Seleziona</MudButton>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback Callback { get; set; }
+
+    [Parameter]
+    public EventCallback<int> CallbackOpenModal { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = "Titolo";
+
+    [Parameter]
+    public string Description { get; set; } = "Descrizione...";
+
+    [Parameter]
+    public string Icon { get; set; } = "";
+
+    [Parameter]
+    public string? CardStyle { get; set; } = "";
+
+    [Parameter]
+    public string? BodyStyle { get; set; } = "";
+
+    protected override void OnInitialized(){
+
+    }
+
+    private async Task Click()
+    {
+        if (Callback.HasDelegate)
+        {
+            await Callback.InvokeAsync();
+        }
+    }
+
+    private async Task ClickOpenModal(int idResource)
+    {
+        if (CallbackOpenModal.HasDelegate)
+        {
+            await CallbackOpenModal.InvokeAsync(idResource);
+        }
+    }
+}
+
+<style>
+    .iconCardscheduleDetailsCss {
+        color:white;
+        font-size:2.5vw !important;
+    }
+</style>

@@ -1,34 +1,24 @@
-﻿.dialogTitleRegister {
-    font-family: Arial;
-    font-size: 2vw;
-    color: #0066FF;
-}
+﻿
 
-.dialogSubTitleRegister {
-    font-family: Arial;
-    opacity: 0.5;
-    padding-inline: 0.2vw;
-    font-size: 0.8vw;
-}
-
-.dialogRegisterContainer {
+.dialogScheduleContainer {
     width: 100%;
     height: 100%;
 }
 
-.columnFormRegister {
+.columnCalendar {
     height: 100%;
-    padding:3vh;
+    padding: 3vh;
 }
 
-.registerDivider {
+.scheduleDivider {
     height: 95%;
     width: 1px;
     border: 1px solid #E1E1E1;
     padding-block: 10px;
 }
 
-::deep .iconDialogRegister {
+
+::deep .iconDialogSchedule {
     color: #0066FF;
     font-size: 10vh;
 }
@@ -87,4 +77,3 @@
         background-color: #1170FF;
         box-shadow: 0 0 10px 3px rgba(128, 128, 128, 0.5);
     }
-

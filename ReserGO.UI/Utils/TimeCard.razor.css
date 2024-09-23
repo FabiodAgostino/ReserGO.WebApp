@@ -1,0 +1,22 @@
+﻿.timeContainer{
+    width:50%;
+    height:80%;
+    padding:5px;
+}
+
+.cardTime {
+    width:100%;
+    height:100%;
+    border:1px solid lightgray;
+    border-radius:15px;
+    cursor:pointer;
+}
+
+    .cardTime:hover {
+        background-color: #b3d1ff;
+    }
+
+.timeText{
+    font-size:x-large;
+    font-weight:500;
+}

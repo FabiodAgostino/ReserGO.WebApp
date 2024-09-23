@@ -2,11 +2,12 @@
 @using ReserGO.UI.Utils
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.Header
+@using ReserGO.UI.Schedule
 
 
 <GuestHome/>
-
-@*  <div class="d-flex flex-column homeGuestScheduleContainer">
+@* 
+ <div class="d-flex flex-column homeGuestScheduleContainer">
 
     <BaseComponent TViewModel="IHeaderViewModel" TModel="object">
         <Content>
@@ -18,17 +19,27 @@
 
      
         <div class="d-flex flex-column rightSideSchedule justify-content-center align-items-center">
-            <CardReserGo Title=" " Description="Seleziona Risorsa" CardStyle="opacity:0.5;" BodyStyle="@CardItemEmptyStyle" Icon="@InformationIcon" />
+            @if (OpenDetailsCard)
+            {
+                <ScheduleCardDetails Title="Titolo della risorsa" Description="Seleziona Risorsa" CardStyle="width:35vw;height:80vh;" Icon="@InformationIcon" CallbackOpenModal="@( async (int idResource) => await OpenModalCalendar(idResource))" />
+            }
+            else
+            {
+                <CardReserGo Title=" " Description="Seleziona Risorsa" CardStyle="opacity:0.5;" BodyStyle="@CardItemEmptyStyle" Icon="@InformationIcon" />
+            }
         </div>
 
         <div class="d-felx flex-column leftSideSchedule">
 
-            <ListSchedules/>
+            <ListSchedules Callback="@( async (int idResource) => await GetData(idResource))" />
 
         </div>
 
+        <ModalSchedule ShowModal="@ShowModal" />
+
     </div>
 
+    
 </div>  *@
 
 
@@ -38,10 +49,23 @@
 
     private string CardItemEmptyStyle = "";
 
+    private bool OpenDetailsCard;
+
+    private bool ShowModal = false;
+
     protected override void OnInitialized()
     {
         InformationIcon = Icons.Material.Filled.Today;
         CardItemEmptyStyle = "background-color:#0066FF;color:#FFFFFF;font-size:xxx-large;justify-content: center;";
+    }
+
+    private async Task GetData(int idResource){
+        OpenDetailsCard = true;
+    }
+
+    private async Task OpenModalCalendar(int idResource)
+    {
+        ShowModal = true;
     }
 
 }

@@ -1,0 +1,123 @@
+﻿@using MudBlazor
+
+<div class="d-flex align-items-center justify-content-center calendarContainer">
+    <MudDatePicker IsDateDisabledFunc="@casa" Class="scheduleCalendarCss" PickerVariant="PickerVariant.Static" Date="@(DateTime.Today.AddDays(1))" />
+</div>
+
+
+@code {
+
+    Func<DateTime, bool> casa = item =>
+    {
+    DateTime yesterday = DateTime.Now.AddDays(-2).Date;  // Ottieni la data di ieri (senza tempo)
+    return item.Date == yesterday;  // Restituisce true se la data è ieri
+    };
+}
+
+<style>
+    .scheduleCalendarCss{
+        border: 1px solid lightgray;
+        border-radius:15px;
+    }
+
+    /* Per lo stile del giorno disabilitato */
+    .mud-icon-button:disabled {
+        color: var(--mud-palette-action-disabled);
+        background-color: #EEEEEE !important;
+    }
+
+    .mud-picker-static {
+        display: flex;
+        overflow: hidden;
+        min-width: 95%!important;
+        flex-direction: column;
+        height: 100%!important;
+    }
+
+    .mud-picker-calendar-container {
+        display: flex;
+        width: 100% !important;
+        flex-direction: column;
+    }
+
+    .mud-picker-calendar-header-day .mud-day-label {
+        color: var(--mud-palette-text-secondary);
+        width: 90% !important;
+        margin: 0 2px;
+        text-align: center;
+        font-size: large;
+    }
+
+    .mud-paper-square {
+        border-radius: 0px;
+        height: 100% !important;
+    }
+
+    .mud-picker-content {
+        display: flex;
+        max-width: 100% !important;
+        height: 100% !important;
+        min-width: 310px;
+        min-height: 305px;
+        overflow: hidden;
+        flex-direction: column;
+        justify-content: start !important;
+    }
+
+    .mud-picker-calendar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        height: 100% !important;
+    }
+
+    .mud-picker-calendar-content {
+        display: grid;
+        --selected-day: 0;
+        grid-column-gap: 10px;
+        grid-template-columns: auto;
+        height: 100% !important;
+    }
+
+        .mud-picker-calendar .mud-day {
+            color: var(--mud-palette-text-primary);
+            width: 4vw !important;
+            height: 6vh !important;
+            margin: 0 2px;
+            padding: 0;
+            font-size: .75rem;
+            font-weight: 500;
+        }
+
+            .mud-picker-calendar .mud-day .mud-typography {
+                margin-top: 2px;
+                font-size: large !important;
+            }
+
+    .mud-picker-calendar-transition {
+        margin-top: 12px;
+        min-height: 216px;
+        height: 100%;
+    }
+
+    .mud-picker-calendar-header-day {
+        display: flex;
+        max-height: 16px;
+        align-items: center;
+        justify-content: center;
+        padding-inline: 5px;
+    }
+
+    .mud-picker-month-container {
+        width: 100% !important;
+        height: 100% !important;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: stretch;
+    }
+
+    .mud-picker-year-container {
+        height: 42vh !important;
+        overflow-y: auto;
+    }
+</style>

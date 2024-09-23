@@ -1,5 +1,4 @@
-﻿@using ReserGO.UI.GuestHome.Containers
-@using Microsoft.AspNetCore.Components.Authorization
+﻿@using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 @using ReserGO.DTO
 @using ReserGO.Utils.Event
@@ -9,9 +8,13 @@
 @using ReserGO.ViewModel.Interface.Utils
 @using ReserGO.UI.Authentication;
 @using ReserGO.UI.GuestHome
+@using ReserGO.UI.GuestHome.Containers
+@using ReserGO.UI.LoginHome
+@using ReserGO.UI.LoginHome.Containers
 @using ReserGO.UI.Schedule
 @using Microsoft.AspNetCore.Components.Authorization;
 @using Microsoft.AspNetCore.Components;
+
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
@@ -39,6 +42,7 @@
                 <Content>
                     <Login />
                     @* <GuestHomeContainer /> *@
+                    @* <LoginHomeContainer /> *@
                 </Content>
             </BaseComponent>
         </NotAuthorized>

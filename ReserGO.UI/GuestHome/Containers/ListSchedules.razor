@@ -9,42 +9,18 @@
         <MudGrid Spacing="@Spacing" Justify="Justify.Center" Style="align-items:center;">
             <MudItem>
                 <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
+                    <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(8))" />
                     <ScheduleCard Icon="@InformationIcon" />
                 </div>
             </MudItem>
              <MudItem>
                 <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
                     <ScheduleCard Icon="@InformationIcon" />
                     <ScheduleCard Icon="@InformationIcon" />
                 </div>
             </MudItem>
           
-             <MudItem>
-                <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                </div>
-            </MudItem>
-          
-             <MudItem>
-                <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                </div>
-            </MudItem>
-          
-             <MudItem>
-                <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                </div>
-            </MudItem>
+             
             
         </MudGrid>
 
@@ -53,6 +29,10 @@
 
 
 @code {
+
+    [Parameter]
+    public EventCallback<int> Callback { get; set; }
+
     public int Spacing { get; set; } = 1;
     private string InformationIcon = "";
 
@@ -60,5 +40,14 @@
     protected override void OnInitialized()
     {
         InformationIcon = Icons.Material.Filled.Today;
+    }
+
+    
+    private async Task Click(int idResource)
+    {
+        if (Callback.HasDelegate)
+        {
+            await Callback.InvokeAsync(idResource);
+        }
     }
 }

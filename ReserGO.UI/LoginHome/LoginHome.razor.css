@@ -1,0 +1,32 @@
+﻿.homeLoginContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.topSideLogin[b-p6ye3jphxp] {
+    width: 100%;
+    height: 35%;
+    background-color: #EEEEEE;
+}
+
+.bottomSideLogin {
+    width: 100%;
+    height: 65%;
+}
+
+.homeLoginBody {
+    width: 100%;
+    height: 100%;
+}
+
+.informationHomeLoginContiner {
+    width: 100%;
+    height: 40%;
+    padding: 1vw;
+}
+
+.detailsHomeLoginContiner {
+    width: 100%;
+    height: 60%;
+    padding-inline: 1vw;
+}

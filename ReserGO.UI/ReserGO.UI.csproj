@@ -17,24 +17,40 @@
     <None Remove="GuestHome\Containers\GuestHomeContainer.razor.css" />
     <None Remove="GuestHome\Containers\ListSchedules.razor.css" />
     <None Remove="GuestHome\GuestHome.razor.css" />
+    <None Remove="LoginHome\LoginHome.razor.css" />
+    <None Remove="Schedule\ModalSchedule.razor.css" />
     <None Remove="Schedule\Schedule.razor.css" />
+    <None Remove="Schedule\TimeSchedule.razor.css" />
+    <None Remove="Utils\CalendarHome.razor.css" />
+    <None Remove="Utils\CalendarSchedule.razor.css" />
     <None Remove="Utils\CardDetails.razor.css" />
     <None Remove="Utils\CardInformation.razor.css" />
+    <None Remove="Utils\CardReserGo - Copy.razor.css" />
     <None Remove="Utils\CardReserGo.razor.css" />
     <None Remove="Utils\ItemCardReserGo.razor.css" />
+    <None Remove="Utils\ScheduleCard - Copy.razor.css" />
     <None Remove="Utils\ScheduleCard.razor.css" />
+    <None Remove="Utils\ScheduleCardDetails.razor.css" />
+    <None Remove="Utils\TimeCard.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="GuestHome\Containers\GuestHomeContainer.razor.css" />
     <Content Include="GuestHome\Containers\ListSchedules.razor.css" />
     <Content Include="GuestHome\GuestHome.razor.css" />
+    <Content Include="LoginHome\LoginHome.razor.css" />
+    <Content Include="Schedule\ModalSchedule.razor.css" />
     <Content Include="Schedule\Schedule.razor.css" />
+    <Content Include="Schedule\TimeSchedule.razor.css" />
+    <Content Include="Utils\CalendarHome.razor.css" />
+    <Content Include="Utils\CalendarSchedule.razor.css" />
     <Content Include="Utils\CardReserGo.razor.css" />
     <Content Include="Utils\CardDetails.razor.css" />
     <Content Include="Utils\CardInformation.razor.css" />
     <Content Include="Utils\ItemCardReserGo.razor.css" />
     <Content Include="Utils\ScheduleCard.razor.css" />
+    <Content Include="Utils\ScheduleCardDetails.razor.css" />
+    <Content Include="Utils\TimeCard.razor.css" />
   </ItemGroup>
 
 
@@ -71,6 +87,7 @@
 
   <ItemGroup>
     <Folder Include="Admin\" />
+    <Folder Include="WizardSchedule\" />
   </ItemGroup>
 
 </Project>
