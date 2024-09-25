@@ -14,10 +14,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Admin\AdminHome.razor.css" />
+    <None Remove="Admin\InsertComunication.razor.css" />
     <None Remove="GuestHome\Containers\GuestHomeContainer.razor.css" />
     <None Remove="GuestHome\Containers\ListSchedules.razor.css" />
     <None Remove="GuestHome\GuestHome.razor.css" />
+    <None Remove="Historical\Historical.razor.css" />
     <None Remove="LoginHome\LoginHome.razor.css" />
+    <None Remove="ScheduleRequest\ScheduleRequest.razor.css" />
+    <None Remove="Schedule\Containers\ScheduleContainer.razor.css" />
+    <None Remove="Schedule\ListSchedules.razor.css" />
     <None Remove="Schedule\ModalSchedule.razor.css" />
     <None Remove="Schedule\Schedule.razor.css" />
     <None Remove="Schedule\TimeSchedule.razor.css" />
@@ -35,10 +41,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Admin\AdminHome.razor.css" />
+    <Content Include="Admin\InsertComunication.razor.css" />
     <Content Include="GuestHome\Containers\GuestHomeContainer.razor.css" />
     <Content Include="GuestHome\Containers\ListSchedules.razor.css" />
     <Content Include="GuestHome\GuestHome.razor.css" />
+    <Content Include="Historical\Historical.razor.css" />
     <Content Include="LoginHome\LoginHome.razor.css" />
+    <Content Include="ScheduleRequest\ScheduleRequest.razor.css" />
+    <Content Include="Schedule\Containers\ScheduleContainer.razor.css" />
+    <Content Include="Schedule\ListSchedules.razor.css" />
     <Content Include="Schedule\ModalSchedule.razor.css" />
     <Content Include="Schedule\Schedule.razor.css" />
     <Content Include="Schedule\TimeSchedule.razor.css" />
@@ -86,7 +98,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Admin\" />
     <Folder Include="WizardSchedule\" />
   </ItemGroup>
 

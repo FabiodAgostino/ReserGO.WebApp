@@ -1,6 +1,6 @@
 ﻿.cardDetails {
     border-radius: 30px;
-    border: 1px solid #FFFFFF;
+    border: 1px solid lightgray;
     cursor: pointer;
 }
 
@@ -23,7 +23,7 @@
 
 .textDetails {
     color: #0066FF;
-    font-size: xx-large;
+    font-size: x-large;
     font-family: var(--mud-typography-button-family);
     line-height: var(--mud-typography-button-lineheight);
     letter-spacing: var(--mud-typography-button-letterspacing);

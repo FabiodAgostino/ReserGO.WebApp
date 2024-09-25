@@ -1,0 +1,46 @@
+﻿@using ReserGO.Miscellaneous.Model
+@using ReserGO.UI.FiltersComponent
+@using MudBlazor
+@using ReserGO.ViewModel.Interface.FiltersComponent
+@using ReserGO.ViewModel.Interface.Register
+@using ReserGO.DTO
+@using ReserGO.Utils.UI
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using ReserGO.UI.Utils
+
+<MudDialog Class="insertComunicationCss" Visible="ShowModal" OnBackdropClick="OnBackdropClickHandler">
+    <TitleContent>
+
+    </TitleContent>
+    <DialogContent>
+
+        <div class="d-flex insertComunicationContainer p-1">
+
+
+        </div>
+
+    </DialogContent>
+
+</MudDialog>
+
+@code {
+
+    [Parameter]
+    public bool ShowModal { get; set; }
+
+
+    private async Task OnBackdropClickHandler(MouseEventArgs e)
+    {
+        ShowModal = false;
+    }
+}
+
+<style>
+    .insertComunicationCss {
+        width: 70%;
+        height: 60%;
+        max-width: 70% !important;
+        border-radius: 30px !important;
+    }
+</style>

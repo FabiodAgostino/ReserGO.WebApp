@@ -1,0 +1,66 @@
+﻿@using MudBlazor
+@inject HttpClient httpClient
+
+<MudTable Items="@Elements" Hover="true" Style="width:100%" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Nome</MudTh>
+        <MudTh>Cognome</MudTh>
+        <MudTh>Telefono</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>Data</MudTh>
+        <MudTh>Ora inizio</MudTh>
+        <MudTh>Ora fine</MudTh>
+        <MudTh>Azioni</MudTh>
+    </HeaderContent>
+    <RowTemplate Context="element">
+        <MudTd>@element.Nome</MudTd>
+        <MudTd>@element.Cognome</MudTd>
+        <MudTd>@element.Telefono</MudTd>
+        <MudTd>@element.Email</MudTd>
+        <MudTd>@element.Data</MudTd>
+        <MudTd>@element.OraInizio</MudTd>
+        <MudTd>@element.OraFine</MudTd>
+        <MudTd><MudButton Color="Color.Primary">Modifica</MudButton></MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    // Modello dati per la tabella
+    public class Persona
+    {
+        public string Nome { get; set; }
+        public string Cognome { get; set; }
+        public string Telefono { get; set; }
+        public string Email { get; set; }
+        public string Data { get; set; }
+        public string OraInizio { get; set; }
+        public string OraFine { get; set; }
+    }
+
+    // Lista di dati fittizi
+    private IEnumerable<Persona> Elements;
+
+    // Inizializzazione con dati provvisori
+    protected override void OnInitialized()
+    {
+        Elements = new List<Persona>
+        {
+            new Persona { Nome = "Alessia", Cognome = "Calogero", Telefono = "345xxxxxxx", Email = "Alessia@gmail.com", Data = "11/22/2024", OraInizio = "09:00", OraFine = "10:00" },
+            new Persona { Nome = "Luca", Cognome = "Rossi", Telefono = "334xxxxxxx", Email = "luca.rossi@gmail.com", Data = "11/22/2024", OraInizio = "10:00", OraFine = "11:00" },
+            new Persona { Nome = "Marta", Cognome = "Verdi", Telefono = "339xxxxxxx", Email = "marta.verdi@gmail.com", Data = "11/23/2024", OraInizio = "14:00", OraFine = "15:00" }
+        };
+    }
+}
+
+<style>
+    .mud-table-root .mud-table-head {
+        display: table-header-group;
+        background-color: #0066FF;
+    }
+
+        .mud-table-root .mud-table-head .mud-table-cell {
+            color: white !important;
+            font-weight: 500;
+            line-height: 1.5rem;
+        }
+</style>

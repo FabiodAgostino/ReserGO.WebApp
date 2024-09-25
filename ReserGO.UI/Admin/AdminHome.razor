@@ -6,14 +6,13 @@
 <div class="d-flex flex-column homeLoginContainer">
     <div class="d-flex flex-column homeLoginBody">
 
-        
         <div class="d-felx flex-row topSideLogin">
 
             <div class="d-flex justify-content-around align-items-center w-100 h-100">
 
                 <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon"/>
 
-                <CardReserGo Title="Comunicazioni" Description="Il giorno xx lo studio rimarrà chiuso" Icon="@InformationIcon" />
+                <CardReserGo Title="Richieste" Description="Richieste di appuntamento da confermare" Icon="@InformationIcon" />
 
             </div>
 
@@ -24,16 +23,17 @@
             <CalendarHome />
 
                 <div class="d-flex align-items-center p-2">
-                    <CardReserGo Title="Visite in programma" Description="Riepilogo dei tuoi appuntamenti" Icon="@ReservationIcon" CardStyle="width:19vw;height:44vh" />
+                    <CardReserGo Title="Inserisci risorsa" Description="Inserisci una nuova risorsa" Icon="@ReservationIcon" CardStyle="width:19vw;height:44vh" />
                 </div>
-                <div class="d-flex align-items-center p-2">
-                    <CardReserGo Title="Storico prenotazioni" Description="Lo storico delle tue visite" Icon="@InformationIcon" CardStyle="width:19vw;height:44vh" />
+                <div class="d-flex align-items-center p-2" onclick="@OpenModalComunications">
+                    <CardReserGo Title="Inserisci comunicazione" Description="Il giorno xx lo studio resterà chiuso" Icon="@InformationIcon" CardStyle="width:19vw;height:44vh" />
                 </div>
 
         </div>
-
     </div>
+    <InsertComunication ShowModal="@ShowModal" />
 </div>
+
 
 
 @code {
@@ -41,6 +41,8 @@
     private string InformationIcon = "";
     private string HourDesc = "";
     private string AddresDesc = "";
+    private bool ShowModal = false;
+
 
 
     protected override void OnInitialized()
@@ -56,6 +58,11 @@
     private void Click()
     {
 
+    }
+
+    private void OpenModalComunications()
+    {
+        ShowModal = true;
     }
 
 }
