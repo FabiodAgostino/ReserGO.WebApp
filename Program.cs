@@ -8,6 +8,7 @@ using ReserGO.WebApp.Components;
 using ReserGO.Service.Extensions;
 using ReserGO.Service.Service.Authentication;
 using ReserGO.ViewModel.Extensions;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthorizationCore();
@@ -19,6 +20,13 @@ builder.Services.AddReserGOViewModels();
 builder.Services.AddMudServices();
 builder.Services.AddScoped(sp => new HttpClient()
 { BaseAddress = new Uri(builder.Configuration.GetValue<string>("serverapi")) });
+
+builder.Host.UseSerilog((hostingContext, services, loggerConfiguration) =>
+{
+    loggerConfiguration
+        .ReadFrom.Configuration(hostingContext.Configuration)
+        .ReadFrom.Services(services);
+}, writeToProviders: false, preserveStaticLogger: false);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -40,7 +48,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseSerilogRequestLogging();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
