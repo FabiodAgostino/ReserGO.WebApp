@@ -14,12 +14,16 @@
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<IHomeViewModel, object>
 
-<div class="d-flex flex-column loginContainter">
+<div class="d-flex flex-column loginContainter" style="@(CurrentViewModel.User.Roles != null && !CurrentViewModel.UserIs(RoleConst.GUEST) ? "background: linear-gradient(to bottom, #EEEEEE 50%, #FFFFFF 50%);": "")">
+
+
     <BaseComponent TViewModel="IHeaderViewModel" TModel="object">
         <Content>
-            <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFFF"></Header>
+            <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFFF" UserIsGuest="@(CurrentViewModel.User.Roles != null && CurrentViewModel.UserIs(RoleConst.GUEST))"></Header>
         </Content>
     </BaseComponent>
+    
+    
     @if(CurrentViewModel.User.Roles!=null && !CurrentViewModel.UserIs(RoleConst.GUEST))
     {
          @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
@@ -31,13 +35,15 @@
                         @foreach (var item in CurrentViewModel.ItemsMenu)
                         {
                             <MudNavLink OnClick="() => ChangeComponent(item)">
-                                <MudIcon Icon="@item.Icon" Style="font-size: 3rem;color:white;" />
-                                @if (_open)
-                                {
-                                    <div class="textNavMenu">
-                                        @item.Text
+                                    <div class="d-flex align-items-center textNavMenu">
+                                        
+                                        <MudIcon Icon="@item.Icon" Style="font-size: x-large; color:white;"  />
+                                        
+                                        @if (_open)
+                                        {
+                                            <span style="padding-inline:3px">@item.Text</span>
+                                        }    
                                     </div>
-                                }
                             </MudNavLink>
                         }
                     </MudNavMenu>
@@ -86,11 +92,9 @@
 
     .textNavMenu {
         color: white;
-        display: inline;
-        position: relative;
-        bottom: 12px;
-        font-size: 1.5em;
+        font-size: large;
         padding-left: 10px;
+        font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     }
 
     .mud-nav-link.mud-ripple {
@@ -126,6 +130,11 @@
     {
         padding:0 !important;
     }
+
+    .mud-nav-link.mud-ripple {
+        padding-left: 0;
+        padding-block:20px !important;
+    }
     .mainContent
     {
         height:100% !impostant;
@@ -148,5 +157,9 @@
     .mud-drawer-open-mini-md-left .mud-main-content {
         margin-left: var(--mud-drawer-width-left);
         height: 100%;
+    }
+
+    .mud-paper.mud-elevation-1 {
+        background: linear-gradient(to bottom, #EEEEEE 50%, #FFFFFF 50%);
     }
 </style>

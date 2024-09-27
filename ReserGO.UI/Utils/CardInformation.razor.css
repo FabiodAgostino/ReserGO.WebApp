@@ -1,7 +1,6 @@
 ﻿.cardInformation {
     border-radius: 30px;
     border: 1px solid lightgray;
-    cursor: pointer;
 }
 
 .cardInfoHeader {
@@ -9,7 +8,7 @@
     height: 20%;
     border-radius: 30px 30px 0px 0px;
     background-color: #FFFFFF;
-    padding-inline:1vw;
+    padding-inline: 1vw;
 }
 
 .cardBodyInformation {
@@ -24,7 +23,7 @@
 .textInformation {
     color: #0066FF;
     font-size: xx-large;
-    font-family: var(--mud-typography-button-family);
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     line-height: var(--mud-typography-button-lineheight);
     letter-spacing: var(--mud-typography-button-letterspacing);
 }

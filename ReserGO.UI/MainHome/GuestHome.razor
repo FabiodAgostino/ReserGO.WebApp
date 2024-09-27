@@ -4,37 +4,55 @@
 
 
 
-<div class="d-flex flex-column homeGuestContainer">
+<div class="d-flex flex-column homeGuestContainer" style="@(IsSmall ? "padding-block: 3vh":"")">
 
-        <div class="d-flex flex-row homeGuestBody">
+    <div class="d-flex @(IsSmall ? "flex-column":"flex-row") homeGuestBody">
 
-            <div class="d-felx flex-column leftSide">
+            @if(!IsSmall)
+            {
+                <div class="d-felx flex-column leftSide">
 
-                <div class="d-flex justify-content-center informationHomeContiner">
-                    <CardInformation />
-                </div>
+                    <div class="d-flex justify-content-center informationHomeContiner">
+                        <CardInformation />
+                    </div>
 
-                <div class="d-flex justify-content-center detailsHomeContiner">
-                    <div class="d-flex flex-row">
+                    <div class="d-flex justify-content-center detailsHomeContiner">
+                        <div class="d-flex flex-row">
+                            <div class="d-flex p-2 w-100">
+                                <CardDetails Title="Orari studio:" Description="@HourDesc" />
+                            </div>
                         <div class="d-flex p-2 w-100">
-                            <CardDetails Title="Orari studio:" Description="@HourDesc" />
-                        </div>
-                    <div class="d-flex p-2 w-100">
-                            <CardDetails Title="Contatti e Indirizzo:" Description="@AddresDesc" />
+                                <CardDetails Title="Contatti e Indirizzo:" Description="@AddresDesc" />
+                            </div>
                         </div>
                     </div>
+
+                </div>
+            }
+
+        <div class="d-flex flex-column  @(IsSmall ? "h-50":"justify-content-center align-items-center rightSide")">
+            <div class="d-flex  @(IsSmall ? "p-2 h-100":"p-4")">
+                <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon" CardStyle="@(IsSmall ? "width:100%;height:100%;":"")" IsSmallView="IsSmall" />
+            </div>
+            <div class="d-flex @(IsSmall ? "p-2 h-100":"p-4")">
+                <CardReserGo Title="Informazioni" Description="Tutte le informazioni sullo studio medico" Icon="@InformationIcon" CardStyle="@(IsSmall ? "width:100%;height:100%;":"")" IsSmallView="IsSmall" />
+            </div>
+        </div>
+
+            @if(IsSmall)
+            {
+                <div class="d-felx flex-column @(IsSmall ? "h-50":"leftSide")">
+
+                <div class="d-flex justify-content-center p-2 informationHomeContiner @(IsSmall ? "h-50":"")">
+                    <CardDetails Title="Orari studio" Description="@HourDesc" IsSmallView="@IsSmall" />
+                </div>
+                <div class="d-flex justify-content-center p-2 informationHomeContiner @(IsSmall ? "h-50":"")">
+                    <CardDetails Title="Contatti e Indirizzo" Description="@AddresDesc" IsSmallView="@IsSmall" />
                 </div>
 
-            </div>
 
-            <div class="d-flex flex-column rightSide justify-content-center align-items-center">
-                <div class="d-flex p-4">
-                    <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon"/>
                 </div>
-                <div class="d-flex p-4">
-                    <CardReserGo Title="Informazioni" Description="Tutte le informazioni sullo studio medico" Icon="@InformationIcon" />
-                </div>
-            </div>
+            }
         </div>
 
 </div>
@@ -50,6 +68,7 @@
     private string InformationIcon = "";
     private string HourDesc = "";
     private string AddresDesc = "";
+    private bool IsSmall = false;
 
 
     protected override void OnInitialized()

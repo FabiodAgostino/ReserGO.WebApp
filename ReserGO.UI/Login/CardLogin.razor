@@ -6,79 +6,108 @@
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.Authentication
 @inherits BaseComponentChild<ILoginViewModel, DTOLoginRequest>
-<MudDialog Class="dialogClass" OnBackdropClick="@HandleBackdropClick" Visible="CurrentViewModel.IsOpen" Options="@Options">
+
+<MudDialog Class="@(IsSmall? "dialogClassSmall":"dialogClass")" OnBackdropClick="@HandleBackdropClick" Visible="CurrentViewModel.IsOpen" Options="@Options">
     <DialogContent>
-        <div class="d-flex justify-content-between p-2 cardLogin">
-            <div class="d-flex flex-column loginSide">
+
+        <div class="d-flex @(IsSmall? "flex-column cardLoginSmall":"cardLogin") justify-content-between p-2 ">
+            <div class="d-flex flex-column loginSide @(IsSmall? "w-100":"") ">
 
                 <div class="d-flex flex-row align-items-center w-100">
-                    <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="iconCardLogin"></MudIcon>
-                    <span class="titleCardLogin">Log-in</span>
+                    <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="@(IsSmall? "iconCardLoginSmall":"iconCardLogin")"></MudIcon>
+                    <span class="titleCardLogin" style="@(IsSmall? "font-size:x-large;":"")">Log-in</span>
                 </div>
 
-                <div class="d-flex flex-column p-5 w-100 h-100">
-                    <span class="textInputCardLogin">Nome utente:</span>
-                    <MudTextField @bind-Value="CurrentViewModel.User.Username"
-                        class="inputText"
-                        Label="nome.cognome"
-                        Variant="Variant.Outlined"
-                        Margin="Margin.Dense"
-                        OnKeyDown="HandleKeyDown">
-                    </MudTextField>
-                    @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("utente"))
-                    {
-                        <div class="d-flex w-100 justify-content-end p-1">
-                            <bold style="color:white">@CurrentViewModel.LoginError!</bold>
-                        </div>
-                    }
+                <div class="d-flex flex-column @(IsSmall? "justify-content-around p-3 ":"p-5") w-100 h-100">
+                    <div class="d-flex flex-column pt-2" >
+                        <span class="textInputCardLogin" style="@(IsSmall? "font-size:x-large;":"")">Nome utente:</span>
+                        <MudTextField @bind-Value="CurrentViewModel.User.Username"
+                            class="inputText"
+                            Label="nome.cognome"
+                            Variant="Variant.Outlined"
+                            Margin="Margin.Dense"
+                            OnKeyDown="HandleKeyDown">
+                        </MudTextField>
+                        @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("utente"))
+                        {
+                            <div class="d-flex w-100 justify-content-end p-1">
+                                <bold style="color:white">@CurrentViewModel.LoginError!</bold>
+                            </div>
+                        }
+                    </div>
+                    <div class="d-flex flex-column pt-3">
+                        <span class="textInputCardLogin" style="@(IsSmall? "font-size:x-large;":"")">Password:</span>
+                        <MudTextField @bind-Value="CurrentViewModel.User.Password"
+                                      InputType="InputType.Password"
+                                      Label="inserisci password"
+                                      class="inputText"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      OnKeyDown="HandleKeyDown">
+                        </MudTextField>
+                        @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("password"))
+                        {
+                            <div class="d-flex w-100 justify-content-end p-1">
+                                <bold style="color:white">@CurrentViewModel.LoginError!</bold>
+                            </div>
+                        }
+                    </div>
 
-                    <span class="textInputCardLogin">Password:</span>
-                    <MudTextField @bind-Value="CurrentViewModel.User.Password"
-                                  InputType="InputType.Password"
-                                  Label="inserisci password"
-                                  class="inputText"
-                                  Variant="Variant.Outlined"
-                                  Margin="Margin.Dense"
-                                  OnKeyDown="HandleKeyDown">
-                    </MudTextField>
-                    @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("password"))
-                    {
-                        <div class="d-flex w-100 justify-content-end p-1">
-                            <bold style="color:white">@CurrentViewModel.LoginError!</bold>
-                        </div>
-                    }
-
-                    <div class="d-flex justify-content-center align-items-center p-3 h-100">
-                        <button class="loginButton btn-primary" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</button>
+                    <div class="d-flex justify-content-center pt-3 align-items-center @(IsSmall?"pt-5":"p-3")">
+                        <button class="@(IsSmall ? "loginButtonSmall":"loginButton") btn-primary" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</button>
                     </div>
                 </div>
 
             </div>
 
+            @if(IsSmall)
+            {
+                <MudDivider DividerType="DividerType.Middle" Class="my-6" style="border-width:3px"/>
 
-            <div class="d-flex flex-column justify-content-center h-100">
-                <div class="loginDivider"></div>
-            </div>
 
+                    <div class="d-flex flex-row justify-content-center w-100" style="height:5%">
+                        <span class="titleCardRegisterSmall">Non sei registrato?</span>
+                    </div>
 
-            <div class="d-flex flex-column registerSide">
+                <div class="d-flex flex-row w-100" style="height:25%">
 
-                <div class="d-flex flex-column align-items-end" style="padding-inline:2vw;">
-                    <MudIcon Icon="@Icons.Material.Filled.PersonAddAlt" Class="iconCardRegister"></MudIcon>
-                </div>
+                    <div class="d-flex align-items-center justify-content-center" style="width: 40%;padding-inline:2vw;">
+                        <MudIcon Icon="@Icons.Material.Filled.PersonAddAlt" Class="iconCardLoginSmall"></MudIcon>
+                    </div>
                 
+                    <div class="d-flex flex-column justify-content-center align-items-center p-1 w-50 h-100">
+                        <button class="loginButtonSmall btn-primary" type="submit" @onclick="OpenDialogAsync">Registrati</button>
+                    </div>
+                
+                </div>
+            }
+            else
+            {
+
                 <div class="d-flex flex-column justify-content-center h-100">
-                    <span class="titleCardRegister">Non sei registrato?</span>
-                    <span class="descRegister">Esegui ora la registrazione in pochi passaggi</span>
+                    <div class="loginDivider"></div>
                 </div>
 
-                <div class="d-flex flex-column justify-content-start p-1 w-100 h-100">
-                    <div class="d-flex justify-content-center align-items-center p-2" style="height:50%">
-                        <button class="loginButton btn-primary" type="submit" @onclick="OpenDialogAsync">Registrati</button>
+
+                <div class="d-flex flex-column registerSide">
+
+                    <div class="d-flex flex-column align-items-end" style="padding-inline:2vw;">
+                        <MudIcon Icon="@Icons.Material.Filled.PersonAddAlt" Class="iconCardRegister"></MudIcon>
                     </div>
-                </div>
                 
-            </div>
+                    <div class="d-flex flex-column justify-content-center h-100">
+                        <span class="titleCardRegister">Non sei registrato?</span>
+                        <span class="descRegister">Esegui ora la registrazione in pochi passaggi</span>
+                    </div>
+
+                    <div class="d-flex flex-column justify-content-start p-1 w-100 h-100">
+                        <div class="d-flex justify-content-center align-items-center p-2" style="height:50%">
+                            <button class="loginButton btn-primary" type="submit" @onclick="OpenDialogAsync">Registrati</button>
+                        </div>
+                    </div>
+                
+                </div>
+            }
         </div>
     </DialogContent>
 </MudDialog>
@@ -90,6 +119,7 @@
 </BaseComponent>
 
 @code {
+    private bool IsSmall = false;
 
     void HandleBackdropClick(MouseEventArgs eArgs)
     {
@@ -117,6 +147,7 @@
 
     private async Task OpenDialogAsync()
     {
+        CurrentViewModel.IsOpen = false;
         await CurrentViewModel.OpenModal();
     }
 
@@ -137,9 +168,21 @@
 
     .dialogClass {
         border-radius: 25px !important;
+        background-color:#0066FF !important;
+    }
+    
+    .dialogClassSmall {
+        border-radius: 25px !important;
+        max-width: 100%;
+        width: 95%;
+        height: 100%;
+        background-color: #0066FF !important;
     }
 
-  .mud-dialog .mud-dialog-content {
+    .mud-dialog .mud-dialog-content {
         overflow: hidden !important;
     }
+
+
+
 </style>

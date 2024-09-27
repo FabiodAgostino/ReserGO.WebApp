@@ -4,11 +4,11 @@
     <div class="d-flex justify-content-center align-items-center cardHeader">
         @if(Icon.Length > 1)
         {
-            <MudIcon Icon="@Icon" Class="iconCardReserGoCss" />
+            <MudIcon Icon="@Icon" Class="@(IsSmallView ? "smallIconCardReserGoCss":"iconCardReserGoCss")" />
         }
         @if (Title.Length > 1)
         {
-            <span class="text" style="padding-inline:1vw;">@Title</span>
+            <span class="text" style="padding-inline:1vw; @(IsSmallView ? "font-size:x-large;":"")">@Title</span>
         }
     </div>
     <div class="d-flex align-items-center cardBodyReserGo" style="@BodyStyle">
@@ -32,9 +32,12 @@
 
     [Parameter]
     public string? CardStyle { get; set; } = "";
-    
+
     [Parameter]
     public string? BodyStyle { get; set; } = "";
+
+    [Parameter]
+    public bool IsSmallView { get; set; }
 
     protected override void OnInitialized(){
     }
@@ -52,5 +55,10 @@
     .iconCardReserGoCss{
         color:white;
         font-size:2.5vw !important;
+    }
+
+    .smallIconCardReserGoCss {
+        color: white;
+        font-size: 26px !important;
     }
 </style>

@@ -1,0 +1,38 @@
+﻿@using MudBlazor
+
+
+<MudDialog Class="modalSmallDetailsCss" Visible="ShowModal">
+    <TitleContent>
+        <div class="d-flex justify-content-center w-100" >
+            <span>@Title</span>
+        </div>
+    </TitleContent>
+    <DialogContent>
+
+        <div class="d-flex  p-1">
+            <p>@Desc</p>
+        </div>
+
+    </DialogContent>
+
+</MudDialog>
+
+@code {
+    [Parameter]
+    public bool ShowModal { get; set; }
+
+    [Parameter]
+    public string? Title { get; set; }
+
+    [Parameter]
+    public string? Desc { get; set; }
+
+}
+
+<style>
+    .modalSmallDetailsCss{
+        width:100%;
+        height:100%;
+        padding:2vw;
+    }
+</style>

@@ -6,14 +6,27 @@
     background-color: #0066FF;
 }
 
+.cardLoginSmall {
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+    border: 1px solid #0066FF;
+    background-color: #0066FF;
+}
+
 ::deep .iconCardLogin {
     color: #FFFFFF;
-    font-size: 20vh;
+    font-size: 20vh !important;
+}
+
+::deep .iconCardLoginSmall {
+    color: #FFFFFF;
+    font-size: 5rem !important;
 }
 
 ::deep .iconCardRegister {
     color: #FFFFFF;
-    font-size: 19vh;
+    font-size: 19vh !important;
 }
 
 .loginSide {
@@ -29,6 +42,13 @@
 .loginDivider {
     height: 90%;
     width: 1px;
+    border: 1px solid #ffffff;
+    padding-block: 10px;
+}
+
+.loginDividerSmall {
+    width: 90%;
+    height: 1px;
     border: 1px solid #ffffff;
     padding-block: 10px;
 }
@@ -99,6 +119,14 @@
     padding-inline: 3vw;
 }
 
+.titleCardRegisterSmall {
+    font-family: Arial;
+    font-size: x-large;
+    color: #FFFFFF;
+    padding-inline: 3vw;
+    text-align: center;
+}
+
 .descRegister {
     font-family: Arial;
     font-size: 1.2vw;
@@ -113,27 +141,23 @@
     padding-inline: 3vw;
 }
 
-@media (max-width: 800px) {
-
-    .loginButton {
-        display: inline-block;
-        width: 10vw;
-        height: 4vh;
-        color: red;
-        font-weight: 400;
-        line-height: 1.5;
-        text-align: center;
-        text-decoration: none;
-        vertical-align: middle;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-        background-color: #EEEEEE;
-        border: 1px solid transparent;
-        padding: .375rem .75rem;
-        font-size: 1vw;
-        border-radius: .25rem;
-        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-    }
+.loginButtonSmall {
+    display: inline-block;
+    width: 83%;
+    color: #404040;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    background-color: #EEEEEE;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: large;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }

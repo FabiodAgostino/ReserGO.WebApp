@@ -21,7 +21,7 @@
 .text {
     color: #FFFFFF;
     font-size: xx-large;
-    font-family: var(--mud-typography-button-family);
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     font-weight: var(--mud-typography-button-weight);
     line-height: var(--mud-typography-button-lineheight);
     letter-spacing: var(--mud-typography-button-letterspacing);
@@ -35,4 +35,5 @@
     color: #404040;
     font-size: x-large;
     padding-inline: 4vw !important;
+    font-family: sans-serif;
 }

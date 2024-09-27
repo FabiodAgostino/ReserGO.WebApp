@@ -9,16 +9,22 @@
     font-size: 4rem;
 }
 
+::deep .smallIconCss {
+    color: #FFFFFF;
+    font-size: 2rem;
+}
+
 .titleLogin {
-    font-family: Arial;
     font-size: xx-large;
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
+    padding-inline: 10px;
 }
 
 .rightTextHeader {
-    font-family: Arial;
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     font-size: x-large;
     color: #FFFFFF;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 

@@ -1,13 +1,29 @@
 ﻿@using MudBlazor
 
-<div class="d-flex flex-column shadow cardDetails" style="@Style" @onclick="@(()=> Click())">
-    <div class="d-flex align-items-center cardDetailsHeader">
-        <span class="textDetails"><b>@Title</b></span>
+@if (IsSmallView)
+{
+    <div class="d-flex flex-column w-100 shadow cardDetails" style="@Style" @onclick="@(()=> Click())">
+        <div class="d-flex p-1 justify-content-center align-items-center cardDetailsHeaderSmall">
+            <span class="textDetails"><b>@Title</b></span>
+        </div>
+        <div class="d-flex p-4 cardBodyDetails">
+            @TruncateText(Description, 35)
+        </div>
     </div>
-    <div class="d-flex p-4 cardBodyDetails">
-        @Description
+}
+else
+{
+    <div class="d-flex flex-column shadow cardDetails" style="@Style" @onclick="@(()=> Click())">
+        <div class="d-flex align-items-center cardDetailsHeader">
+            <span class="textDetails"><b>@Title</b></span>
+        </div>
+        <div class="d-flex p-4 cardBodyDetails">
+            @Description
+        </div>
     </div>
-</div>
+}
+
+<ModalSmallDetails ShowModal="@ShowModal" Title="@Title" Desc="@Description" />
 
 @code {
 
@@ -28,7 +44,12 @@
     [Parameter]
     public string Height { get; set; } = "100%";
 
+    [Parameter]
+    public bool IsSmallView { get; set; }
+
     private string Style = "";
+
+    private bool ShowModal;
 
     protected override void OnInitialized()
     {
@@ -36,9 +57,23 @@
 
     private async Task Click()
     {
+
+        if(IsSmallView){
+            ShowModal = true;
+        }
+        
         if (Callback.HasDelegate)
         {
             await Callback.InvokeAsync();
         }
+    }
+
+    public static string TruncateText(string text, int maxLength)
+    {
+        if (text.Length <= maxLength)
+        {
+            return text; 
+        }
+        return text.Substring(0, maxLength - 3) + "..."; 
     }
 }
