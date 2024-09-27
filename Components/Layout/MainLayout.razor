@@ -24,32 +24,33 @@
     <MudDialogProvider />
     <MudSnackbarProvider />
 
-
-    <AuthorizeView>
-        <Authorized>
-            @if (Render)
-            {
-                @Body
-            }
-        </Authorized>
-        <NotAuthorized>
-             <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
-                <Content>
-                    <Login />
-                </Content>
-            </BaseComponent>
-@* 
-             <ContainerComponent TViewModel="ILoginViewModel"
-                             TModel="DTOLoginRequest"
-                             TComponent="Login" /> *@
-        </NotAuthorized>
-    </AuthorizeView>
-
+    @if (!IsRedirect)
+    {
+        <AuthorizeView>
+            <Authorized>
+                @if (Render)
+                {
+                    @Body
+                }
+            </Authorized>
+            <NotAuthorized>
+                <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
+                    <Content>
+                        <Login />
+                    </Content>
+                </BaseComponent>
+            </NotAuthorized>
+        </AuthorizeView>
+    }
+    else
+    {
+        @Body
+    }
 </div>
 
 <style>
     .mud-dialog .mud-dialog-content {
-         padding:0 !important;
+        padding: 0 !important;
         margin: 0 !important;
     }
 </style>

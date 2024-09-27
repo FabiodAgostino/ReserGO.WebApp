@@ -20,46 +20,107 @@
     <DialogContent>
 
         <div class="d-flex dialogRegisterContainer p-1">
+            <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:80%;">
 
-
-            <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:40%;">
-
-                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.FirstName" Required="true" RequiredError="Inserire Nome" Label="Nome" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.Address" Required="true" RequiredError="Inserire Indirizzo" Label="Indirizzo" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-                 <RegioneCombo OnRegionSelected="@((string regione) =>_regione=regione)"/>
-                
-                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.PhoneNumber" Required="true" RequiredError="Inserire numero di telefono" Label="Recapito telefonico" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.Password" Required="true"
-                    RequiredError="inserire password" Label="Password"
-                    @ref="pwField1" InputType="InputType.Password"
-                    Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"
-                    Variant="Variant.Outlined" Margin="Margin.Dense">
-                </MudTextField>
-
+                <MudForm @ref="form" @bind-IsValid="@_success">
+                    <table style="border-collapse: collapse; width: 100%; border: none;">
+                        <tr>
+                            <td>
+                                <div class="inputSpace">
+                                    <MudTextField @bind-Value="@CurrentViewModel.UserRegister.FirstName" Required="true" RequiredError="Inserire Nome" Label="Nome" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="inputSpace">
+                                    <MudTextField @bind-Value="@CurrentViewModel.UserRegister.LastName" Required="true" RequiredError="Inserire Cognome" Label="Cognome" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="inputSpace">
+                                    <MudTextField @bind-Value="@CurrentViewModel.UserRegister.Address" Required="true" RequiredError="Inserire Indirizzo" Label="Indirizzo" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="inputSpace">
+                                    <MudTextField @bind-Value="@CurrentViewModel.UserRegister.LastName" Required="true" RequiredError="Inserire Cognome" Label="Cognome" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="inputSpace">
+                                    <MudTextField @bind-Value="@CurrentViewModel.UserRegister.Address" Required="true" RequiredError="Inserire Indirizzo" Label="Indirizzo" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="inputSpace">
+                                    <MudDatePicker @bind-Date="@CurrentViewModel.UserRegister.DateOfBirth" Label="Data di nascita" Required="true" RequiredError="Inserire data di nascita" Variant="Variant.Outlined" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="inputSpace">
+                                    <RegioneCombo OnRegionSelected="@((string regione) => _regione = regione)" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="inputSpace">
+                                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                                        <Content>
+                                            <ComuneCombo Regione="@_regione" OnComuneSelected="@((string? comune) => CurrentViewModel.UserRegister.CityOfBirth = (comune is null ? "" : comune))" />
+                                        </Content>
+                                    </BaseComponent>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="inputSpace">
+                                    <MudTextField @bind-Value="@CurrentViewModel.UserRegister.PhoneNumber" Required="true" RequiredError="Inserire numero di telefono" Label="Recapito telefonico" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="inputSpace">
+                                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                                        <Content>
+                                            <MudTextField @bind-Value="@CurrentViewModel.UserRegister.Email"
+                                                          Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                          Required="true" RequiredError="Inserire Email corretta"
+                                                          Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
+                                            </MudTextField>
+                                        </Content>
+                                    </BaseComponent>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="inputSpace">
+                                    <MudTextField @bind-Value="@CurrentViewModel.UserRegister.Password" Required="true"
+                                                  RequiredError="inserire password" Label="Password"
+                                                  @ref="pwField1" InputType="InputType.Password"
+                                                  Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"
+                                                  Variant="Variant.Outlined" Margin="Margin.Dense">
+                                    </MudTextField>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="inputSpace">
+                                    <MudTextField @bind-Value="@CurrentViewModel.UserRegister.ConfirmPassword" Required="true"
+                                                  InputType="InputType.Password"
+                                                  Validation="@(new Func<string, string>(PasswordMatch))"
+                                                  RequiredError="La password non corrisponde" Label="Conferma password"
+                                                  Variant="Variant.Outlined" Margin="Margin.Dense">
+                                    </MudTextField>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </MudForm>
             </div>
-            <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:40%;">
-               
-                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.LastName" Required="true" RequiredError="Inserire Cognome" Label="Cognome" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-                <MudDatePicker @bind-Date="@CurrentViewModel.UserRegister.DateOfBirth" Label="Data di nascita" Required="true" RequiredError="Inserire data di nascita" Variant="Variant.Outlined" />
-                <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
-                        <Content>
-                            <ComuneCombo Regione="@_regione" OnComuneSelected="@((string comune) =>CurrentViewModel.UserRegister.CityOfBirth=comune)"/>
-                        </Content>
-                    </BaseComponent>
-                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.Email"
-                    Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required="true" RequiredError="Inserire Email corretta"
-                    Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})">
-                </MudTextField>
-                <MudTextField @bind-Value="@CurrentViewModel.UserRegister.ConfirmPassword" Required="true"
-                    InputType="InputType.Password"
-                    Validation="@(new Func<string, string>(PasswordMatch))" 
-                    RequiredError="La password non corrisponde" Label="Conferma password" 
-                    Variant="Variant.Outlined" Margin="Margin.Dense">
-                </MudTextField>
-
-            </div>
-
 
             <div class="d-flex flex-column justify-content-center h-100">
                 <div class="registerDivider"></div>
@@ -76,14 +137,12 @@
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center p-2" style="height:20%;margin-left: 2vw;">
-                    <MudButton OnClick="Submit" class="registerButton btn-primary" style="width:15vw;" type="submit">Salva</MudButton>
+                    <MudButton OnClick="Submit" class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw;" type="submit">Salva</MudButton>
                 </div>
-
             </div>
 
 
         </div>
-
     </DialogContent>
 
 </MudDialog>
@@ -99,6 +158,8 @@
     private void Cancel() => CurrentViewModel.Close();
 
     MudTextField<string> pwField1;
+    MudForm form;
+    private bool _success;
 
     private IEnumerable<string> PasswordStrength(string pw)
     {
@@ -141,6 +202,19 @@
     }
 
     .mud-input > input.mud-input-root-outlined.mud-input-root-adorned-end, div.mud-input-slot.mud-input-root-outlined.mud-input-root-adorned-end {
-        padding:10px !important;
+        padding: 10px !important;
+    }
+
+    .mud-form {
+        flex-direction: unset !important;
+    }
+
+    td {
+        padding: 9px;
+        margin-bottom: 15px;
+    }
+
+    .inputSpace {
+        height: 45px;
     }
 </style>

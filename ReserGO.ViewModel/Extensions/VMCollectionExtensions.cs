@@ -22,7 +22,7 @@ namespace ReserGO.ViewModel.Extensions
             services.AddScoped<ILoginViewModel, LoginViewModel>();
             services.AddScoped<ILoadingSpinnerViewModel, LoadingSpinnerViewModel>();
             services.AddScoped<IHeaderViewModel, HeaderViewModel>();
-            services.AddScoped<IRegisterViewModel, RegisterViewModel>();
+            services.AddTransient<IRegisterViewModel, RegisterViewModel>();
             services.AddScoped<IComuneComboViewModel, ComuneComboViewModel>();
 
 

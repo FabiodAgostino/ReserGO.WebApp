@@ -1,0 +1,20 @@
+﻿@using ReserGO.ViewModel.Interface.Register;
+@using ReserGO.Utils.UI;
+@using ReserGO.UI.Login;
+@page "/confirm/{username}"
+
+<BaseComponent TViewModel="IRegisterViewModel" TModel="object">
+        <Content>
+            <RegistrationConfirm Username="@username" />
+        </Content>
+    </BaseComponent>
+@code
+{
+    [Parameter]
+    public string username { get; set; }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+    }
+}

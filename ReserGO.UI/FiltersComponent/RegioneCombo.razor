@@ -12,7 +12,7 @@
                      MaxItems="null"
                      Variant="Variant.Outlined"
                      Margin="Margin.Dense"
-                 OnBlur="CheckError"
+                     OnBlur="CheckError"
                      Required="true"
                      ClearIcon="null"
                      RequiredError="Inserire regione di nascita"
@@ -67,9 +67,20 @@
 <style>
     .comboRegione {
         width: 100% !important;
+        max-width: 100% !important;
     }
 
     .mud-container.mud-container-maxwidth-lg.mud-container--gutters {
         padding: 0;
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-icon-button-edge-end.mud-input-adornment-icon-button {
+        color: white !important;
+        width: 5px;
+        height: 5px;
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-icon-button-size-small.mud-input-clear-button.mud-icon-button-edge-end {
+        display: none !important;
     }
 </style>

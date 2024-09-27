@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using ReserGO.Miscellaneous.Message;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
 using ReserGO.Utils.MVM.ViewModel;
 using ReserGO.ViewModel.Interface;
+using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.ViewModel
 {
@@ -16,6 +18,11 @@ namespace ReserGO.ViewModel.ViewModel
         public virtual async Task Refresh()
         {
 
+        }
+
+        public virtual void Loading()
+        {
+            Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(IsLoading), typeof(LoadingSpinnerViewModel));
         }
     }
 }

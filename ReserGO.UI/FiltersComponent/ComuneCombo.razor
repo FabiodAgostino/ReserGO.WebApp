@@ -11,9 +11,8 @@
                     T="DTOComuneProvincia"
                      SearchFunc="@SearchComuni"
                      Placeholder="Seleziona un comune..."
-                     Clearable="true"
+                     Clearable="false"
                      ResetValueOnEmptyText="true"
-                     ShowProgressIndicator="CurrentViewModel.IsLoading"
                      Disabled="String.IsNullOrEmpty(Regione)"
                      ToStringFunc=DisplayValue
                      MaxItems="null"
@@ -25,18 +24,25 @@
                      Margin="Margin.Dense"
                      @ref="@err"
                      OnBlur="CheckError"
-                      />
-
+                      >
+    <ProgressIndicatorInPopoverTemplate>
+        <MudList T="string" ReadOnly>
+            <MudListItem>
+                Loading...
+            </MudListItem>
+        </MudList>
+    </ProgressIndicatorInPopoverTemplate>
+    </MudAutocomplete>
 @code {
     [Parameter]
     public string Regione { get; set; }
-
-    private string SelectedComune { get; set; }
+    [Parameter]
+    public EventCallback<string?> OnComuneSelected { get; set; }
     private bool IsLoading { get; set; }
     private Func<DTOComuneProvincia, string?> DisplayValue = item => item is null ? null : item.Nome;
     private MudAutocomplete<DTOComuneProvincia> err;
     private bool showCustomError;
-    public EventCallback<string> OnComuneSelected { get; set; }
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,5 +91,15 @@
 
     .mud-container.mud-container-maxwidth-lg.mud-container--gutters {
         padding: 0;
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-icon-button-edge-end.mud-input-adornment-icon-button {
+        color: white !important;
+        width: 5px;
+        height: 5px;
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-icon-button-size-small.mud-input-clear-button.mud-icon-button-edge-end {
+        display: none !important;
     }
 </style>

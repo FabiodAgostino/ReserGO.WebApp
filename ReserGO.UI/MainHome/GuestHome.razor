@@ -32,7 +32,7 @@
 
         <div class="d-flex flex-column  @(IsSmall ? "h-50":"justify-content-center align-items-center rightSide")">
             <div class="d-flex  @(IsSmall ? "p-2 h-100":"p-4")">
-                <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon" CardStyle="@(IsSmall ? "width:100%;height:100%;":"")" IsSmallView="IsSmall" />
+                <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon" CardStyle="@(IsSmall ? "width:100%;height:100%;":"")" IsSmallView="IsSmall" Callback="@(() => ClickChangeComponent("Prenotazione"))"/>
             </div>
             <div class="d-flex @(IsSmall ? "p-2 h-100":"p-4")">
                 <CardReserGo Title="Informazioni" Description="Tutte le informazioni sullo studio medico" Icon="@InformationIcon" CardStyle="@(IsSmall ? "width:100%;height:100%;":"")" IsSmallView="IsSmall" />
@@ -64,25 +64,29 @@
 
 
 @code {
+    [Parameter]
+    public EventCallback<string> ChoiceSelectedComponent { get; set; }
+
     private string ReservationIcon = "";
     private string InformationIcon = "";
     private string HourDesc = "";
     private string AddresDesc = "";
     private bool IsSmall = false;
-
+   
 
     protected override void OnInitialized()
     {
         ReservationIcon = Icons.Material.Filled.AddCircleOutline;
         InformationIcon = Icons.Material.Filled.Info;
-        
+
         AddresDesc = "Via Roma, 123, 00100 Roma, Italia.     Dr.Rossi: 06 / xxxxxxx    Segreteria: 06 / xxxxxxx";
         HourDesc = "Lunedì: 09:00 - 13:00 / 16:00 - 18:30 Martedì: 09:00 - 13:00 / 16:00 - 18:30 Mercoledì:09:00 - 13:00 / 16:00 - 18:30 Giovedì:09:00 - 13:00 / 16:00 - 18:30 Venerdì:09:00 - 13:00 / 16:00 - 18:30 Sabato/Domenica:studio chiuso";
 
     }
 
-    private void Click(){
-
+    private async Task  ClickChangeComponent(string component){
+        if (ChoiceSelectedComponent.HasDelegate)
+            await ChoiceSelectedComponent.InvokeAsync(component);
     }
 
     

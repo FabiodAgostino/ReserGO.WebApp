@@ -10,6 +10,7 @@ namespace ReserGO.Service.Interface.Authentication
         Task<ServiceResponse<string>> Login(DTOLoginRequest loginRequest);
         Task<bool> IsLoggedIn();
         Task Logout();
+        Task<ServiceResponse<string>> RegistrationConfirm(string username);
 
     }
 }

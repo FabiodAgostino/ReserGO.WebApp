@@ -1,5 +1,21 @@
-﻿<h3>MainHome</h3>
+﻿@using ReserGO.ViewModel.Interface.Home;
+@using ReserGO.Utils.UI
+@using ReserGO.Utils.DTO.Utils
+@inherits BaseComponentChild<IHomeViewModel, object>
 
-@code {
 
+@if (CurrentViewModel.User.Roles is null || CurrentViewModel.UserIs(RoleConst.GUEST))
+{
+    <GuestHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))"/>
 }
+
+@if (CurrentViewModel.User.Roles!=null && CurrentViewModel.UserIs(RoleConst.CUSTOMER))
+{
+     <LoginHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))" />
+}
+
+@if (CurrentViewModel.User.Roles!=null && CurrentViewModel.UserIs(RoleConst.ADMIN))
+{
+     <AdminHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))"/>
+}
+

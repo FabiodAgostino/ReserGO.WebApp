@@ -10,7 +10,7 @@
 @inject IDialogService DialogService
 @inherits BaseComponentChild<IHeaderViewModel, object>
 @inject NavigationManager NaviMngr;
-<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:@(!UserIsGuest && !IsSmall ? "transparent" : BackgroundColor)">
+<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:@(!_userIsGuest && !IsSmall ? "transparent" : BackgroundColor)">
 
     @if(IsSmall)
     {
@@ -18,7 +18,7 @@
         <div class="d-flex justify-content-center" style="width:100%;">
             <span class="titleLogin" style="@TitleColor()">@Title</span>
         </div>
-        if (!UserIsGuest)
+        if (!_userIsGuest)
         {
             <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
                      AriaLabel="Open user menu"
@@ -40,7 +40,7 @@
     {
 
 
-        if (!UserIsGuest)
+        if (!_userIsGuest)
         {
             <div class="d-flex flex-row align-items-center">
                 <MudIcon Icon="@Icon" Class="iconCss" Style="color:#0066FF;"></MudIcon>
@@ -91,10 +91,15 @@
     [Parameter]
     public string ColorFont { get; set; }
 
-    [Parameter]
-    public bool UserIsGuest { get; set; }
+    private bool _userIsGuest { get; set; }
 
     private bool IsSmall = false;
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _userIsGuest = CurrentViewModel.User.Roles is null || CurrentViewModel.UserIs(RoleConst.GUEST);
+    }
 
     private string IconColor()
     {

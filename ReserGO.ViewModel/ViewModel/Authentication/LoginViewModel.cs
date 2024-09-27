@@ -9,6 +9,7 @@ using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Authentication;
+using ReserGO.ViewModel.ViewModel.Register;
 using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.ViewModel.Authentication
@@ -76,14 +77,11 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             }
         }
 
-        private void Loading()
-        {
-            Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(IsLoading), typeof(LoadingSpinnerViewModel));
-        }
+        
 
         public async Task OpenModal()
         {
-            Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true));
+            Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true),typeof(RegisterViewModel));
         }
     }
 }

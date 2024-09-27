@@ -11,6 +11,7 @@
 @using ReserGO.Miscellaneous.Enum
 @using ReserGO.Utils.DTO.Utils
 @using ReserGO.UI.FiltersComponent
+@using ReserGO.UI.MainHome.Containers
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<IHomeViewModel, object>
 
@@ -19,14 +20,14 @@
 
     <BaseComponent TViewModel="IHeaderViewModel" TModel="object">
         <Content>
-            <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFFF" UserIsGuest="@(CurrentViewModel.User.Roles != null && CurrentViewModel.UserIs(RoleConst.GUEST))"></Header>
+            <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFFF"></Header>
         </Content>
     </BaseComponent>
     
     
-    @if(CurrentViewModel.User.Roles!=null && !CurrentViewModel.UserIs(RoleConst.GUEST))
+    @if (CurrentViewModel.User.Roles != null && !CurrentViewModel.UserIs(RoleConst.GUEST))
     {
-         @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
+        @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
         {
         <MudPaper Height="100%">
             <MudDrawerContainer>
@@ -57,14 +58,21 @@
     }
     else
     {
-        @CurrentViewModel.Content
+        @if (CurrentViewModel.ItemsMenu is null || CurrentViewModel.ItemsMenu.Count() == 0 || (CurrentViewModel.ItemsMenu is object && CurrentViewModel.SelectedItem.Text.ToLower().Contains("home")))
+        {
+            <MainHomeContainer />
+        }
+        else
+        {
+            @CurrentViewModel.Content
+        }
     }
 </div>
  <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
         <Content>
             <CardLogin />
         </Content>
-    </BaseComponent>
+ </BaseComponent>
 @code {
     private bool _open = true;
 

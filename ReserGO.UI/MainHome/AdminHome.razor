@@ -10,7 +10,7 @@
 
             <div class="d-flex justify-content-around align-items-center w-100 h-100">
 
-                <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon"/>
+                <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon"  Callback="@(() => ClickChangeComponent("Prenotazione"))"/>
 
                 <CardReserGo Title="Richieste" Description="Richieste di appuntamento da confermare" Icon="@InformationIcon" />
 
@@ -37,12 +37,13 @@
 
 
 @code {
+    [Parameter]
+    public EventCallback<string> ChoiceSelectedComponent { get; set; }
     private string ReservationIcon = "";
     private string InformationIcon = "";
     private string HourDesc = "";
     private string AddresDesc = "";
     private bool ShowModal = false;
-
 
 
     protected override void OnInitialized()
@@ -58,6 +59,12 @@
     private void Click()
     {
 
+    }
+
+    private async Task ClickChangeComponent(string component)
+    {
+        if (ChoiceSelectedComponent.HasDelegate)
+            await ChoiceSelectedComponent.InvokeAsync(component);
     }
 
     private void OpenModalComunications()

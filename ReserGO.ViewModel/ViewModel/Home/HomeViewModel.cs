@@ -57,8 +57,6 @@ namespace ReserGO.ViewModel.ViewModel.Home
 
         public async Task OnInitialize()
         {
-            var cf=await cfService.GetComuniAsync("Ba");
-            IsLoading = true;
             try
             {
                 var result = await _service.GetSettingsMenu();
@@ -76,14 +74,16 @@ namespace ReserGO.ViewModel.ViewModel.Home
             }
             finally
             {
-                IsLoading = false;
-                Loading();
+                isFirstLoad = false;
                 OnPropertyChanged();
             }
         }
 
-        public void ChangeComponent()
+        public void ChangeComponent(string component = null)
         {
+            if (!String.IsNullOrEmpty(component))
+                SelectedItem = ItemsMenu.SingleOrDefault(x => x.Text.ToLower().StartsWith(component.ToLower()));
+
             Content = new RenderFragment(builder =>
             {
                 builder.OpenComponent(0, Type.GetType(SelectedItem.ComponentType));
@@ -92,10 +92,5 @@ namespace ReserGO.ViewModel.ViewModel.Home
             OnPropertyChanged();
 
         }
-        private void Loading()
-        {
-            Aggregator.Publish<bool,ObjectMessage<bool>>(new ObjectMessage<bool>(IsLoading), typeof(LoadingSpinnerViewModel));
-        }
-
     }
 }

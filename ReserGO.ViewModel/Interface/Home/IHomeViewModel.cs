@@ -12,7 +12,7 @@ namespace ReserGO.ViewModel.Interface.Home
         string PageTitle { get; set; }
 
         RenderFragment Content { get; set; }
-        void ChangeComponent();
+        void ChangeComponent(string component=null);
         bool DrawerVisibility { get; set; }
         Task OnInitialize();
     }

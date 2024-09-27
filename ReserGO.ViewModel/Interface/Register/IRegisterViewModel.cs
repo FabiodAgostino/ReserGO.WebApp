@@ -1,12 +1,4 @@
-﻿using ReserGO.DTO;
-using ReserGO.Miscellaneous.Model;
-using ReserGO.ViewModel.Interface.Header;
-using ReserGO.ViewModel.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ReserGO.Miscellaneous.Model;
 
 namespace ReserGO.ViewModel.Interface.Register
 {
@@ -16,6 +8,7 @@ namespace ReserGO.ViewModel.Interface.Register
         UserRegister UserRegister { get; set; }
         void Close();
         void Register();
+        Task RegistrationConfirm(string username);
 
     }
 }

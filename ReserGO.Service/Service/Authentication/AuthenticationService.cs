@@ -22,6 +22,8 @@ namespace ReserGO.Service.Service.Authentication
             _authProvider = authProvider;
         }
 
+
+
         public async Task Logout()
         {
             await _sessionStorage.RemoveItemAsync("authToken");
@@ -46,6 +48,8 @@ namespace ReserGO.Service.Service.Authentication
             }
             return new ServiceResponse<string>();
         }
+
+        public async Task<ServiceResponse<string>> RegistrationConfirm(string username) => await RequestGet<string>(AuthenticationServiceType.ConfirmUsername, $"username={username}");
 
         public async Task<bool> IsLoggedIn()
         {
