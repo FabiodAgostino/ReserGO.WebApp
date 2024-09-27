@@ -26,8 +26,6 @@ namespace ReserGO.Service.Service.Authentication
             _httpClient = httpClient;
             _logger = logger;
         }
-
-
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var token = await _sessionStorage.GetItemAsync<string>("authToken");

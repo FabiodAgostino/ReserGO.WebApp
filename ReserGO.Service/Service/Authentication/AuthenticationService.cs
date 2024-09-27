@@ -2,24 +2,22 @@
 using Blazored.SessionStorage;
 using Microsoft.Extensions.Configuration;
 using ReserGO.DTO;
-using ReserGO.Service.Enum;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Utils.DTO.Service;
-using ReserGO.Utils.Service.Service;
 
 namespace ReserGO.Service.Service.Authentication
 {
-    public class AuthenticationService : ClientBaseService<object>, IAuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly ISessionStorageService _sessionStorage;
         private readonly IJwtAuthenticationStateProvider _authProvider;
+        private readonly ILoginService _loginService;
 
-        public AuthenticationService(HttpClient Http, IConfiguration Configuration, ISessionStorageService sessionStorage, IJwtAuthenticationStateProvider authProvider)
-            : base(Http, Configuration)
+        public AuthenticationService(IConfiguration Configuration, ISessionStorageService sessionStorage, IJwtAuthenticationStateProvider authProvider, ILoginService loginService)
         {
-            ExtraBaseUrl = "Auth";
             _sessionStorage = sessionStorage;
             _authProvider = authProvider;
+            _loginService = loginService;
         }
 
 
@@ -36,7 +34,7 @@ namespace ReserGO.Service.Service.Authentication
             {
                 if (_authProvider.User!=null && _authProvider.User.Username == "system")
                     await Logout();
-                var response = await PostItem<string>(loginRequest, AuthenticationServiceType.Login);
+                var response = await _loginService.Login(loginRequest);
 
                 if (response.Success && response.Data!=null)
                 {
@@ -48,8 +46,6 @@ namespace ReserGO.Service.Service.Authentication
             }
             return new ServiceResponse<string>();
         }
-
-        public async Task<ServiceResponse<string>> RegistrationConfirm(string username) => await RequestGet<string>(AuthenticationServiceType.ConfirmUsername, $"username={username}");
 
         public async Task<bool> IsLoggedIn()
         {
