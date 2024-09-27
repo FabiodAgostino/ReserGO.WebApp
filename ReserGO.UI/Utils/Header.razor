@@ -21,8 +21,7 @@
         if (!_userIsGuest)
         {
             <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
-                     AriaLabel="Open user menu"
-                     Style="@IconColor()" >
+                     AriaLabel="Open user menu" Class="iconUserButton" >
                 <MudMenuItem>Profilo</MudMenuItem>
                 <MudMenuItem>Privacy</MudMenuItem>
                 <MudMenuItem>Logout</MudMenuItem>
@@ -31,7 +30,7 @@
         else
         {
             <div @onclick="OpenDialogAsync">
-                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="smallIconCss" Style="@IconColor()"></MudIcon>
+                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="smallIconCss" Style="color:white;"></MudIcon>
             </div>
         }
         
@@ -48,9 +47,14 @@
             </div>
 
             <div class="px-2">
-                    <div class="d-flex flex-row" @onclick="@(async () => await CurrentViewModel.Logout())">
-                        <span class="rightTextHeader" style="color:#0066FF; padding-inline: 0.5vw">Logout</span>
-                        <MudIcon Icon="@Icons.Material.Filled.Logout" style="color:#0066FF;" Class="iconCss"></MudIcon>
+                    <div class="d-flex flex-row align-items-center" @onclick="@(async () => await CurrentViewModel.Logout())">
+                        <span class="rightTextHeader" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;color:#0066FF;">Mario Bianchi</span>
+                        <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
+                                 AriaLabel="Open user menu" Class="iconUserButtonLogin">
+                            <MudMenuItem>Profilo</MudMenuItem>
+                            <MudMenuItem>Privacy</MudMenuItem>
+                            <MudMenuItem>Logout</MudMenuItem>
+                        </MudMenu>
                     </div>
             </div>
         }
@@ -124,12 +128,19 @@
 }
 
 <style>
-    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon{
-        color:white !important;
+
+    .iconUserButton > button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon 
+    {
+        color:white!important;
+    }
+
+    .iconUserButtonLogin > button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon {
+        color: #0066FF !important;
     }
 
     svg.mud-icon-root.mud-svg-icon.mud-icon-size-medium{
         font-size:2rem;
     }
+
 </style>
 

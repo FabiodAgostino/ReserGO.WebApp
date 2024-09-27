@@ -1,7 +1,7 @@
 ﻿@using MudBlazor
 
-<div class="d-flex justify-content-center align-items-center p-2">
-    <MudDatePicker Class="homeCalendarCss shadow" Orientation="Orientation.Landscape" PickerVariant="PickerVariant.Static" Date="@(DateTime.Today.AddDays(1))" />
+<div class="d-flex justify-content-center align-items-center p-2" style="width:30vw;">
+    <MudDatePicker Class="w-100 shadow" Orientation="Orientation.Landscape" PickerVariant="PickerVariant.Static" Date="@(DateTime.Today.AddDays(1))" />
 </div>
 
 
@@ -27,4 +27,24 @@
         flex-direction: column;
     }
    
+    .mud-picker-toolbar.mud-picker-toolbar-landscape {
+        background-color: #0066FF !important;
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-picker-calendar-day.mud-day.mud-selected.mud-theme-primary {
+        background-color: #0066FF !important;
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-picker-calendar-day.mud-day.mud-current.mud-button-outlined.mud-button-outlined-primary.mud-primary-text{
+        border-color: #0066FF !important;
+    }
+
+    h5.mud-typography.mud-typography-h5.mud-picker-month-selected.mud-primary-text{
+        color: #0066FF !important;
+    }
+
+    h5.mud-typography.mud-typography-h5.mud-picker-year-selected.mud-primary-text{
+        color: #0066FF !important;
+    }
+
 </style>
