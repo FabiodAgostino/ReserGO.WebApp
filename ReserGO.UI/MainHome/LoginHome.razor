@@ -7,31 +7,38 @@
     <div class="d-flex flex-column homeLoginBody">
 
         
-        <div class="d-felx flex-row topSideLogin">
+        <div class="d-flex @(IsSmall ? "flex-column w-100 h-100":"flex-row topSideLogin")">
 
-            <div class="d-flex justify-content-around align-items-center w-100 h-100">
+            <div class="d-flex justify-content-around align-items-center w-100 h-100 @(IsSmall ? "flex-column":"")">
 
                 <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon"  Callback="@(() => ClickChangeComponent("Prenotazione"))"/>
 
                 <CardReserGo Title="Comunicazioni" Description="Il giorno xx lo studio rimarrà chiuso" Icon="@InformationIcon" />
-
+                
+                @if (IsSmall)
+                {
+                    <CardReserGo Title="Comunicazioni" Description="Il giorno xx lo studio rimarrà chiuso" Icon="@InformationIcon" />
+                }
             </div>
 
         </div>
 
-        <div class="d-flex flex-row justify-content-around bottomSideLogin">
+        @if(!IsSmall)
+        {
+            <div class="d-flex flex-row justify-content-around bottomSideLogin">
 
-            <div class="d-flex justify-content-around align-items-center w-100 h-100">
+                <div class="d-flex justify-content-around align-items-center w-100 h-100">
                 
-                <CalendarHome />
+                    <CalendarHome />
 
-                <div class="d-flex align-items-center p-2">
-                    <CardReserGo Title="Storico" Description="Riepilogo dei tuoi appuntamenti" Icon="@Icons.Material.Filled.ContentPasteSearch" />
+                    <div class="d-flex align-items-center p-2">
+                        <CardReserGo Title="Storico" Description="Riepilogo dei tuoi appuntamenti" Icon="@Icons.Material.Filled.ContentPasteSearch" />
+                    </div>
+                
                 </div>
-                
-            </div>
 
-        </div>
+            </div>
+        }
 
     </div>
 </div>
@@ -44,6 +51,7 @@
     private string InformationIcon = "";
     private string HourDesc = "";
     private string AddresDesc = "";
+    private bool IsSmall = false;
 
     protected override void OnInitialized()
     {
