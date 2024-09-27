@@ -1,10 +1,15 @@
-﻿using ReserGO.Miscellaneous.Model;
-using static ReserGO.Service.Service.Utils.ComuneService;
+﻿using Refit;
+using ReserGO.Miscellaneous.Model;
 
 namespace ReserGO.Service.Interface.Utils
 {
     public interface IComuneService
     {
-        Task<List<DTOComuneProvincia>> GetComuniAsync(string nome, int page = 1, int pageSize = 100);
+    [Get("/comuni")]
+    Task<List<DTOComuneProvincia>> GetComuniAsync(
+      [AliasAs("nome")] string nome,
+      [AliasAs("page")] int page = 1,
+      [AliasAs("pagesize")] int pageSize = 100
+  );
     }
 }

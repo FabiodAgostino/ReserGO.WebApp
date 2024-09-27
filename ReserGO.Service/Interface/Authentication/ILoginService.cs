@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Refit;
 using ReserGO.DTO;
 using ReserGO.Utils.DTO.Service;
 
 namespace ReserGO.Service.Interface.Authentication
 {
-    public interface IAuthenticationService
+    public interface ILoginService
     {
+        [Post("/login")]
         Task<ServiceResponse<string>> Login(DTOLoginRequest loginRequest);
-        Task<bool> IsLoggedIn();
-        Task Logout();
+
+        [Get("/ConfirmUsername")]
+        Task<ServiceResponse<string>> RegistrationConfirm(string username);
     }
 }

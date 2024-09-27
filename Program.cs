@@ -3,23 +3,26 @@ using ReserGO.Utils.Event;
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
-using Microsoft.Extensions.Logging;
+using Refit;
 using ReserGO.WebApp.Components;
 using ReserGO.Service.Extensions;
 using ReserGO.Service.Service.Authentication;
 using ReserGO.ViewModel.Extensions;
 using Serilog;
+using ReserGO.Service.Interface.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
+var serverapi = builder.Configuration.GetValue<string>("serverapi");
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 builder.Services.AddScoped<IEvent, Event>();
 builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddReserGOServices();
+builder.Services.AddRefitClients(builder.Configuration);
 builder.Services.AddReserGOViewModels();
 builder.Services.AddMudServices();
 builder.Services.AddScoped(sp => new HttpClient()
-{ BaseAddress = new Uri(builder.Configuration.GetValue<string>("serverapi")) });
+{ BaseAddress = new Uri(serverapi) });
 
 builder.Host.UseSerilog((hostingContext, services, loggerConfiguration) =>
 {
