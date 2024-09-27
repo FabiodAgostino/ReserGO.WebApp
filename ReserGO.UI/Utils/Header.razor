@@ -21,8 +21,7 @@
         if (!_userIsGuest)
         {
             <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
-                     AriaLabel="Open user menu"
-                     Style="@IconColor()" >
+                     AriaLabel="Open user menu">
                 <MudMenuItem>Profilo</MudMenuItem>
                 <MudMenuItem>Privacy</MudMenuItem>
                 <MudMenuItem>Logout</MudMenuItem>
@@ -31,7 +30,7 @@
         else
         {
             <div @onclick="OpenDialogAsync">
-                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="smallIconCss" Style="@IconColor()"></MudIcon>
+                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="smallIconCss" Style="color:white;"></MudIcon>
             </div>
         }
         
@@ -93,7 +92,7 @@
 
     private bool _userIsGuest { get; set; }
 
-    private bool IsSmall = false;
+    private bool IsSmall = true;
 
 
     protected override async Task OnParametersSetAsync()
@@ -124,7 +123,8 @@
 }
 
 <style>
-    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon{
+    
+    .mud-icon-button-label{
         color:white !important;
     }
 
