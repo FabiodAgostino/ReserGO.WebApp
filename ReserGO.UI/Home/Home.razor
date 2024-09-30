@@ -29,7 +29,7 @@
     {
         @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
         {
-        <MudPaper Height="100%">
+        <MudPaper Height="100%" Style="padding:0px">
             <MudDrawerContainer>
                     <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="8" MiniWidth="100" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Class="mainContent">
                     <MudNavMenu Class="mudDrawer">

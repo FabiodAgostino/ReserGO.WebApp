@@ -4,14 +4,15 @@
 }
 
 .leftSideSchedule {
-    width: 50%;
+    width: 45%;
     height: 100%;
-    background-color: #EEEEEE;
+    
 }
 
 .rightSideSchedule {
-    width: 50%;
+    width: 55%;
     height: 100%;
+    background-color: #EEEEEE;
 }
 
 .scheduleBody {

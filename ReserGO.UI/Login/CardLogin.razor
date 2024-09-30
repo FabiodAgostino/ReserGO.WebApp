@@ -7,20 +7,20 @@
 @using ReserGO.ViewModel.Interface.Authentication
 @inherits BaseComponentChild<ILoginViewModel, DTOLoginRequest>
 
-<MudDialog Class="@(IsSmall? "dialogClassSmall":"dialogClass")" OnBackdropClick="@HandleBackdropClick" Visible="CurrentViewModel.IsOpen" Options="@Options">
+<MudDialog Class="@(CurrentViewModel.IsSmallView ? "dialogClassSmall":"dialogClass")" OnBackdropClick="@HandleBackdropClick" Visible="CurrentViewModel.IsOpen" Options="@Options">
     <DialogContent>
 
-        <div class="d-flex @(IsSmall? "flex-column cardLoginSmall":"cardLogin") justify-content-between p-2 ">
-            <div class="d-flex flex-column loginSide @(IsSmall? "w-100":"") ">
+        <div class="d-flex @(CurrentViewModel.IsSmallView ? "flex-column cardLoginSmall":"cardLogin") justify-content-between p-2 ">
+            <div class="d-flex flex-column loginSide @(CurrentViewModel.IsSmallView ? "w-100":"") ">
 
                 <div class="d-flex flex-row align-items-center w-100">
-                    <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="@(IsSmall? "iconCardLoginSmall":"iconCardLogin")"></MudIcon>
-                    <span class="titleCardLogin" style="@(IsSmall? "font-size:x-large;":"")">Log-in</span>
+                    <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="@(CurrentViewModel.IsSmallView ? "iconCardLoginSmall":"iconCardLogin")"></MudIcon>
+                    <span class="titleCardLogin" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"")">Log-in</span>
                 </div>
 
-                <div class="d-flex flex-column @(IsSmall? "justify-content-around p-3 ":"p-5") w-100 h-100">
+                <div class="d-flex flex-column @(CurrentViewModel.IsSmallView ? "justify-content-around p-3 ":"p-5") w-100 h-100">
                     <div class="d-flex flex-column pt-2" >
-                        <span class="textInputCardLogin" style="@(IsSmall? "font-size:x-large;":"")">Nome utente:</span>
+                        <span class="textInputCardLogin" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"")">Nome utente:</span>
                         <MudTextField @bind-Value="CurrentViewModel.User.Username"
                             class="inputText"
                             Label="nome.cognome"
@@ -36,7 +36,7 @@
                         }
                     </div>
                     <div class="d-flex flex-column pt-3">
-                        <span class="textInputCardLogin" style="@(IsSmall? "font-size:x-large;":"")">Password:</span>
+                        <span class="textInputCardLogin" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"")">Password:</span>
                         <MudTextField @bind-Value="CurrentViewModel.User.Password"
                                       InputType="InputType.Password"
                                       Label="inserisci password"
@@ -53,14 +53,14 @@
                         }
                     </div>
 
-                    <div class="d-flex justify-content-center pt-3 align-items-center @(IsSmall?"pt-5":"p-3")">
-                        <button class="@(IsSmall ? "loginButtonSmall":"loginButton") btn-primary" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</button>
+                    <div class="d-flex justify-content-center pt-5 align-items-center">
+                        <button class="@(CurrentViewModel.IsSmallView  ? "loginButtonSmall":"loginButton") btn-primary" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</button>
                     </div>
                 </div>
 
             </div>
 
-            @if(IsSmall)
+            @if(CurrentViewModel.IsSmallView )
             {
                 <MudDivider DividerType="DividerType.Middle" Class="my-6" style="border-width:3px"/>
 
@@ -75,7 +75,7 @@
                         <MudIcon Icon="@Icons.Material.Filled.PersonAddAlt" Class="iconCardLoginSmall"></MudIcon>
                     </div>
                 
-                    <div class="d-flex flex-column justify-content-center align-items-center p-1 w-50 h-100">
+                    <div class="d-flex flex-column justify-content-center align-items-center p-1 w-50">
                         <button class="loginButtonSmall btn-primary" type="submit" @onclick="OpenDialogAsync">Registrati</button>
                     </div>
                 
@@ -119,7 +119,13 @@
 </BaseComponent>
 
 @code {
-    private bool IsSmall = false;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentViewModel.RegisterOnScreenResize(800);
+    }
 
     void HandleBackdropClick(MouseEventArgs eArgs)
     {
@@ -174,8 +180,8 @@
     .dialogClassSmall {
         border-radius: 25px !important;
         max-width: 100%;
-        width: 95%;
-        height: 100%;
+        width: 95% !important;
+        height: 100% !important;
         background-color: #0066FF !important;
     }
 

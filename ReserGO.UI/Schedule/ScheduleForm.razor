@@ -1,0 +1,123 @@
+﻿@using MudBlazor
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.UI.FiltersComponent
+@using ReserGO.ViewModel.Interface.FiltersComponent
+@using ReserGO.ViewModel.Interface.Register
+@using ReserGO.DTO
+@using ReserGO.Utils.UI
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
+
+<div class="d-flex flex-column w-100 h-100">
+
+    <div class="d-flex flex-row justify-content-around columnFormRegister" style="width:100%; height:80%;">
+
+        <MudForm @ref="form" @bind-IsValid="@_success">
+            <table style="border-collapse: collapse; width: 100%; border: none;">
+                <tr>
+                    <td>
+                        <div class="inputSpace">
+                            <MudTextField @bind-Value="@User.FirstName" Required="true" RequiredError="Inserire Nome" Label="Nome" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputSpace">
+                <MudTextField @bind-Value="@User.LastName" Required="true" RequiredError="Inserire Cognome" Label="Cognome" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="inputSpace">
+                <MudTextField @bind-Value="@User.PhoneNumber" Required="true" RequiredError="Inserire numero di telefono" Label="Recapito telefonico" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="inputSpace">
+                            <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                                <Content>
+                                    <MudTextField @bind-Value="@User.Email"
+                                                    Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                    Required="true" RequiredError="Inserire Email corretta"
+                                                    Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
+                                    </MudTextField>
+                                </Content>
+                            </BaseComponent>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </MudForm>
+
+    </div>
+
+    <div class="d-flex flex-row justify-content-around columnFormRegister" style="width:100%; height:30%">
+
+            <MudButton OnClick="Cancel" class="cancelButton btn-primary" style="width:15vw;height:10vh;" type="submit">Annulla</MudButton>
+
+            <MudButton OnClick="Submit" class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw;height:10vh;" type="submit">Salva</MudButton>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback Callback { get; set; }
+
+    public UserRegister User = new UserRegister();
+
+    private bool _success;
+
+
+    protected override void OnInitialized()
+    {
+        User = new UserRegister();
+    }
+
+    private async Task Click()
+    {
+        if (Callback.HasDelegate)
+        {
+            await Callback.InvokeAsync();
+        }
+    }
+
+    private void Submit() {}
+
+    private void Cancel() {}
+
+    MudForm form;
+
+}
+
+
+<style>
+    .registerDialogCss {
+        width: 50vw;
+        height: 55vh;
+        max-width: 50vw !important;
+        border-radius: 30px !important;
+    }
+
+    .mud-input > input.mud-input-root-outlined.mud-input-root-adorned-end, div.mud-input-slot.mud-input-root-outlined.mud-input-root-adorned-end {
+        padding: 10px !important;
+    }
+
+    .mud-form {
+        flex-direction: unset !important;
+    }
+
+    td {
+        padding: 9px;
+        margin-bottom: 15px;
+    }
+
+    .inputSpace {
+        height: 45px;
+    }
+
+    .mud-form{
+        width:100% !important;
+    }
+</style>

@@ -47,13 +47,13 @@
             </div>
 
             <div class="px-2">
-                    <div class="d-flex flex-row align-items-center" @onclick="@(async () => await CurrentViewModel.Logout())">
+                    <div class="d-flex flex-row align-items-center" >
                         <span class="rightTextHeader" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;color:#0066FF;">Mario Bianchi</span>
                         <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
                                  AriaLabel="Open user menu" Class="iconUserButtonLogin">
                             <MudMenuItem>Profilo</MudMenuItem>
                             <MudMenuItem>Privacy</MudMenuItem>
-                            <MudMenuItem>Logout</MudMenuItem>
+                            <MudMenuItem @onclick="@(async () => await CurrentViewModel.Logout())">Logout</MudMenuItem>
                         </MudMenu>
                     </div>
             </div>

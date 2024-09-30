@@ -22,6 +22,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
             _service = service;
             this.cfService = cfService;
             aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
+
         }
 
         public IEnumerable<DTOSettingMenu> ItemsMenu { get; set; }
