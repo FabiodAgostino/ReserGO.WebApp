@@ -7,6 +7,7 @@ using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Utils;
+using ReserGO.Utils.DTO.Utils;
 using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Authentication;
 using ReserGO.ViewModel.ViewModel.Register;
@@ -27,11 +28,11 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             aggregator.Subscribe<ObjectMessage<GenericModalVoid>>(GetType(), OpenModal);
             IsLoading = false;
             IsFirstLoad = true;
+            SelectedItem = new();
         }
         public string? LoginError { get; set; }
         public bool IsOpen { get; set; }
         EventCallback Callback { get; set; }
-        public DTOLoginRequest User { get; set; } = new();
 
         public async void OpenModal(ObjectMessage<GenericModalVoid> message)
         {
@@ -53,7 +54,14 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             {
                 if(user == null)
                     user = new() { IsGuest = true };
-
+                else
+                {
+                    if (user.Password == null && !(user.Password.Length > 0))
+                    {
+                        LoginError = "Inserisci una password";
+                        return;
+                    }
+                }
                 var data = await _authService.Login(user);
                 if(!data.Success)
                     LoginError = data.Message;

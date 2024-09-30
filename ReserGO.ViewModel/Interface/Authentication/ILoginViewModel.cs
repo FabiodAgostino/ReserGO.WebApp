@@ -8,7 +8,6 @@ namespace ReserGO.ViewModel.Interface.Authentication
         Task Login(DTOLoginRequest user = null);
         public string? LoginError { get; set; }
         public bool IsOpen { get; set; }
-        DTOLoginRequest User { get; set; }
         Task OpenModal();
     }
 }

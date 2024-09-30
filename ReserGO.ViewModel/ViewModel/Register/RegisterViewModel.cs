@@ -35,7 +35,7 @@ namespace ReserGO.ViewModel.ViewModel.Register
                 Loading();
                 var result = await _authService.RegistrationConfirm(username);
                 if(result.Success)
-                    Notification("Registrazione effettuata con successo!", NotificationColor.Success);
+                    Notification("Conferma della mail effettuata con successo!", NotificationColor.Success);
                 else
                     Notification(result.Message, NotificationColor.Error);
 
@@ -64,9 +64,28 @@ namespace ReserGO.ViewModel.ViewModel.Register
             IsOpen = false;
         }
 
-        public void Register()
+        public async void Register()
         {
-            //chiamata
+            try
+            {
+                IsLoading = true;
+                Loading();
+                var result=await _authService.Register(SelectedItem);
+                if(result.Success)
+                    Notification("Registrazione effettuata con successo, conferma la mail.", NotificationColor.Success);
+                else
+                {
+
+                }
+            }catch(Exception ex)
+            {
+                Notification(ex.Message, NotificationColor.Error);
+            }
+            finally
+            {
+                IsLoading= false;
+                Loading();
+            }
         }
     }
 }

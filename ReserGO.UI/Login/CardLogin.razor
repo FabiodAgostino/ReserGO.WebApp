@@ -21,10 +21,10 @@
 
                 <div class="d-flex flex-column @(CurrentViewModel.IsSmallView ? "justify-content-around p-3 ":"p-5") w-100 h-100">
                     <div class="d-flex flex-column pt-2" >
-                        <span class="textInputCardLogin" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"")">Nome utente:</span>
-                        <MudTextField @bind-Value="CurrentViewModel.User.Username"
+                        <span class="textInputCardLogin" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"")">Email:</span>
+                        <MudTextField @bind-Value="CurrentViewModel.SelectedItem.Email"
                             class="inputText"
-                            Label="nome.cognome"
+                            Label="Email"
                             Variant="Variant.Outlined"
                             Margin="Margin.Dense"
                             OnKeyDown="HandleKeyDown">
@@ -38,7 +38,7 @@
                     </div>
                     <div class="d-flex flex-column pt-3">
                         <span class="textInputCardLogin" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"")">Password:</span>
-                        <MudTextField @bind-Value="CurrentViewModel.User.Password"
+                        <MudTextField @bind-Value="CurrentViewModel.SelectedItem.Password"
                                       InputType="InputType.Password"
                                       Label="inserisci password"
                                       class="inputText"
@@ -149,7 +149,7 @@
         };
     private async Task Login(EnumLoginType typeAction)
     {
-        await CurrentViewModel.Login(CurrentViewModel.User);
+        await CurrentViewModel.Login(CurrentViewModel.SelectedItem);
     }
 
     private async Task OpenDialogAsync()

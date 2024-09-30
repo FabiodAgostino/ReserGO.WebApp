@@ -9,7 +9,10 @@ namespace ReserGO.Service.Interface.Authentication
         [Post("/login")]
         Task<ServiceResponse<string>> Login(DTOLoginRequest loginRequest);
 
-        [Get("/ConfirmUsername")]
-        Task<ServiceResponse<string>> RegistrationConfirm(string username);
+        [Post("/Register")]
+        Task<ServiceResponse<string>> Register(DTOUser loginRequest);
+
+        [Get("/ConfirmEmail")]
+        Task<ServiceResponse<string>> RegistrationConfirm(string email);
     }
 }
