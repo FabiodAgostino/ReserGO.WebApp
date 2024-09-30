@@ -14,11 +14,11 @@ using ReserGO.Service.Interface.Utils;
 var builder = WebApplication.CreateBuilder(args);
 var serverapi = builder.Configuration.GetValue<string>("serverapi");
 builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 builder.Services.AddScoped<IEvent, Event>();
 builder.Services.AddBlazoredSessionStorage();
-builder.Services.AddReserGOServices();
 builder.Services.AddRefitClients(builder.Configuration);
+builder.Services.AddReserGOServices();
+builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 builder.Services.AddReserGOViewModels();
 builder.Services.AddMudServices();
 builder.Services.AddScoped(sp => new HttpClient()

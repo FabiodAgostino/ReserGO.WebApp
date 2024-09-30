@@ -15,7 +15,6 @@ namespace ReserGO.Service.Extensions
             var serverapi = configuration["serverapi"];
 
             services.AddTransient<ApiMessageHandler>();
-
             services.AddScoped(provider =>
             {
                 var handler = provider.GetRequiredService<ApiMessageHandler>();
@@ -25,7 +24,6 @@ namespace ReserGO.Service.Extensions
                 };
                 return RestService.For<IHomeService>(httpClient);
             });
-
             services.AddScoped(provider =>
             {
                 var httpClient = new HttpClient()

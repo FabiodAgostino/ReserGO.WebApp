@@ -15,6 +15,7 @@ namespace ReserGO.Service.Extensions
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IUserSession, UserSession>();
+        
 
 
             return services;
