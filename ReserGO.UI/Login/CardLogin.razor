@@ -5,6 +5,7 @@
 @using ReserGO.ViewModel.Interface.Register
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.Authentication
+@using ReserGO.DTO;
 @inherits BaseComponentChild<ILoginViewModel, DTOLoginRequest>
 
 <MudDialog Class="@(CurrentViewModel.IsSmallView ? "dialogClassSmall":"dialogClass")" OnBackdropClick="@HandleBackdropClick" Visible="CurrentViewModel.IsOpen" Options="@Options">
@@ -112,7 +113,7 @@
     </DialogContent>
 </MudDialog>
 
-<BaseComponent TViewModel="IRegisterViewModel" TModel="object">
+<BaseComponent TViewModel="IRegisterViewModel" TModel="DTOUser">
         <Content>
             <RegisterDialog />
         </Content>

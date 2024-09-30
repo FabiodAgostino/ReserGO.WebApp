@@ -1,9 +1,10 @@
-﻿@using ReserGO.ViewModel.Interface.Register;
+﻿@using ReserGO.DTO
+@using ReserGO.ViewModel.Interface.Register;
 @using ReserGO.Utils.UI;
 @using ReserGO.UI.Login;
 @page "/confirm/{username}"
 
-<BaseComponent TViewModel="IRegisterViewModel" TModel="object">
+<BaseComponent TViewModel="IRegisterViewModel" TModel="DTOUser">
         <Content>
             <RegistrationConfirm Username="@username" />
         </Content>

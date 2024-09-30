@@ -29,9 +29,6 @@
     <Reference Include="ReserGO.Utils.MVM">
       <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.MVM\obj\Debug\net8.0\ReserGO.Utils.MVM.dll</HintPath>
     </Reference>
-    <Reference Include="ReserGO.Utils.Service">
-      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.Service\obj\Debug\net8.0\ReserGO.Utils.Service.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

@@ -65,14 +65,14 @@
     [Parameter]
     public EventCallback Callback { get; set; }
 
-    public UserRegister User = new UserRegister();
+    public DTOUser User = new DTOUser();
 
     private bool _success;
 
 
     protected override void OnInitialized()
     {
-        User = new UserRegister();
+        User = new DTOUser();
     }
 
     private async Task Click()
