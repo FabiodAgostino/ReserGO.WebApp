@@ -75,7 +75,7 @@ namespace ReserGO.ViewModel.ViewModel.Register
                     Notification("Registrazione effettuata con successo, conferma la mail.", NotificationColor.Success);
                 else
                 {
-
+                    Notification(result.Message, NotificationColor.Error);
                 }
             }catch(Exception ex)
             {

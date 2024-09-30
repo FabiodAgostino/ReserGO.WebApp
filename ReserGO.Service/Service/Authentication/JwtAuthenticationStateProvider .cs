@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Utils.DTO.Utils;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
@@ -41,7 +42,9 @@ namespace ReserGO.Service.Service.Authentication
             var identity = new ClaimsIdentity(claims, "jwtAuthType");
             var user = new ClaimsPrincipal(identity);
             if (User == null) User = new();
-            User.Username = claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+            User.Username = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+            User.FirstName = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.GivenName)?.Value;
+            User.LastName = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.FamilyName)?.Value;
             User.Roles = claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).FirstOrDefault().Trim(new char[] { '[', ']' }).Split(',').ToList().ToList();
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
             return new AuthenticationState(user);
