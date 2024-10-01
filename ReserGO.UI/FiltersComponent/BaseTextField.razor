@@ -1,0 +1,107 @@
+﻿@using MudBlazor
+
+<MudTextField Value="@_value" ValueChanged="(string value) => OnValueChanged(value)" T="string" Immediate="@Required"
+              Required="@Required" Pattern="GetMinLenght()"
+              Error="@(_value?.Length < MinLenght)"
+              @ref="@textRef"
+              RequiredError="@GetErrorRequired()"
+              ErrorText="@GetErrorText()" 
+              Label="@Label" Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+@code
+{
+    [Parameter]
+    public bool NumericField { get; set; } = false;
+
+    [Parameter]
+    public bool Required {get;set;} = true;
+
+    [Parameter]
+    public int MinLenght {get;set;} = 3;
+
+    [Parameter]
+    public EventCallback<string?> Bind { get; set; }
+
+    [Parameter]
+    public string Value { get; set; } = "";
+
+    [Parameter]
+    public string CustomErrorText{get;set;}
+
+    [Parameter]
+    public string CustomErrorRequired{get;set;}
+
+    [Parameter]
+    public string Label {get;set;}
+
+    [Parameter]
+    public string Regex { get; set; } = "";
+
+    private string _value {get;set;}
+
+    private MudTextField<string> textRef;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            SetMinLenghtOnRegex();
+        }
+    }
+
+    private string GetMinLenght()
+    {
+        if(String.IsNullOrEmpty(Regex))
+            return "^.{"+@MinLenght+",}$";
+        return Regex;
+    }
+
+    private string GetErrorText()
+    {
+        if(String.IsNullOrEmpty(CustomErrorText))
+            return $"Almeno {MinLenght} caratteri";
+        else
+            return CustomErrorText;
+    }
+
+    private string GetErrorRequired()
+    {
+        @if(Required)
+        {
+
+            if(String.IsNullOrEmpty(CustomErrorRequired))
+                return $"Inserire {Label}";
+            else
+                return CustomErrorRequired;
+        }
+        return "";
+    }
+
+    private async Task OnValueChanged(string e)
+    {
+        if(NumericField)
+        {
+            _value = new string(e.Where(char.IsDigit).ToArray());
+            textRef.Text = _value;
+
+        }
+        else
+            _value = e;
+        await Bind.InvokeAsync(_value); // Notifica il padre del cambiamento
+    }
+
+    private void SetMinLenghtOnRegex()
+    {
+        if (!string.IsNullOrEmpty(Regex))
+        {
+            // Estrai il valore di MinLenght dalla regex se possibile
+            var match = System.Text.RegularExpressions.Regex.Match(Regex, @"\{(\d+),?");
+            if (match.Success && int.TryParse(match.Groups[1].Value, out int minLengthFromRegex))
+            {
+                MinLenght = minLengthFromRegex; // Modifica MinLenght in base alla regex
+            }
+        }
+    }
+
+}
