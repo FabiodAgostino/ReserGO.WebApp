@@ -1,4 +1,6 @@
-﻿@using ReserGO.ViewModel.Interface.Home;
+﻿@using ReserGO.ViewModel.Interface.LoginHome;
+@using ReserGO.ViewModel.Interface.Home;
+@using ReserGO.ViewModel.Interface.Authentication;
 @using ReserGO.Utils.UI
 @using ReserGO.Utils.DTO.Utils
 @inherits BaseComponentChild<IHomeViewModel, object>
@@ -9,13 +11,17 @@
     <GuestHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))"/>
 }
 
-@if (CurrentViewModel.User.Roles!=null && CurrentViewModel.UserIs(RoleConst.CUSTOMER))
+@if ((CurrentViewModel.User.Roles!=null && CurrentViewModel.UserIs(RoleConst.CUSTOMER)) || true)
 {
-     <LoginHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))" />
+    <BaseComponent TViewModel="ILoginHomeViewModel" TModel="object">
+        <Content>
+            <LoginHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))" />
+        </Content>
+    </BaseComponent>
 }
 
-@if (CurrentViewModel.User.Roles!=null && CurrentViewModel.UserIs(RoleConst.ADMIN))
+@if ((CurrentViewModel.User.Roles != null && CurrentViewModel.UserIs(RoleConst.ADMIN)) || false)
 {
-     <AdminHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))"/>
+     <AdminHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))"/>    
 }
 

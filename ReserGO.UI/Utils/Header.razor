@@ -10,9 +10,9 @@
 @inject IDialogService DialogService
 @inherits BaseComponentChild<IHeaderViewModel, object>
 @inject NavigationManager NaviMngr;
-<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:@(!_userIsGuest && !IsSmall ? "transparent" : BackgroundColor)">
+<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:@(!_userIsGuest && !CurrentViewModel.IsSmallView ? "transparent" : BackgroundColor)">
 
-    @if(IsSmall)
+    @if (CurrentViewModel.IsSmallView)
     {
         <MudIcon Icon="@Icon" Class="smallIconCss" Style="@IconColor()"></MudIcon>
         <div class="d-flex justify-content-center" style="width:100%;">
@@ -97,8 +97,6 @@
 
     private bool _userIsGuest { get; set; }
 
-    private bool IsSmall = false;
-
 
     protected override async Task OnParametersSetAsync()
     {
@@ -116,6 +114,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        CurrentViewModel.RegisterOnScreenResize(800);
         await CurrentViewModel.CheckUser();
         StateHasChanged();
     }
