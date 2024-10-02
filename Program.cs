@@ -10,9 +10,11 @@ using ReserGO.Service.Service.Authentication;
 using ReserGO.ViewModel.Extensions;
 using Serilog;
 using ReserGO.Service.Interface.Utils;
+using ReserGO.Service.Service.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 var serverapi = builder.Configuration.GetValue<string>("serverapi");
+MyConfigurationAccessor.Configuration = builder.Configuration;
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IEvent, Event>();
 builder.Services.AddBlazoredSessionStorage();

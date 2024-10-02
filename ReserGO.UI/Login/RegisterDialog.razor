@@ -7,7 +7,7 @@
 @using ReserGO.Utils.UI
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
-
+@using ReserGO.Utils.DTO.Utils
 @inherits BaseComponentChild<IRegisterViewModel, DTOUser>
 
 <MudDialog Class="registerDialogCss" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler">
@@ -49,7 +49,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr>
+                        <tr style="@(CurrentViewModel.ConfigurationServer.ExtendedInput == ExtendedInput.ADVANCED ? "" : "display:none")">
                             <td>
                                 <div class="inputSpace">
                                     <RegioneCombo OnRegionSelected="@((string regione) => _regione = regione)" />
