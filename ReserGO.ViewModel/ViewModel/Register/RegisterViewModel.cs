@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
+using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
@@ -11,7 +12,7 @@ using ReserGO.ViewModel.Interface.Register;
 
 namespace ReserGO.ViewModel.ViewModel.Register
 {
-    public class RegisterViewModel : CompleteReserGOViewModell<DTOUser>, IRegisterViewModel
+    public class RegisterViewModel : CompleteReserGOViewModell<DTOUser, RegisterViewModel>, IRegisterViewModel
     {
         ILoginService _authService;
         private readonly NavigationManager _navigationManager;
@@ -19,11 +20,12 @@ namespace ReserGO.ViewModel.ViewModel.Register
         public bool IsOpen { get; set; }
 
 
-        public RegisterViewModel(IEvent aggregator, ILogger<RegisterViewModel> logger, INotificationService notification, IUserSession session, ILoginService authService, IJSRuntime js, NavigationManager navigationManager) : base(aggregator, logger, notification, session, js)
+        public RegisterViewModel(IBaseServicesReserGO<RegisterViewModel> baseService, ILoginService authService, NavigationManager navigationManager) 
+            : base(baseService)
         {
             _authService = authService;
             _navigationManager = navigationManager;
-            aggregator.Subscribe<ObjectMessage<bool>>(GetType(), OpenModal);
+            Aggregator.Subscribe<ObjectMessage<bool>>(GetType(), OpenModal);
             SelectedItem = new DTOUser();
         }
 

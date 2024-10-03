@@ -5,6 +5,7 @@ using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
+using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
@@ -13,11 +14,11 @@ using ReserGO.ViewModel.ViewModel.Home;
 
 namespace ReserGO.ViewModel.ViewModel.Header
 {
-    public class HeaderViewModel : CompleteReserGOViewModell<object>, IHeaderViewModel
+    public class HeaderViewModel : CompleteReserGOViewModell<object, HeaderViewModel>, IHeaderViewModel
     {
         private readonly IAuthenticationService _authService;
 
-        public HeaderViewModel(IEvent aggregator, ILogger<HeaderViewModel> logger, INotificationService notificaition, IUserSession session,IAuthenticationService authService, IJSRuntime js) : base(aggregator, logger, notificaition, session, js)
+        public HeaderViewModel(IBaseServicesReserGO<HeaderViewModel> baseService,IAuthenticationService authService) : base(baseService)
         {
             _authService = authService;
         }

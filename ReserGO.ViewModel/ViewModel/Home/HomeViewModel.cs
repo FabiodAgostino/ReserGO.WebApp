@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
+using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Home;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
@@ -12,16 +13,14 @@ using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.ViewModel.Home
 {
-    public class HomeViewModel : CompleteReserGOViewModell<object>, IHomeViewModel
+    public class HomeViewModel : CompleteReserGOViewModell<object, HomeViewModel>, IHomeViewModel
     {
         private readonly IHomeService _service;
-        private readonly IComuneService cfService;
 
-        public HomeViewModel(IEvent aggregator, ILogger<HomeViewModel> logger, INotificationService notification,IUserSession session, IHomeService service, IJSRuntime js, IComuneService cfService) : base(aggregator, logger, notification, session, js)
+        public HomeViewModel(IBaseServicesReserGO<HomeViewModel> baseService, IHomeService service) : base(baseService)
         {
             _service = service;
-            this.cfService = cfService;
-            aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
+            Aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
 
         }
 

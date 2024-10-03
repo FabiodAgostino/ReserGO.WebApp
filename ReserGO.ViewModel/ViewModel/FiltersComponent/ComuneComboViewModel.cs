@@ -2,18 +2,18 @@
 using Microsoft.JSInterop;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Model;
+using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.FiltersComponent;
 
 namespace ReserGO.ViewModel.ViewModel.FiltersComponent
 {
-    public class ComuneComboViewModel : CompleteReserGOViewModell<DTOComuneProvincia>, IComuneComboViewModel
+    public class ComuneComboViewModel : CompleteReserGOViewModell<DTOComuneProvincia, ComuneComboViewModel>, IComuneComboViewModel
     {
         private readonly IComuneService service;
 
-        public ComuneComboViewModel(IEvent aggregator, ILogger<ComuneComboViewModel> logger, INotificationService notificationService, IUserSession userSession, IJSRuntime js, IComuneService service) : 
-            base(aggregator, logger, notificationService, userSession, js)
+        public ComuneComboViewModel(IBaseServicesReserGO<ComuneComboViewModel> baseService, IComuneService service) : base(baseService)
         {
             this.service = service;
             IsLoading = false;

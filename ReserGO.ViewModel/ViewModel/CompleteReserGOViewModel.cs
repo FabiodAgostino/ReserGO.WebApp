@@ -1,36 +1,29 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
+﻿using Microsoft.JSInterop;
 using ReserGO.Miscellaneous.Enum;
-using ReserGO.Service.Interface.Authentication;
-using ReserGO.Service.Interface.Utils;
+using ReserGO.Service.Interface;
 using ReserGO.Utils.DTO.Utils;
-using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface;
 
 namespace ReserGO.ViewModel.ViewModel
 {
-    public class CompleteReserGOViewModell<TModel> : LightReserGOViewModel<TModel>, ICompleteReserGOViewModel<TModel> where TModel : class
+    public class CompleteReserGOViewModell<TModel, T> : LightReserGOViewModel<TModel>, ICompleteReserGOViewModel<TModel> where TModel : class where T : class
     {
-        private readonly INotificationService _notificationService;
-        private readonly IUserSession _userSession;
-        private readonly IJSRuntime _js;
+        private readonly IBaseServicesReserGO<T> _baseServices;
 
-        public CompleteReserGOViewModell(IEvent aggregator, ILogger logger, INotificationService notificationService, IUserSession userSession, IJSRuntime js) : base(aggregator, logger)
+        public CompleteReserGOViewModell(IBaseServicesReserGO<T> baseServices) : base(baseServices.Aggregator, baseServices.Log)
         {
-            _notificationService = notificationService;
-            _userSession = userSession;
-            _js = js;
+            _baseServices = baseServices;
         }
 
         public DTOUserSession User
         {
             get
             {
-                if (_userSession.User == null || _userSession.User.Username == null)
+                if (_baseServices.Session.User == null || _baseServices.Session.User.Username == null)
                 {
                     return new DTOUserSession();
                 }
-                return _userSession.User;
+                return _baseServices.Session.User;
             }
         }
         private bool _isSmallView { get;set; }
@@ -38,7 +31,7 @@ namespace ReserGO.ViewModel.ViewModel
 
         public virtual async Task RegisterOnScreenResize(int width=1200)
         {
-            await _js.InvokeVoidAsync("onScreenResize.addResizeListener", DotNetObjectReference.Create(this), width);
+            await _baseServices.JS.InvokeVoidAsync("onScreenResize.addResizeListener", DotNetObjectReference.Create(this), width);
         }
 
         [JSInvokable]
@@ -50,23 +43,24 @@ namespace ReserGO.ViewModel.ViewModel
 
         public virtual void Notification(string text, NotificationColor color = NotificationColor.Info, string position = null)
         {
-            _notificationService.NotifyMessage(text, color, position);
+            _baseServices.Notification.NotifyMessage(text, color, position);
         }
 
       
 
         public virtual bool UserIs(RoleConst role)
         {
-            if(User!=null && User.Roles!=null)
+            var roles = _baseServices.Session.User.Roles;
+            if (User!=null && User.Roles!=null)
             {
                 switch (role)
                 {
                     case RoleConst.ADMIN:
-                        return User.Roles.HasPermission(RoleConst.ADMIN);
+                        return roles.HasPermission(RoleConst.ADMIN);
                     case RoleConst.CUSTOMER:
-                        return User.Roles.HasPermission(RoleConst.CUSTOMER) && !User.Roles.HasPermission(RoleConst.ADMIN);
+                        return roles.HasPermission(RoleConst.CUSTOMER) && !roles.HasPermission(RoleConst.ADMIN);
                     case RoleConst.GUEST:
-                        return User.Roles.HasPermission(RoleConst.GUEST) && !User.Roles.HasPermission(RoleConst.CUSTOMER);
+                        return roles.HasPermission(RoleConst.GUEST) && !roles.HasPermission(RoleConst.CUSTOMER);
                     default: return false;
                 }
             }

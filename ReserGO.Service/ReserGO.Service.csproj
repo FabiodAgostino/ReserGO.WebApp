@@ -27,6 +27,9 @@
     <Reference Include="ReserGO.Utils.DTO">
       <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.DTO\bin\Debug\net8.0\ReserGO.Utils.DTO.dll</HintPath>
     </Reference>
+    <Reference Include="ReserGO.Utils.Events">
+      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.Events\obj\Debug\net8.0\ReserGO.Utils.Events.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

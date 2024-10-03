@@ -1,35 +1,31 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
+using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
-using ReserGO.Service.Interface.Utils;
-using ReserGO.Utils.DTO.Utils;
-using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Authentication;
 using ReserGO.ViewModel.ViewModel.Register;
-using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.ViewModel.Authentication
 {
-    public class LoginViewModel : CompleteReserGOViewModell<DTOLoginRequest>, ILoginViewModel
+    public class LoginViewModel : CompleteReserGOViewModell<DTOLoginRequest, LoginViewModel>, ILoginViewModel
     {
         private readonly IAuthenticationService _authService;
         private readonly NavigationManager _navigationManager;
 
-        public LoginViewModel(IEvent aggregator, ILogger<LoginViewModel> logger, INotificationService notification, IUserSession session, IAuthenticationService authService, NavigationManager navigationManager, IJSRuntime js) 
-            : base(aggregator, logger, notification, session, js)
-        { 
+        public LoginViewModel(IBaseServicesReserGO<LoginViewModel> baseServices, IAuthenticationService authService, NavigationManager navigationManager)
+           : base(baseServices)
+        {
             _authService = authService;
             _navigationManager = navigationManager;
-            aggregator.Subscribe<ObjectMessage<GenericModalVoid>>(GetType(), OpenModal);
+            Aggregator.Subscribe<ObjectMessage<GenericModalVoid>>(GetType(), OpenModal);
             IsLoading = false;
             IsFirstLoad = true;
             SelectedItem = new();
         }
+
         public string? LoginError { get; set; }
         public bool IsOpen { get; set; }
         EventCallback Callback { get; set; }
