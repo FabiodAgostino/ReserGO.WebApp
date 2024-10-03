@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using ReserGO.DTO;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Utils.DTO.Service;
+using System.Security.Claims;
 
 namespace ReserGO.Service.Service.Authentication
 {

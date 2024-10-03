@@ -24,7 +24,7 @@
                      AriaLabel="Open user menu" Class="iconUserButton" >
                 <MudMenuItem>Profilo</MudMenuItem>
                 <MudMenuItem>Privacy</MudMenuItem>
-                <MudMenuItem>Logout</MudMenuItem>
+                <MudMenuItem @onclick="@(async () => await CurrentViewModel.Logout())">Logout</MudMenuItem>
             </MudMenu>
         }
         else

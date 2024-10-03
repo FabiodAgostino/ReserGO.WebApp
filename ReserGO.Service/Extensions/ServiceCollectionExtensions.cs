@@ -18,7 +18,7 @@ namespace ReserGO.Service.Extensions
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IUserSession, UserSession>();
-        
+            services.AddScoped(typeof(IBaseServicesReserGO<>), typeof(BaseServicesReserGO<>));
 
 
             return services;

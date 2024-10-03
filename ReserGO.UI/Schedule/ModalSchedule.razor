@@ -9,54 +9,54 @@
 @using System.ComponentModel.DataAnnotations
 @using ReserGO.UI.Utils
 @using ReserGO.UI.Login
+@using ReserGO.ViewModel.Interface.Schedule;
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.Utils.DTO.Utils
+@inherits BaseComponentChild<IModalScheduleViewModel, GenericModal<int>>
 
-<MudDialog Class="scheduleDialogCss" Visible="ShowModal" OnBackdropClick="OnBackdropClickHandler">
+<MudDialog Class="scheduleDialogCss" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler">
     <TitleContent>
 
     </TitleContent>
     <DialogContent>
 
         <div class="d-flex dialogScheduleContainer p-1">
+            <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
+                <MudTabPanel Text="Giorno e ora">
+                    <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
+                        <CalendarSchedule />
+                    </div>
 
-            @if(false)
-            {
-                <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
+                    <div class="d-flex flex-column justify-content-center h-100">
+                        <div class="scheduleDivider"></div>
+                    </div>
 
-                    <CalendarSchedule />
+                    <div class="d-flex flex-column columnCalendar" style="width:50%;">
+                        <TimeSchedule></TimeSchedule>
+                    </div>
+                </MudTabPanel>
+                @if (CurrentViewModel.UserIs(RoleConst.GUEST))
+                {
+                    <MudTabPanel Text="Anagrafica">
+                        <ScheduleForm />
+                    </MudTabPanel>
+                }
+                <MudTabPanel Text="Three">
+                    <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
 
-                </div>
+                        <CalendarSchedule />
 
-                <div class="d-flex flex-column justify-content-center h-100">
-                    <div class="scheduleDivider"></div>
-                </div>
+                    </div>
 
-                <div class="d-flex flex-column columnCalendar" style="width:50%;">
-                    <TimeSchedule></TimeSchedule>
-                </div>
-            }
-            @if(true)
-            {
+                    <div class="d-flex flex-column justify-content-center h-100">
+                        <div class="scheduleDivider"></div>
+                    </div>
 
-                    <ScheduleForm />
-
-            }
-            @if(false)
-            {
-                <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
-
-                    <CalendarSchedule />
-
-                </div>
-
-                <div class="d-flex flex-column justify-content-center h-100">
-                    <div class="scheduleDivider"></div>
-                </div>
-
-                <div class="d-flex flex-column columnCalendar" style="width:50%;">
-                    <TimeSchedule></TimeSchedule>
-                </div>
-            }
-
+                    <div class="d-flex flex-column columnCalendar" style="width:50%;">
+                        <TimeSchedule></TimeSchedule>
+                    </div>
+                </MudTabPanel>
+            </MudTabs>
         </div>
 
     </DialogContent>
@@ -65,13 +65,11 @@
 
 @code {
 
-    [Parameter]
-    public bool ShowModal { get; set; }
 
 
     private async Task OnBackdropClickHandler(MouseEventArgs e)
     {
-        ShowModal = false;
+        CurrentViewModel.Close();
     }
 }
 
@@ -81,5 +79,18 @@
         height: 60%;
         max-width: 70% !important;
         border-radius: 30px !important;
+    }
+
+    .mud-tabs {
+        width: 100%;
+    }
+
+    .mud-tabs-panels {
+        display: flex;
+        height: 100%;
+    }
+
+    .mud-tab-slider.mud-tab-slider-horizontal {
+        width: 160.29px !important;
     }
 </style>

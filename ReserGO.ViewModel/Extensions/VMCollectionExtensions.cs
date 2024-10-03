@@ -5,6 +5,7 @@ using ReserGO.ViewModel.Interface.Header;
 using ReserGO.ViewModel.Interface.Home;
 using ReserGO.ViewModel.Interface.LoginHome;
 using ReserGO.ViewModel.Interface.Register;
+using ReserGO.ViewModel.Interface.Schedule;
 using ReserGO.ViewModel.Interface.Utils;
 using ReserGO.ViewModel.ViewModel.Authentication;
 using ReserGO.ViewModel.ViewModel.FiltersComponent;
@@ -12,6 +13,7 @@ using ReserGO.ViewModel.ViewModel.Header;
 using ReserGO.ViewModel.ViewModel.Home;
 using ReserGO.ViewModel.ViewModel.LoginHome;
 using ReserGO.ViewModel.ViewModel.Register;
+using ReserGO.ViewModel.ViewModel.Schedule;
 using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.Extensions
@@ -27,6 +29,8 @@ namespace ReserGO.ViewModel.Extensions
             services.AddTransient<IRegisterViewModel, RegisterViewModel>();
             services.AddScoped<IComuneComboViewModel, ComuneComboViewModel>();
             services.AddScoped<ILoginHomeViewModel, LoginHomeViewModel>();
+            services.AddScoped<IModalScheduleViewModel, ModalScheduleViewModel>();
+            services.AddScoped<IScheduleViewModel, ScheduleViewModel>();
 
 
             return services;

@@ -1,55 +1,32 @@
 ﻿@using MudBlazor
 @using ReserGO.UI.Utils
-
-
+@using ReserGO.DTO;
 
 <div class="d-flex flex-column align-items-center justify-content-center h-100 w-100 listScheduleContainer">
     <div class="d-flex justify-content-center gridContainer">
 
         <MudGrid Spacing="@Spacing" Justify="Justify.Center" Style="align-items:center;">
-            <MudItem>
-                <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(8))" />
-                    <ScheduleCard Icon="@InformationIcon" />
+            @if (Resources != null && Resources.Any())
+            {
+                @foreach (var resource in Resources)
+                {
+                    <MudItem>
+                        <div class="d-flex flex-row">
+                            <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(8))" Title="@resource.ResourceName" Description="@resource.Description" />
+                        </div>
+                    </MudItem>
+                }
+            }
+            @if (!IsLoading && Resources==null)
+            {
+                <div>No data...</div>
+            }
+            @if(IsLoading)
+            {
+                <div style="position:fixed;">
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="mudProgressSchedules" />
                 </div>
-            </MudItem>
-             <MudItem>
-                <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                </div>
-            </MudItem>
-            <MudItem>
-                <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                </div>
-            </MudItem>
-            <MudItem>
-                <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                </div>
-            </MudItem>
-            <MudItem>
-                <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                </div>
-            </MudItem>
-            <MudItem>
-                <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                </div>
-            </MudItem>
-            <MudItem>
-                <div class="d-flex flex-row">
-                    <ScheduleCard Icon="@InformationIcon" />
-                    <ScheduleCard Icon="@InformationIcon" />
-                </div>
-            </MudItem>
-
+            }
         </MudGrid>
 
     </div>
@@ -61,6 +38,12 @@
     [Parameter]
     public EventCallback<int> Callback { get; set; }
 
+    [Parameter]
+    public IEnumerable<DTOResource> Resources { get; set; }
+
+    [Parameter]
+    public bool IsLoading { get; set; } = true;
+
     public int Spacing { get; set; } = 1;
     private string InformationIcon = "";
 
@@ -70,7 +53,7 @@
         InformationIcon = Icons.Material.Filled.Today;
     }
 
-    
+
     private async Task Click(int idResource)
     {
         if (Callback.HasDelegate)
@@ -79,3 +62,15 @@
         }
     }
 }
+
+<style>
+    .mudProgressSchedules {
+        height: 150px !important;
+        width: 150px !important;
+    }
+
+     .mud-progress-circular.mud-progress-medium {
+        height: 150px !important;
+        width: 150px !important;
+    }
+</style>

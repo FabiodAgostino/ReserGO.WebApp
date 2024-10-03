@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
+using ReserGO.Service.Service.Authentication;
+using ReserGO.Service.Interface.Authentication;
 
 namespace ReserGO.WebApp.Components.Layout
 {
@@ -7,6 +9,7 @@ namespace ReserGO.WebApp.Components.Layout
     {
         [CascadingParameter] private Task<AuthenticationState> Authentication { get; set; }
         [Inject] NavigationManager Navigation { get; set; }
+        [Inject] IJwtAuthenticationStateProvider provider { get; set; }
         public bool Render = false;
         public bool IsRedirect = false;
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -22,6 +25,7 @@ namespace ReserGO.WebApp.Components.Layout
                     var authstate = await Authentication;
                     if (authstate != null)
                     {
+                        await provider.GetAuthenticationStateAsync();
                         Render = true;
                         StateHasChanged();
                     }

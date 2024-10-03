@@ -9,7 +9,9 @@ using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
+using ReserGO.ViewModel.Interface.Authentication;
 using ReserGO.ViewModel.Interface.Header;
+using ReserGO.ViewModel.ViewModel.Authentication;
 using ReserGO.ViewModel.ViewModel.Home;
 
 namespace ReserGO.ViewModel.ViewModel.Header
@@ -27,7 +29,7 @@ namespace ReserGO.ViewModel.ViewModel.Header
         public async Task OpenModal()
         {
             var modal = new GenericModalVoid(new EventCallbackFactory().Create(this, () => Refresh()));
-            Aggregator.Publish<GenericModalVoid,ObjectMessage<GenericModalVoid>>(new ObjectMessage<GenericModalVoid>(modal));
+            Aggregator.Publish<GenericModalVoid,ObjectMessage<GenericModalVoid>>(new ObjectMessage<GenericModalVoid>(modal), typeof(LoginViewModel));
         }
 
         public async Task Refresh()
@@ -41,11 +43,15 @@ namespace ReserGO.ViewModel.ViewModel.Header
 
         public async Task Logout()
         {
+            IsLoading = true;
+            Loading();
             await _authService.Logout();
             await Login();
             await CheckUser();
             Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(HomeViewModel));
             OnPropertyChanged();
+            IsLoading = false;
+            Loading();
 
         }
 

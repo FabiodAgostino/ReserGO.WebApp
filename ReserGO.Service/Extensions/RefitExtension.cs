@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Home;
+using ReserGO.Service.Interface.Schedule;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Service.Service.Authentication;
 
@@ -31,6 +32,16 @@ namespace ReserGO.Service.Extensions
                     BaseAddress = new Uri($"{serverapi}api/Auth")
                 };
                 return RestService.For<ILoginService>(httpClient);
+            });
+
+            services.AddScoped(provider =>
+            {
+                var handler = provider.GetRequiredService<ApiMessageHandler>();
+                var httpClient = new HttpClient(handler)
+                {
+                    BaseAddress = new Uri($"{serverapi}api/Resource")
+                };
+                return RestService.For<IScheduleService>(httpClient);
             });
 
             services.AddScoped(provider =>

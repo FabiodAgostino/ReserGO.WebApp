@@ -1,6 +1,14 @@
-﻿
+﻿@using ReserGO.ViewModel.Interface.Schedule
+@using ReserGO.DTO;
 @using ReserGO.UI.Schedule;
-<Schedule />
+@using ReserGO.Utils.UI
+
+<BaseComponent TViewModel="IScheduleViewModel" TModel="IEnumerable<DTOResource>">
+    <Content>
+        <Schedule />
+    </Content>
+</BaseComponent>
+
 
 
 

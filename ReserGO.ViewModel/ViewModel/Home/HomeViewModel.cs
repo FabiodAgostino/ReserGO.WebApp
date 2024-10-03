@@ -1,29 +1,27 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
+﻿using Blazored.SessionStorage;
+using Microsoft.AspNetCore.Components;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Home;
-using ReserGO.Service.Interface.Utils;
-using ReserGO.Utils.Event;
+using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Home;
-using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.ViewModel.Home
 {
     public class HomeViewModel : CompleteReserGOViewModell<object, HomeViewModel>, IHomeViewModel
     {
         private readonly IHomeService _service;
-
-        public HomeViewModel(IBaseServicesReserGO<HomeViewModel> baseService, IHomeService service) : base(baseService)
+        private readonly ISessionStorageService _sessionStorage;
+        private const string SettingsMenuKey = "settingsMenu";
+        public HomeViewModel(IBaseServicesReserGO<HomeViewModel> baseService, IHomeService service, ISessionStorageService sessionStorage) : base(baseService)
         {
             _service = service;
+            _sessionStorage = sessionStorage;
             Aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
 
         }
-
         public IEnumerable<DTOSettingMenu> ItemsMenu { get; set; }
         public string PageTitle { get; set; }
         private RenderFragment _content;
@@ -52,31 +50,43 @@ namespace ReserGO.ViewModel.ViewModel.Home
             }
 
         }
+
+
         public void ToggleDrawer() => DrawerVisibility = !DrawerVisibility;
 
 
         public async Task OnInitialize()
         {
-            try
+            var savedSettingsMenu = await _sessionStorage.GetItemAsync<IEnumerable<DTOSettingMenu>>(SettingsMenuKey);
+            if (savedSettingsMenu == null)
             {
-                var result = await _service.GetSettingsMenu();
-                if (result.Success)
+                isLoading = true;
+                Loading();
+                try
                 {
-                    ItemsMenu = result.Data.OrderBy(x=>x.OrderN);
-                    SelectedItem = ItemsMenu.FirstOrDefault();
-                    ChangeComponent();
-                }
+                    var result = await _service.GetSettingsMenu();
+                    if (result.Success)
+                    {
+                        savedSettingsMenu = result.Data;
+                        await _sessionStorage.SetItemAsync(SettingsMenuKey, savedSettingsMenu);
+                    }
 
+                }
+                catch (Exception ex)
+                {
+                    Notification(ex.Message, NotificationColor.Error);
+                }
+                finally
+                {
+                    IsLoading = false;
+                    Loading();
+                    isFirstLoad = false;
+                    OnPropertyChanged();
+                }
             }
-            catch (Exception ex)
-            {
-                Notification(ex.Message, NotificationColor.Error);
-            }
-            finally
-            {
-                isFirstLoad = false;
-                OnPropertyChanged();
-            }
+            ItemsMenu = savedSettingsMenu.Where(menu => menu.Permissions.Any(permission => User.Roles.HasPermission((RoleConst)permission))).OrderBy(x => x.OrderN);
+            SelectedItem = ItemsMenu.FirstOrDefault();
+            ChangeComponent();
         }
 
         public void ChangeComponent(string component = null)
