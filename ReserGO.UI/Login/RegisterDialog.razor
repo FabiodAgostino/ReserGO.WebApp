@@ -22,96 +22,119 @@
             <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:80%;">
 
                 <MudForm @ref="form" @bind-IsValid="@_success">
-                    <table style="border-collapse: collapse; width: 100%; border: none;">
-                        <tr>
-                            <td>
-                                <div class="inputSpace">
-                                    <BaseTextField Bind="@((string value ) => CurrentViewModel.SelectedItem.FirstName=value)" Label="Nome"/>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="inputSpace">
-                                    <BaseTextField Bind="@((string value ) => CurrentViewModel.SelectedItem.LastName=value)" Label="Cognome"/>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="inputSpace">
-                                    <BaseTextField Bind="@((string value ) => CurrentViewModel.SelectedItem.Address=value)" Label="Indirizzo"/>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="inputSpace">
-                                    <MudDatePicker @bind-Date="@CurrentViewModel.SelectedItem.DateOfBirth"  Immediate="true" Label="Data di nascita" Required="true" RequiredError="Inserire data di nascita" Variant="Variant.Outlined" />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr style="@(CurrentViewModel.ConfigurationServer.ExtendedInput == ExtendedInput.ADVANCED ? "" : "display:none")">
-                            <td>
-                                <div class="inputSpace">
-                                    <RegioneCombo OnRegionSelected="@((string regione) => _regione = regione)" />
-                                </div>
-                            </td>
-                            <td>
-                                <div class="inputSpace">
-                                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
-                                        <Content>
-                                            <ComuneCombo Regione="@_regione" OnComuneSelected="@((string? comune) => CurrentViewModel.SelectedItem.CityOfBirth = (comune is null ? "" : comune))" />
-                                        </Content>
-                                    </BaseComponent>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="inputSpace">
-                                    <BaseTextField Bind="@((string? value ) => CurrentViewModel.SelectedItem.PhoneNumber=value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido"/>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="inputSpace">
-                                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
-                                        <Content>
-                                            <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email"
-                                                          Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                                          Immediate="true"
-                                                          Required="true" RequiredError="Inserire Email corretta"
-                                                          Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
-                                            </MudTextField>
-                                        </Content>
-                                    </BaseComponent>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="inputSpace">
-                                    <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Password" Required="true"
-                                                  RequiredError="inserire password" Label="Password"
-                                                  Immediate="true"
-                                                  @ref="pwField1" InputType="InputType.Password"
-                                                  Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"
-                                                  Variant="Variant.Outlined" Margin="Margin.Dense">
-                                    </MudTextField>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="inputSpace">
-                                    <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.ConfirmPassword" Required="true"
-                                                  InputType="InputType.Password"
-                                                  Immediate="true"
-                                                  Validation="@(new Func<string, string>(PasswordMatch))"
-                                                  RequiredError="La password non corrisponde" Label="Conferma password"
-                                                  Variant="Variant.Outlined" Margin="Margin.Dense">
-                                    </MudTextField>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </MudForm>
+    <MudGrid>
+        <MudItem xs="12" sm="6">
+            <div class="inputSpace">
+                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FirstName = value)" Label="Nome"/>
+            </div>
+        </MudItem>
+
+        <MudItem xs="12" sm="6">
+            <div class="inputSpace">
+                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.LastName = value)" Label="Cognome"/>
+            </div>
+        </MudItem>
+
+        <MudItem xs="12" sm="6">
+            <div class="inputSpace">
+                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.Address = value)" Label="Indirizzo"/>
+            </div>
+        </MudItem>
+
+        <MudItem xs="12" sm="6">
+            <div class="inputSpace">
+                <MudDatePicker @bind-Date="@CurrentViewModel.SelectedItem.DateOfBirth" Immediate="true" Label="Data di nascita" Required="true" RequiredError="Inserire data di nascita" Variant="Variant.Outlined" />
+            </div>
+        </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <div class="inputSpace">
+                    <BaseComponent TViewModel="INazioneViewModel" TModel="DTONazione">
+                        <Content>
+                            <NationalityCombo  OnNazioneSelected="@((string? nazione) => CurrentViewModel.SelectedItem.Nationality = nazione ?? "")" />
+                        </Content>
+                    </BaseComponent>
+                </div>
+            </MudItem>
+
+        @if (CurrentViewModel.ConfigurationServer.ExtendedInput == ExtendedInput.ADVANCED)
+        {
+            <MudItem xs="12" sm="6">
+                <div class="inputSpace">
+                    <RegioneCombo OnRegionSelected="@((string regione) => _regione = regione)" />
+                </div>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <div class="inputSpace">
+                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                        <Content>
+                            <ComuneCombo Regione="@_regione" OnComuneSelected="@((string? comune) => CurrentViewModel.SelectedItem.CityOfBirth = comune ?? "")" />
+                        </Content>
+                    </BaseComponent>
+                </div>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <div class="inputSpace">
+                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                        <Content>
+                            <ComuneCombo  OnComuneSelected="@((string? comune) => CurrentViewModel.SelectedItem.CityOfBirth = comune ?? "")" />
+                        </Content>
+                    </BaseComponent>
+                </div>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <div class="inputSpace">
+                    @if(true)
+                    {
+
+                        <BaseComponent TViewModel="INazioneViewModel" TModel="DTONazione">
+                            <Content>
+                                <NationalityCombo  OnNazioneSelected="@((string? nazione) => CurrentViewModel.SelectedItem.Nationality = nazione ?? "")" />
+                            </Content>
+                        </BaseComponent>
+
+                        <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FiscalCode = value)" Label="Codice fiscale" Regex="^[A-Z]{6}\d{2}[A-EHLMPRST]{1}\d{2}[A-Z]{1}\d{3}[A-Z]{1}$"/>
+                    }
+                    else
+                    {
+                        <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FiscalCode = value)" Label="Codice fiscale" />
+                    }
+                </div>
+            </MudItem>
+        }
+
+        <MudItem xs="12" sm="6">
+            <div class="inputSpace">
+                <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido"/>
+            </div>
+        </MudItem>
+
+        <MudItem xs="12" sm="6">
+            <div class="inputSpace">
+                <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                    <Content>
+                        <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email" Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Required="true" RequiredError="Inserire Email corretta" Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })"/>
+                    </Content>
+                </BaseComponent>
+            </div>
+        </MudItem>
+
+        <MudItem xs="12" sm="6">
+            <div class="inputSpace">
+                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Password" Required="true" RequiredError="inserire password" Label="Password" Immediate="true" @ref="pwField1" InputType="InputType.Password" Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+            </div>
+        </MudItem>
+
+        <MudItem xs="12" sm="6">
+            <div class="inputSpace">
+                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.ConfirmPassword" Required="true" InputType="InputType.Password" Immediate="true" Validation="@(new Func<string, string>(PasswordMatch))" RequiredError="La password non corrisponde" Label="Conferma password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+            </div>
+        </MudItem>
+    </MudGrid>
+</MudForm>
             </div>
 
             <div class="d-flex flex-column justify-content-center h-100">
