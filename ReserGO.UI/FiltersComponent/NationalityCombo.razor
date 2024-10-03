@@ -1,0 +1,105 @@
+﻿@using MudBlazor
+@using System.Collections.Generic
+@using System.Threading
+@using System.Threading.Tasks
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.FiltersComponent
+@using ReserGO.ViewModel.ViewModel.FiltersComponent
+
+@inherits BaseComponentChild<INazioneViewModel, DTONazione>
+<MudAutocomplete ValueChanged="@OnNazioneChanged"
+                    T="DTONazione"
+                     SearchFunc="@SearchNazione"
+                     Placeholder="Seleziona luogo di nascita..."
+                     Clearable="false"
+                     ResetValueOnEmptyText="true"
+                     ToStringFunc=DisplayValue
+                     MaxItems="null"
+                     Variant="Variant.Outlined"
+                     Required="true"
+                     RequiredError="Inserire luogo di nascita"
+                     ClearIcon="null"
+                     Class="comuneCombo"
+                     Margin="Margin.Dense"
+                     @ref="@err"
+                     OnBlur="CheckError"
+                      >
+    <ProgressIndicatorInPopoverTemplate>
+        <MudList T="string" ReadOnly>
+            <MudListItem>
+                Loading...
+            </MudListItem>
+        </MudList>
+    </ProgressIndicatorInPopoverTemplate>
+    </MudAutocomplete>
+@code {
+    [Parameter]
+    public string Nazione { get; set; }
+    [Parameter]
+    public EventCallback<string?> OnNazioneSelected { get; set; }
+    private bool IsLoading { get; set; }
+    private Func<DTONazione, string?> DisplayValue = item => item is null ? null : item.name;
+    private MudAutocomplete<DTONazione> err;
+    private bool showCustomError;
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentViewModel.IsLoading = false;
+    }
+
+    private async Task LoadNazioneAsync()
+    {
+        await CurrentViewModel.Refresh();
+    }
+
+    private async Task<IEnumerable<DTONazione>> SearchNazione(string searchText, CancellationToken cancellationToken)
+    {
+        await Task.Yield();
+        if (string.IsNullOrWhiteSpace(searchText) || searchText.Length<3)
+        {
+            return Enumerable.Empty<DTONazione>();
+        }
+        CurrentViewModel.SearchString = searchText;
+        await CurrentViewModel.Refresh();
+        return CurrentViewModel.Nazioni.ToList();
+    }
+
+    private async Task OnNazioneChanged(DTONazione newValue)
+    {
+        CurrentViewModel.SelectedItem = newValue;
+        err.Error = string.IsNullOrEmpty(CurrentViewModel.SelectedItem.name);
+        if (OnNazioneSelected.HasDelegate)
+            await OnNazioneSelected.InvokeAsync(newValue.name);
+    }
+
+    private async Task CheckError()
+    {
+        await Task.Delay(2000);
+        err.Error = CurrentViewModel.SelectedItem == null || string.IsNullOrEmpty(CurrentViewModel.SelectedItem.name);
+        err.ErrorText = "Inserire luogo di nascita";
+    }
+
+   
+}
+
+<style>
+    .comuneCombo {
+        width: 100% !important;
+    }
+
+    .mud-container.mud-container-maxwidth-lg.mud-container--gutters {
+        padding: 0;
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-icon-button-edge-end.mud-input-adornment-icon-button {
+        color: white !important;
+        width: 5px;
+        height: 5px;
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-icon-button-size-small.mud-input-clear-button.mud-icon-button-edge-end {
+        display: none !important;
+    }
+</style>

@@ -42,6 +42,15 @@ namespace ReserGO.Service.Extensions
                 return RestService.For<IComuneService>(httpClient);
             });
 
+            services.AddScoped(provider =>
+            {
+                var httpClient = new HttpClient()
+                {
+                    BaseAddress = new Uri("https://restcountries.com")
+                };
+                return RestService.For<INazioneService>(httpClient);
+            });
+
             return services;
         }
     }

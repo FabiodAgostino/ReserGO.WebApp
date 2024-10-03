@@ -26,6 +26,7 @@ namespace ReserGO.ViewModel.Extensions
             services.AddScoped<IHeaderViewModel, HeaderViewModel>();
             services.AddTransient<IRegisterViewModel, RegisterViewModel>();
             services.AddScoped<IComuneComboViewModel, ComuneComboViewModel>();
+            services.AddScoped<INazioneViewModel, NazioneViewModel>();
             services.AddScoped<ILoginHomeViewModel, LoginHomeViewModel>();
 
 
