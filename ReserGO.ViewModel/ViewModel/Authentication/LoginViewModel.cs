@@ -36,6 +36,7 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             {
                 Callback = message.Value.Event;
                 IsOpen = true;
+                SelectedItem = new();
                 OnPropertyChanged();
             }
                 

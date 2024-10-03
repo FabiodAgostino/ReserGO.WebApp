@@ -1,21 +1,15 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
-using Microsoft.VisualBasic;
-using ReserGO.Miscellaneous.Message;
+﻿using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
-using ReserGO.Service.Interface.Utils;
-using ReserGO.Utils.Event;
+using ReserGO.Service.Interface;
 using ReserGO.ViewModel.Interface.Schedule;
 
 namespace ReserGO.ViewModel.ViewModel.Schedule
 {
-    public class ModalScheduleViewModel : CompleteReserGOViewModell<GenericModal<int>>, IModalScheduleViewModel
+    public class ModalScheduleViewModel : CompleteReserGOViewModell<GenericModal<int>, ModalScheduleViewModel>, IModalScheduleViewModel
     {
-        public ModalScheduleViewModel(IEvent aggregator, ILogger<ModalScheduleViewModel> logger, 
-            INotificationService notificationService, IUserSession userSession, IJSRuntime js) : base(aggregator, logger, notificationService, userSession, js)
+        public ModalScheduleViewModel(IBaseServicesReserGO<ModalScheduleViewModel> baseServices) : base(baseServices)
         {
-            aggregator.Subscribe<ObjectMessage<GenericModal<int>>>(GetType(), OpenModal);
+            Aggregator.Subscribe<ObjectMessage<GenericModal<int>>>(GetType(), OpenModal);
         }
         public bool IsOpen { get; set; }
 

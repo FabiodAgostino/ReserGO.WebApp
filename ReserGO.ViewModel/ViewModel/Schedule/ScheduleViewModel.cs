@@ -1,22 +1,18 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
-using ReserGO.DTO;
+﻿using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
+using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
-using ReserGO.Service.Interface.Utils;
-using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Schedule;
 
 namespace ReserGO.ViewModel.ViewModel.Schedule
 {
-    internal class ScheduleViewModel : CompleteReserGOViewModell<IEnumerable<DTOResource>>, IScheduleViewModel
+    internal class ScheduleViewModel : CompleteReserGOViewModell<IEnumerable<DTOResource>, ScheduleViewModel>, IScheduleViewModel
     {
         private readonly IScheduleService _service;
 
-        public ScheduleViewModel(IEvent aggregator, ILogger<ScheduleViewModel> logger, INotificationService notificationService, IUserSession userSession, IJSRuntime js, IScheduleService service) : base(aggregator, logger, notificationService, userSession, js)
+        public ScheduleViewModel(IBaseServicesReserGO<ScheduleViewModel> baseServices, IScheduleService service) : base(baseServices)
         {
             _service = service;
         }
