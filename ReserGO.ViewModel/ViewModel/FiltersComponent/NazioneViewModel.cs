@@ -1,21 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
-using ReserGO.Miscellaneous.Model;
+﻿using ReserGO.Miscellaneous.Model;
+using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Utils;
-using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.FiltersComponent;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReserGO.ViewModel.ViewModel.FiltersComponent
 {
-    public class NazioneViewModel : CompleteReserGOViewModell<DTONazione>, INazioneViewModel
+    public class NazioneViewModel : CompleteReserGOViewModell<DTONazione, NazioneViewModel>, INazioneViewModel
     {
         private INazioneService _service;
-        public NazioneViewModel(IEvent aggregator, ILogger<NazioneViewModel> logger, INotificationService notificationService, IUserSession userSession, IJSRuntime js, INazioneService service) : base(aggregator, logger, notificationService, userSession, js)
+        public NazioneViewModel(IBaseServicesReserGO<NazioneViewModel> baseService, INazioneService service) : base(baseService)
         {
             this._service = service;
             IsLoading = false;
