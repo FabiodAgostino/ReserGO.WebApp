@@ -2,7 +2,7 @@
 
 namespace ReserGO.ViewModel.Interface.Schedule
 {
-    public interface IScheduleViewModel : ICompleteReserGOViewModel<IEnumerable<DTOResource>>
+    public interface IScheduleViewModel : ICompleteReserGOViewModel<DTOResource>
     {
         Task OpenModalCalendar(int idResource);
     }

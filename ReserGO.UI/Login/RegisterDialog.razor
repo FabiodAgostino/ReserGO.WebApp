@@ -51,7 +51,7 @@
                 <div class="inputSpace">
                     <BaseComponent TViewModel="INazioneViewModel" TModel="DTONazione">
                         <Content>
-                            <NationalityCombo  OnNazioneSelected="@((string? nazione) => CurrentViewModel.SelectedItem.Nationality = nazione ?? "")" />
+                            <NationalityCombo OnNazioneSelected="@((string? nazione) => CurrentViewModel.SelectedItem.Nationality = nazione ?? "")" />
                         </Content>
                     </BaseComponent>
                 </div>

@@ -1,13 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
-namespace ReserGO.Miscellaneous.Model
+public class ComboNazione
 {
-    public class DTONazione
+    [JsonPropertyName("name")]
+    public NameInfo Name { get; set; }
+
+    [JsonPropertyName("translations")]
+    public Translations Translations { get; set; }
+}
+
+public class NameInfo
+{
+    [JsonPropertyName("common")]
+    public string Common { get; set; }
+
+    [JsonPropertyName("official")]
+    public string Official { get; set; }
+}
+
+public class Translations
+{
+    [JsonPropertyName("ita")]
+    public LanguageInfo Italian { get; set; }
+
+    // Aggiungi altre lingue se necessario
+}
+
+public class LanguageInfo
+{
+    [JsonPropertyName("common")]
+    public string Common { get; set; }
+
+    [JsonPropertyName("official")]
+    public string Official { get; set; }
+}
+
+public class DTONazione
+{
+    public string? Name { get; set; }
+
+    public DTONazione(ComboNazione combo)
     {
-        public string name { get; set; }
+        Name = combo?.Translations?.Italian?.Common ?? combo?.Name?.Common;
     }
 }

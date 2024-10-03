@@ -39,10 +39,10 @@
     [Parameter]
     public EventCallback<string?> OnNazioneSelected { get; set; }
     private bool IsLoading { get; set; }
-    private Func<DTONazione, string?> DisplayValue = item => item is null ? null : item.name;
+    private Func<DTONazione, string?> DisplayValue = item => item is null ? null : item.Name;
     private MudAutocomplete<DTONazione> err;
     private bool showCustomError;
-    
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,21 +63,21 @@
         }
         CurrentViewModel.SearchString = searchText;
         await CurrentViewModel.Refresh();
-        return CurrentViewModel.Nazioni.ToList();
+        return CurrentViewModel.List.Where(x => CurrentViewModel.List.Any() || x.Name.ToLower().StartsWith(searchText)).ToList();
     }
 
     private async Task OnNazioneChanged(DTONazione newValue)
     {
         CurrentViewModel.SelectedItem = newValue;
-        err.Error = string.IsNullOrEmpty(CurrentViewModel.SelectedItem.name);
+        err.Error = string.IsNullOrEmpty(newValue.Name);
         if (OnNazioneSelected.HasDelegate)
-            await OnNazioneSelected.InvokeAsync(newValue.name);
+            await OnNazioneSelected.InvokeAsync(newValue.Name);
     }
 
     private async Task CheckError()
     {
         await Task.Delay(2000);
-        err.Error = CurrentViewModel.SelectedItem == null || string.IsNullOrEmpty(CurrentViewModel.SelectedItem.name);
+        err.Error = CurrentViewModel.SelectedItem == null || string.IsNullOrEmpty(CurrentViewModel.SelectedItem.Name);
         err.ErrorText = "Inserire luogo di nascita";
     }
 
