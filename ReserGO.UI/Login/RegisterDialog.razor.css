@@ -88,3 +88,48 @@
         box-shadow: 0 0 10px 3px rgba(128, 128, 128, 0.5);
     }
 
+
+
+::deep .registerButtonSmall {
+    display: inline-block;
+    width: 10vw;
+    height: 8vh;
+    color: #FFFFFF;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    background-color: #0066FF;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: large;
+    border-radius: 30px;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+::deep .cancelButtonSmall {
+    display: inline-block;
+    width: 10vw;
+    height: 8vh;
+    color: #404040;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    background-color: #EEEEEE;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: large;
+    border-radius: 30px;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}

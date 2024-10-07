@@ -10,152 +10,190 @@
 @using ReserGO.Utils.DTO.Utils
 @inherits BaseComponentChild<IRegisterViewModel, DTOUser>
 
-<MudDialog Class="registerDialogCss" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler">
+<MudDialog Class="@(CurrentViewModel.IsSmallView ? "registerDialogCssSmall":"registerDialogCss")" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler">
     <TitleContent>
         <div class="d-flex flex-column" style="padding-inline: 0.5vw;">
-            <span class="dialogTitleRegister">Registrazione Utente</span>
+            <span class="dialogTitleRegister" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">Registrazione Utente</span>
         </div>
     </TitleContent>
     <DialogContent>
 
         <div class="d-flex dialogRegisterContainer p-1">
-            <div class="d-flex flex-column justify-content-around columnFormRegister" style="width:80%;">
+            <div class="d-flex flex-column justify-content-around columnFormRegister" style="@(CurrentViewModel.IsSmallView ? "width:100%; overflow:auto":"width:80%;")">
 
                 <MudForm @ref="form" @bind-IsValid="@_success">
-    <MudGrid>
-        <MudItem xs="12" sm="6">
-            <div class="inputSpace">
-                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FirstName = value)" Label="Nome"/>
+                    <MudGrid>
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FirstName = value)" Label="Nome" />
+                            </div>
+                        </MudItem>
+
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.LastName = value)" Label="Cognome" />
+                            </div>
+                        </MudItem>
+
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.Address = value)" Label="Indirizzo" />
+                            </div>
+                        </MudItem>
+
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <MudDatePicker @bind-Date="@CurrentViewModel.SelectedItem.DateOfBirth" Immediate="true" Label="Data di nascita" Required="true" RequiredError="Inserire data di nascita" Variant="Variant.Outlined" />
+                            </div>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace" style="margin-top:6px">
+                                <BaseComponent TViewModel="INazioneViewModel" TModel="DTONazione">
+                                    <Content>
+                                        <NationalityCombo OnNazioneSelected="@((string? nazione) => OnNazioneChanged(nazione))" Label="Luogo di nascita" />
+                                    </Content>
+                                </BaseComponent>
+                            </div>
+                        </MudItem>
+
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.FiscalCode"
+                                              Required="true"
+                                              Pattern="@GetMinLenght()"
+                                              RequiredError="inserire codice fiscale"
+                                              ErrorText="@GetErrorText()"
+                                              Label="Codice fiscale"
+                                              Error="GetError()"
+                                              Immediate="true"
+                                              MaxLength="MaxLenghtCF"
+                                              InputType="InputType.Text"
+                                              Variant="Variant.Outlined"
+                                              Margin="Margin.Dense"
+                                              Disabled="!EnableCF" />
+                            </div>
+                        </MudItem>
+
+                        @if (CurrentViewModel.ConfigurationServer.ExtendedInput == ExtendedInput.ADVANCED)
+                        {
+                            <MudItem xs="12" sm="6">
+                                <div class="inputSpace">
+                                    <RegioneCombo OnRegionSelected="@((string regione) => _regione = regione)" />
+                                </div>
+                            </MudItem>
+
+                            <MudItem xs="12" sm="6">
+                                <div class="inputSpace">
+                                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                                        <Content>
+                                            <ComuneCombo Regione="@_regione" OnComuneSelected="@((string? comune) => CurrentViewModel.SelectedItem.CityOfBirth = comune ?? "")" />
+                                        </Content>
+                                    </BaseComponent>
+                                </div>
+                            </MudItem>
+
+                            <MudItem xs="12" sm="6">
+                                <div class="inputSpace">
+                                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                                        <Content>
+                                            <ComuneCombo OnComuneSelected="@((string? comune) => CurrentViewModel.SelectedItem.CityOfBirth = comune ?? "")" />
+                                        </Content>
+                                    </BaseComponent>
+                                </div>
+                            </MudItem>
+
+                            <MudItem xs="12" sm="6">
+                                <div class="inputSpace" style="margin-top:6px">
+                                    <BaseComponent TViewModel="INazioneViewModel" TModel="DTONazione">
+                                        <Content>
+                                            <NationalityCombo OnNazioneSelected="@((string? nazione) => OnNazioneChanged(nazione))" Label="Luogo di nascita" />
+                                        </Content>
+                                    </BaseComponent>
+                                </div>
+                            </MudItem>
+
+                            <MudItem xs="12" sm="6">
+                                <div class="inputSpace">
+                                    <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.FiscalCode"
+                                                  Required="true"
+                                                  Pattern="@GetMinLenght()"
+                                                  RequiredError="inserire codice fiscale"
+                                                  ErrorText="@GetErrorText()"
+                                                  Label="Codice fiscale"
+                                                  Error="GetError()"
+                                                  Immediate="true"
+                                                  MaxLength="MaxLenghtCF"
+                                                  InputType="InputType.Text"
+                                                  Variant="Variant.Outlined"
+                                                  Margin="Margin.Dense"
+                                                  Disabled="!EnableCF" />
+                                </div>
+                            </MudItem>
+                        }
+
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido" />
+                            </div>
+                        </MudItem>
+
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                                    <Content>
+                                        <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email" Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Required="true" RequiredError="Inserire Email corretta" Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })" />
+                                    </Content>
+                                </BaseComponent>
+                            </div>
+                        </MudItem>
+
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Password" Required="true" RequiredError="inserire password" Label="Password" Immediate="true" @ref="pwField1" InputType="InputType.Password" Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            </div>
+                        </MudItem>
+
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.ConfirmPassword" Required="true" InputType="InputType.Password" Immediate="true" Validation="@(new Func<string, string>(PasswordMatch))" RequiredError="La password non corrisponde" Label="Conferma password" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            </div>
+                        </MudItem>
+                    </MudGrid>
+                </MudForm>
+
+                @if (CurrentViewModel.IsSmallView)
+                {
+                    <div class="d-flex justify-content-center align-items-center p-2" >
+                        <MudButton OnClick="Cancel" class="cancelButtonSmall btn-primary" style="width:100%; margin-top:3vh" type="submit">Annulla</MudButton>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center p-2" >
+                        <MudButton OnClick="Submit" class="registerButtonSmall btn-primary" Disabled="@(!_success)" style="width:100%;" type="submit">Salva</MudButton>
+                    </div>
+                }
+
             </div>
-        </MudItem>
 
-        <MudItem xs="12" sm="6">
-            <div class="inputSpace">
-                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.LastName = value)" Label="Cognome"/>
-            </div>
-        </MudItem>
-
-        <MudItem xs="12" sm="6">
-            <div class="inputSpace">
-                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.Address = value)" Label="Indirizzo"/>
-            </div>
-        </MudItem>
-
-        <MudItem xs="12" sm="6">
-            <div class="inputSpace">
-                <MudDatePicker @bind-Date="@CurrentViewModel.SelectedItem.DateOfBirth" Immediate="true" Label="Data di nascita" Required="true" RequiredError="Inserire data di nascita" Variant="Variant.Outlined" />
-            </div>
-        </MudItem>
-
-            <MudItem xs="12" sm="6">
-                <div class="inputSpace">
-                    <BaseComponent TViewModel="INazioneViewModel" TModel="DTONazione">
-                        <Content>
-                            <NationalityCombo OnNazioneSelected="@((string? nazione) => CurrentViewModel.SelectedItem.Nationality = nazione ?? "")" />
-                        </Content>
-                    </BaseComponent>
-                </div>
-            </MudItem>
-
-        @if (CurrentViewModel.ConfigurationServer.ExtendedInput == ExtendedInput.ADVANCED)
-        {
-            <MudItem xs="12" sm="6">
-                <div class="inputSpace">
-                    <RegioneCombo OnRegionSelected="@((string regione) => _regione = regione)" />
-                </div>
-            </MudItem>
-
-            <MudItem xs="12" sm="6">
-                <div class="inputSpace">
-                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
-                        <Content>
-                            <ComuneCombo Regione="@_regione" OnComuneSelected="@((string? comune) => CurrentViewModel.SelectedItem.CityOfBirth = comune ?? "")" />
-                        </Content>
-                    </BaseComponent>
-                </div>
-            </MudItem>
-
-            <MudItem xs="12" sm="6">
-                <div class="inputSpace">
-                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
-                        <Content>
-                            <ComuneCombo  OnComuneSelected="@((string? comune) => CurrentViewModel.SelectedItem.CityOfBirth = comune ?? "")" />
-                        </Content>
-                    </BaseComponent>
-                </div>
-            </MudItem>
-
-            <MudItem xs="12" sm="6">
-                <div class="inputSpace">
-                    @if(true)
-                    {
-
-                        <BaseComponent TViewModel="INazioneViewModel" TModel="DTONazione">
-                            <Content>
-                                <NationalityCombo  OnNazioneSelected="@((string? nazione) => CurrentViewModel.SelectedItem.Nationality = nazione ?? "")" />
-                            </Content>
-                        </BaseComponent>
-
-                        <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FiscalCode = value)" Label="Codice fiscale" Regex="^[A-Z]{6}\d{2}[A-EHLMPRST]{1}\d{2}[A-Z]{1}\d{3}[A-Z]{1}$"/>
-                    }
-                    else
-                    {
-                        <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FiscalCode = value)" Label="Codice fiscale" />
-                    }
-                </div>
-            </MudItem>
-        }
-
-        <MudItem xs="12" sm="6">
-            <div class="inputSpace">
-                <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido"/>
-            </div>
-        </MudItem>
-
-        <MudItem xs="12" sm="6">
-            <div class="inputSpace">
-                <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
-                    <Content>
-                        <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email" Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Required="true" RequiredError="Inserire Email corretta" Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })"/>
-                    </Content>
-                </BaseComponent>
-            </div>
-        </MudItem>
-
-        <MudItem xs="12" sm="6">
-            <div class="inputSpace">
-                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Password" Required="true" RequiredError="inserire password" Label="Password" Immediate="true" @ref="pwField1" InputType="InputType.Password" Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-            </div>
-        </MudItem>
-
-        <MudItem xs="12" sm="6">
-            <div class="inputSpace">
-                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.ConfirmPassword" Required="true" InputType="InputType.Password" Immediate="true" Validation="@(new Func<string, string>(PasswordMatch))" RequiredError="La password non corrisponde" Label="Conferma password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-            </div>
-        </MudItem>
-    </MudGrid>
-</MudForm>
-            </div>
-
-            <div class="d-flex flex-column justify-content-center h-100">
+            
+            <div class="d-flex flex-column justify-content-center h-100" style="@(CurrentViewModel.IsSmallView ? "display:none !important":"")">
                 <div class="registerDivider"></div>
             </div>
+            
 
-            <div class="d-flex flex-column columnFormRegister" style="width:30%;">
+            <div class="d-flex flex-column columnFormRegister" style="width:30%;@(CurrentViewModel.IsSmallView ? "display:none !important":"")">
 
-                <div class="d-flex flex-column align-items-center" style="padding-inline:2vw; margin-left:3vw;">
+                <div class="d-flex flex-column align-items-center" style="padding-inline:2vw; margin-left:3vw; @(CurrentViewModel.IsSmallView ? "display:none !important":"")">
                     <MudIcon Icon="@Icons.Material.Filled.PersonAddAlt" Class="iconDialogRegister"></MudIcon>
                 </div>
 
-                <div class="d-flex justify-content-center align-items-center p-2" style="height:40%; margin-left: 2vw;">
+                <div class="d-flex justify-content-center align-items-center p-2" style="height:40%; margin-left: 1vw;">
                     <MudButton OnClick="Cancel" class="cancelButton btn-primary" style="width:15vw;" type="submit">Annulla</MudButton>
                 </div>
 
-                <div class="d-flex justify-content-center align-items-center p-2" style="height:20%;margin-left: 2vw;">
+                <div class="d-flex justify-content-center align-items-center p-2" style="height:20%;margin-left: 1vw;">
                     <MudButton OnClick="Submit" class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw;" type="submit">Salva</MudButton>
                 </div>
             </div>
-
 
         </div>
     </DialogContent>
@@ -175,6 +213,11 @@
     MudTextField<string> pwField1;
     MudForm form;
     private bool _success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentViewModel.RegisterOnScreenResize(800);
+    }
 
     private IEnumerable<string> PasswordStrength(string pw)
     {
@@ -207,6 +250,52 @@
 
     private string RegexEmail => "^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
+    private bool IsItalian => CurrentViewModel.SelectedItem.Nationality == "Italia";
+
+    private bool EnableCF;
+
+    private string RegexCf = "";
+
+    private int MaxLenghtCF = 30;
+
+    public bool GetError()
+    {
+        if (CurrentViewModel.SelectedItem == null || String.IsNullOrEmpty(CurrentViewModel.SelectedItem.FiscalCode))
+            return false;
+
+        Regex regex = new Regex(RegexCf);
+        return !regex.IsMatch(CurrentViewModel.SelectedItem.FiscalCode);
+    }
+
+
+    private string GetMinLenght()
+    {
+        return RegexCf;
+    }
+
+    private string GetErrorText()
+    {
+        return "codice fiscale non valido";
+    }
+
+    private void OnNazioneChanged(string? nazione)
+    {
+
+        CurrentViewModel.SelectedItem.Nationality = nazione ?? string.Empty;
+
+        if (!IsItalian && CurrentViewModel.SelectedItem.Nationality.Length > 1)
+        {
+            EnableCF = true;
+            RegexCf = "^[a-zA-Z0-9]+$";
+            MaxLenghtCF = 30;
+        }
+        else if (IsItalian)
+        {
+            EnableCF = true;
+            RegexCf = @"^[a-zA-Z]{6}\d{2}[a-eh-lmprstA-EHLMPRST]{1}\d{2}[a-zA-Z]{1}\d{3}[a-zA-Z]{1}$";
+            MaxLenghtCF = 16;
+        }
+    }
 }
 
 
@@ -215,6 +304,13 @@
         width: 50vw;
         height: 55vh;
         max-width: 50vw !important;
+        border-radius: 30px !important;
+    }
+
+    .registerDialogCssSmall {
+        width: 90vw;
+        height: 90vh;
+        max-width: 90vw !important;
         border-radius: 30px !important;
     }
 
@@ -229,5 +325,9 @@
 
     .inputSpace {
         height: 45px;
+    }
+
+    .iconDialogRegister{
+        font-size:7vw !important;
     }
 </style>

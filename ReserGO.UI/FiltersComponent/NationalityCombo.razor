@@ -24,7 +24,8 @@
                      Margin="Margin.Dense"
                      @ref="@err"
                      OnBlur="CheckError"
-                      >
+                     Label="@Label"
+                     >
     <ProgressIndicatorInPopoverTemplate>
         <MudList T="string" ReadOnly>
             <MudListItem>
@@ -42,6 +43,8 @@
     private Func<DTONazione, string?> DisplayValue = item => item is null ? null : item.Name;
     private MudAutocomplete<DTONazione> err;
     private bool showCustomError;
+    [Parameter]
+    public string Label { get; set; }
 
 
     protected override async Task OnInitializedAsync()
