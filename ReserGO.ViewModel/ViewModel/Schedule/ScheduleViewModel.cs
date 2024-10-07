@@ -22,6 +22,8 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             Aggregator.Publish<GenericModal<int>, ObjectMessage<GenericModal<int>>>(new ObjectMessage<GenericModal<int>>(modal), typeof(ModalScheduleViewModel));
         }
 
+        public bool LoadingFullResource { get; set; } = false;
+
         public override async Task Refresh()
         {
             try
@@ -39,6 +41,28 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             finally
             {
                 IsLoading=false;
+            }
+        }
+
+        public async Task GetFullResource(int IdResource)
+        {
+            try
+            {
+                LoadingFullResource = true;
+                var res = await _service.GetFullResource(IdResource);
+                if (res.Success)
+                    SelectedItem = res.Data;
+                else
+                    Notification(res.Message, NotificationColor.Warning);
+            }
+            catch (Exception ex)
+            {
+                Notification(ex.Message, NotificationColor.Error);
+            }
+            finally
+            {
+                LoadingFullResource = false;
+                OnPropertyChanged();
             }
         }
     }

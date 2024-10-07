@@ -8,6 +8,7 @@ namespace ReserGO.Service.Interface.Schedule
     {
         [Get("/GetResourcesByCompany")]
         Task<ServiceResponse<IEnumerable<DTOResource>>> GetResourcesByCompany();
+
         [Get("/GetFullResource")]
         Task<ServiceResponse<DTOResource>> GetFullResource(int idResource);
     }

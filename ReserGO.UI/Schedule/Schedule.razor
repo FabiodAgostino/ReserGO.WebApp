@@ -13,7 +13,7 @@
         <div class="d-flex leftSideSchedule justify-content-center align-items-center">
             @if (OpenDetailsCard)
             {
-                <ScheduleCardDetails Title="Titolo della risorsa" Description="Seleziona Risorsa" CardStyle="width:95%;height:80vh;" Icon="@InformationIcon" CallbackOpenModal="@( async (int idResource) => await CurrentViewModel.OpenModalCalendar(idResource))" />
+                <ScheduleCardDetails CardStyle="width:95%;height:80vh;" Icon="@InformationIcon" CallbackOpenModal="@( async (int idResource) => await CurrentViewModel.OpenModalCalendar(idResource))" Resource="@CurrentViewModel.SelectedItem" IsLoading="@CurrentViewModel.LoadingFullResource" />
             }
             else
             {
@@ -21,12 +21,12 @@
             }
         </div>
         <div class="d-felx rightSideSchedule">
-            <ListSchedules Callback="@( async (int idResource) => await GetData(idResource))" Resources="CurrentViewModel.List" IsLoading="CurrentViewModel.IsLoading"/>
+            <ListSchedules Callback="@( async (int idResource) => {OpenDetailsCard=true;await CurrentViewModel.GetFullResource(idResource); })" Resources="CurrentViewModel.List" IsLoading="CurrentViewModel.IsLoading"/>
         </div>
     </div>
 </div>
 
-<BaseComponent TViewModel="IModalScheduleViewModel" TModel="GenericModal<int>">
+<BaseComponent TViewModel="IModalScheduleViewModel" TModel="DTOResource">
     <Content>
         <ModalSchedule />
     </Content>

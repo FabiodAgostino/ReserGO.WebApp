@@ -12,7 +12,7 @@
                 {
                     <MudItem>
                         <div class="d-flex flex-row">
-                            <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(8))" Title="@resource.ResourceName" Description="@resource.Description" />
+                            <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" />
                         </div>
                     </MudItem>
                 }

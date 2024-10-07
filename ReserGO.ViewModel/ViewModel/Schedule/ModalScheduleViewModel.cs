@@ -1,15 +1,20 @@
-﻿using ReserGO.Miscellaneous.Message;
+﻿using ReserGO.DTO;
+using ReserGO.Miscellaneous.Enum;
+using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface;
+using ReserGO.Service.Interface.Schedule;
 using ReserGO.ViewModel.Interface.Schedule;
 
 namespace ReserGO.ViewModel.ViewModel.Schedule
 {
-    public class ModalScheduleViewModel : CompleteReserGOViewModell<GenericModal<int>, ModalScheduleViewModel>, IModalScheduleViewModel
+    public class ModalScheduleViewModel : CompleteReserGOViewModell<DTOResource, ModalScheduleViewModel>, IModalScheduleViewModel
     {
-        public ModalScheduleViewModel(IBaseServicesReserGO<ModalScheduleViewModel> baseServices) : base(baseServices)
+        private readonly IScheduleService _service;
+        public ModalScheduleViewModel(IBaseServicesReserGO<ModalScheduleViewModel> baseServices, IScheduleService service) : base(baseServices)
         {
             Aggregator.Subscribe<ObjectMessage<GenericModal<int>>>(GetType(), OpenModal);
+            _service = service;
         }
         public bool IsOpen { get; set; }
 
@@ -17,6 +22,17 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
         {
             IsOpen = true;
             OnPropertyChanged();
+        }
+
+        public async Task GetFullResource(int idResource)
+        {
+            try
+            {
+                await _service.GetFullResource(idResource);
+            }catch(Exception ex)
+            {
+                Notification(ex.Message, NotificationColor.Error);
+            }
         }
 
         public void Close()

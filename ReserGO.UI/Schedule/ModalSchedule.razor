@@ -12,7 +12,7 @@
 @using ReserGO.ViewModel.Interface.Schedule;
 @using ReserGO.Miscellaneous.Model
 @using ReserGO.Utils.DTO.Utils
-@inherits BaseComponentChild<IModalScheduleViewModel, GenericModal<int>>
+@inherits BaseComponentChild<IModalScheduleViewModel, DTOResource>
 
 <MudDialog Class="scheduleDialogCss" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler">
     <TitleContent>
