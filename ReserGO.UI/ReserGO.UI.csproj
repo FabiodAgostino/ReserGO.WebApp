@@ -25,7 +25,6 @@
     <None Remove="Schedule\ScheduleForm.razor.css" />
     <None Remove="Schedule\TimeSchedule.razor.css" />
     <None Remove="Utils\CalendarHome.razor.css" />
-    <None Remove="Utils\CalendarSchedule.razor.css" />
     <None Remove="Utils\CardDetails.razor.css" />
     <None Remove="Utils\CardInformation.razor.css" />
     <None Remove="Utils\CardReserGo - Copy.razor.css" />
@@ -50,7 +49,6 @@
     <Content Include="Schedule\ScheduleForm.razor.css" />
     <Content Include="Schedule\TimeSchedule.razor.css" />
     <Content Include="Utils\CalendarHome.razor.css" />
-    <Content Include="Utils\CalendarSchedule.razor.css" />
     <Content Include="Utils\CardReserGo.razor.css" />
     <Content Include="Utils\CardDetails.razor.css" />
     <Content Include="Utils\CardInformation.razor.css" />

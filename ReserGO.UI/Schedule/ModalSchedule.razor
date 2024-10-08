@@ -12,9 +12,10 @@
 @using ReserGO.ViewModel.Interface.Schedule;
 @using ReserGO.Miscellaneous.Model
 @using ReserGO.Utils.DTO.Utils
+@using ReserGO.UI.FiltersComponent
 @inherits BaseComponentChild<IModalScheduleViewModel, DTOResource>
 
-<MudDialog Class="scheduleDialogCss" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler">
+<MudDialog Class="scheduleDialogCss" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler" Options="@Options">
     <TitleContent>
 
     </TitleContent>
@@ -24,7 +25,7 @@
             <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
                 <MudTabPanel Text="Giorno e ora">
                     <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
-                        <CalendarSchedule />
+                        <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.SetSlot(date) )"/>
                     </div>
 
                     <div class="d-flex flex-column justify-content-center h-100">
@@ -32,7 +33,7 @@
                     </div>
 
                     <div class="d-flex flex-column columnCalendar" style="width:50%;">
-                        <TimeSchedule></TimeSchedule>
+                        <TimeSchedule TimeSlots="CurrentViewModel.TimeSlots"></TimeSchedule>
                     </div>
                 </MudTabPanel>
                 @if (CurrentViewModel.UserIs(RoleConst.GUEST))
@@ -44,7 +45,7 @@
                 <MudTabPanel Text="Three">
                     <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
 
-                        <CalendarSchedule />
+                        <Calendar />
 
                     </div>
 
@@ -64,8 +65,13 @@
 </MudDialog>
 
 @code {
-
-
+    public DialogOptions Options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.ExtraLarge,
+            NoHeader = true,
+        };
+    private DateTime _dateTimeSelected{ get; set; }
 
     private async Task OnBackdropClickHandler(MouseEventArgs e)
     {
@@ -92,5 +98,9 @@
 
     .mud-tab-slider.mud-tab-slider-horizontal {
         width: 160.29px !important;
+    }
+
+    .mud-tabs-tabbar.mud-tabs-rounded.mud-tabs-tabbar-primary.mud-elevation-4 {
+        border-radius: 20px !important
     }
 </style>

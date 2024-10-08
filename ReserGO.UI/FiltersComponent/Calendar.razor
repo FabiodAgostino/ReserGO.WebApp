@@ -1,17 +1,26 @@
 ﻿@using MudBlazor
 
 <div class="d-flex align-items-center justify-content-center calendarContainer">
-    <MudDatePicker IsDateDisabledFunc="@casa" Class="scheduleCalendarCss" PickerVariant="PickerVariant.Static" Date="@(DateTime.Today.AddDays(1))" />
+    <MudDatePicker IsDateDisabledFunc="@DisabledWhen" Class="scheduleCalendarCss" PickerVariant="PickerVariant.Static" Date="@(_date)" DateChanged="OnDateChanged" />
 </div>
 
 
 @code {
+    [Parameter]
+    public Func<DateTime, bool> DisabledWhen { get; set; }
 
-    Func<DateTime, bool> casa = item =>
+    [Parameter]
+    public EventCallback<DateTime> OnClick { get; set; }
+
+    private DateTime _date { get; set; } = DateTime.Now;
+
+    public async Task OnDateChanged(DateTime? date)
     {
-    DateTime yesterday = DateTime.Now.AddDays(-2).Date;  // Ottieni la data di ieri (senza tempo)
-    return item.Date == yesterday;  // Restituisce true se la data è ieri
-    };
+        _date = date.Value;
+        if (OnClick.HasDelegate)
+            await OnClick.InvokeAsync(date.Value);
+    }
+
 }
 
 <style>
@@ -120,4 +129,10 @@
         height: 42vh !important;
         overflow-y: auto;
     }
+
+    .calendarContainer {
+        width: 100%;
+        height: 100%;
+    }
+
 </style>

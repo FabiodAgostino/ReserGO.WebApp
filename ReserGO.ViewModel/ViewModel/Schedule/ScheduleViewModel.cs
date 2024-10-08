@@ -16,10 +16,10 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
         {
             _service = service;
         }
-        public async Task OpenModalCalendar(int idResource)
+        public async Task OpenModalCalendar()
         {
-            var modal = new GenericModal<int>("", idResource);
-            Aggregator.Publish<GenericModal<int>, ObjectMessage<GenericModal<int>>>(new ObjectMessage<GenericModal<int>>(modal), typeof(ModalScheduleViewModel));
+            var modal = new GenericModal<DTOResource>("", SelectedItem);
+            Aggregator.Publish<GenericModal<DTOResource>, ObjectMessage<GenericModal<DTOResource>>>(new ObjectMessage<GenericModal<DTOResource>>(modal), typeof(ModalScheduleViewModel));
         }
 
         public bool LoadingFullResource { get; set; } = false;

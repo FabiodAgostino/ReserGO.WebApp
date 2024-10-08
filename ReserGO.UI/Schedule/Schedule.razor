@@ -13,7 +13,7 @@
         <div class="d-flex leftSideSchedule justify-content-center align-items-center">
             @if (OpenDetailsCard)
             {
-                <ScheduleCardDetails CardStyle="width:95%;height:80vh;" Icon="@InformationIcon" CallbackOpenModal="@( async (int idResource) => await CurrentViewModel.OpenModalCalendar(idResource))" Resource="@CurrentViewModel.SelectedItem" IsLoading="@CurrentViewModel.LoadingFullResource" />
+                <ScheduleCardDetails CardStyle="width:95%;height:80vh;" Icon="@InformationIcon" CallbackOpenModal="@( async (int idResource) => await CurrentViewModel.OpenModalCalendar())" Resource="@CurrentViewModel.SelectedItem" IsLoading="@CurrentViewModel.LoadingFullResource" />
             }
             else
             {
