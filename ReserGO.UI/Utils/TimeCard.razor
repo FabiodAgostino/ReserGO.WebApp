@@ -1,6 +1,6 @@
 ﻿@using MudBlazor
 
-<div class="d-flex timeContainer">
+<div class="d-flex timeContainer" @onclick="@(async ()=>await Clicked())">
     <div class="d-flex justify-content-center align-items-center cardTime" >
         <span class="timeText">@Time</span>
     </div>
@@ -9,11 +9,12 @@
 @code {
     [Parameter]
     public string Time { get; set; }
+    [Parameter]
+    public EventCallback OnClick { get; set; }
 
-    protected override void OnInitialized()
+    private async Task Clicked()
     {
-        if (Time.Length <= 1)
-            Time = "00:00";
+        if (OnClick.HasDelegate)
+            await OnClick.InvokeAsync();
     }
-
 }

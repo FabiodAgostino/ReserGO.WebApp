@@ -8,7 +8,7 @@ using ReserGO.ViewModel.Interface.Schedule;
 
 namespace ReserGO.ViewModel.ViewModel.Schedule
 {
-    internal class ScheduleViewModel : CompleteReserGOViewModell<DTOResource, ScheduleViewModel>, IScheduleViewModel
+    public class ScheduleViewModel : CompleteReserGOViewModell<DTOResource, ScheduleViewModel>, IScheduleViewModel
     {
         private readonly IScheduleService _service;
 

@@ -10,7 +10,8 @@ namespace ReserGO.ViewModel.Interface.Schedule
         public bool IsOpen { get; set; }
         void Close();
         Func<DateTime, bool> DayDisabled { get; set; }
-        Task SetSlot(DateTime day);
+        Task GetSlot(DateTime day);
         List<DTOTimeSlot> TimeSlots { get; set; }
+        DTOBooking Booking { get; set; }
     }
 }

@@ -7,7 +7,8 @@
 @using ReserGO.Utils.UI
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
-
+@using ReserGO.ViewModel.Interface.Schedule
+@inherits BaseComponentChild<IScheduleFormViewModel, DTOUser>
 
 <div class="d-flex flex-column w-100 h-100">
 
@@ -18,29 +19,30 @@
                 <tr>
                     <td>
                         <div class="inputSpace">
-                            <MudTextField @bind-Value="@User.FirstName" Required="true" RequiredError="Inserire Nome" Label="Nome" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FirstName = value)" Label="Nome" Value="@CurrentViewModel.SelectedItem.FirstName" />
                         </div>
                     </td>
                     <td>
                         <div class="inputSpace">
-                <MudTextField @bind-Value="@User.LastName" Required="true" RequiredError="Inserire Cognome" Label="Cognome" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.LastName = value)" Label="Cognome" Value="@CurrentViewModel.SelectedItem.LastName" />
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <div class="inputSpace">
-                <MudTextField @bind-Value="@User.PhoneNumber" Required="true" RequiredError="Inserire numero di telefono" Label="Recapito telefonico" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                            <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido" Value="@CurrentViewModel.SelectedItem.PhoneNumber" />
                         </div>
                     </td>
                     <td>
                         <div class="inputSpace">
                             <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
                                 <Content>
-                                    <MudTextField @bind-Value="@User.Email"
-                                                    Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                                    Required="true" RequiredError="Inserire Email corretta"
-                                                    Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
+                                    <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email"
+                                                  Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                  Required="true" RequiredError="Inserire Email corretta"
+                                                  Immediate="true"
+                                                  Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
                                     </MudTextField>
                                 </Content>
                             </BaseComponent>
@@ -52,42 +54,36 @@
 
     </div>
 
-    <div class="d-flex flex-row justify-content-around columnFormRegister" style="width:100%; height:30%">
-
-            <MudButton OnClick="Cancel" class="cancelButton btn-primary" style="width:15vw;height:10vh;" type="submit">Annulla</MudButton>
-
-            <MudButton OnClick="Submit" class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw;height:10vh;" type="submit">Salva</MudButton>
+    <div class="d-flex flex-row justify-content-center columnFormRegister" style="width:100%; height:30%">
+        <MudButton class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw;height:10vh;" type="submit" OnClick="Click">Salva</MudButton>
     </div>
 </div>
 
 @code {
 
     [Parameter]
-    public EventCallback Callback { get; set; }
-
-    public DTOUser User = new DTOUser();
-
+    public EventCallback<DTOUser> Callback { get; set; }
     private bool _success;
+    MudForm form;
 
-
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        User = new DTOUser();
+        if (!String.IsNullOrEmpty(CurrentViewModel.SelectedItem.FirstName))
+        {
+            form.Validate();
+            _success = form.IsValid;
+        }
     }
+
 
     private async Task Click()
     {
         if (Callback.HasDelegate)
         {
-            await Callback.InvokeAsync();
+            await Callback.InvokeAsync(CurrentViewModel.SelectedItem);
         }
     }
 
-    private void Submit() {}
-
-    private void Cancel() {}
-
-    MudForm form;
 
 }
 
@@ -117,7 +113,7 @@
         height: 45px;
     }
 
-    .mud-form{
-        width:100% !important;
+    .mud-form {
+        width: 100% !important;
     }
 </style>

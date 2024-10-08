@@ -1,0 +1,35 @@
+﻿@using ReserGO.DTO
+@using MudBlazor
+@if (Booking is object)
+{
+    <div>
+        <p>@Booking.User.FirstName @Booking.User.LastName</p>
+        <p>Prenotazione del servizio dalle @GetDate()</p>
+        <p>Servizio prenotatato: @Booking.Resource.ResourceName</p>
+    </div>
+    <div class="d-flex justify-content-center align-items-center p-2">
+        <MudButton @onclick="@(() => Submit(false))" class="cancelButtonSmall btn-primary" style="width:100%; margin-top:3vh" type="submit">Annulla</MudButton>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center p-2">
+        <MudButton @onclick="@(() => Submit(true))" class="registerButtonSmall btn-primary" style="width:100%;" type="submit">Salva</MudButton>
+    </div>
+}
+@code {
+    [Parameter]
+    public DTOBooking Booking { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnClick { get; set; }
+
+    private async Task Submit(bool submit)
+    {
+        if (OnClick.HasDelegate)
+            await OnClick.InvokeAsync(submit);
+    }
+
+
+    public string GetDate()
+    {
+        return $"{Booking.StartDateTime.Hour:D2}:{Booking.StartDateTime.Minute:D2} alle {Booking.EndDateTime.Hour:D2}:{Booking.EndDateTime.Minute:D2} del giorno {Booking.StartDateTime:yyyy-MM-dd}";
+    }
+}

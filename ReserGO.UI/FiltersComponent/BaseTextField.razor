@@ -23,7 +23,7 @@
     public EventCallback<string?> Bind { get; set; }
 
     [Parameter]
-    public string Value { get; set; } = "";
+    public string Value { get; set; }
 
     [Parameter]
     public string CustomErrorText{get;set;}
@@ -40,6 +40,11 @@
     private string _value {get;set;}
 
     private MudTextField<string> textRef;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _value = !String.IsNullOrEmpty(Value) ? Value : _value;
+    }
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

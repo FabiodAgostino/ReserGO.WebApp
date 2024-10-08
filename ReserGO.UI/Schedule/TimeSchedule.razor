@@ -17,9 +17,7 @@
             {
                 @foreach (var timeslot in TimeSlots)
                 {
-                    <TimeCard Time="@($"{timeslot.StartTime.Hours:D2}:{timeslot.StartTime.Minutes:D2}")"></TimeCard>
-
-
+                    <TimeCard Time="@($"{timeslot.StartTime.Hours:D2}:{timeslot.StartTime.Minutes:D2}")" OnClick="@(() => OnClickSlot(timeslot))"></TimeCard>
                 }
             }
         </div>
@@ -31,11 +29,14 @@
 @code {
     [Parameter]
     public List<DTOTimeSlot> TimeSlots { get; set; }
+    [Parameter]
+    public EventCallback<DTOTimeSlot> OnClick { get; set; }
     private string TimeForCard = "";
 
-    protected override void OnInitialized()
+    public async Task OnClickSlot(DTOTimeSlot slot)
     {
-
+        if (OnClick.HasDelegate)
+            await OnClick.InvokeAsync(slot);
     }
 
 }

@@ -13,6 +13,7 @@
 @using ReserGO.Miscellaneous.Model
 @using ReserGO.Utils.DTO.Utils
 @using ReserGO.UI.FiltersComponent
+@using ReserGO.DTO.ListAvailability
 @inherits BaseComponentChild<IModalScheduleViewModel, DTOResource>
 
 <MudDialog Class="scheduleDialogCss" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler" Options="@Options">
@@ -22,10 +23,10 @@
     <DialogContent>
 
         <div class="d-flex dialogScheduleContainer p-1">
-            <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
+            <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary" @ref="tabs" @bind-ActivePanelIndex="selectedIndex">
                 <MudTabPanel Text="Giorno e ora">
                     <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
-                        <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.SetSlot(date) )"/>
+                        <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" />
                     </div>
 
                     <div class="d-flex flex-column justify-content-center h-100">
@@ -33,29 +34,22 @@
                     </div>
 
                     <div class="d-flex flex-column columnCalendar" style="width:50%;">
-                        <TimeSchedule TimeSlots="CurrentViewModel.TimeSlots"></TimeSchedule>
+                        <TimeSchedule TimeSlots="CurrentViewModel.TimeSlots" OnClick="@((DTOTimeSlot selectedSlot) => SetSlot(selectedSlot))"></TimeSchedule>
                     </div>
                 </MudTabPanel>
                 @if (CurrentViewModel.UserIs(RoleConst.GUEST))
                 {
-                    <MudTabPanel Text="Anagrafica">
-                        <ScheduleForm />
+                    <MudTabPanel Text="Anagrafica" Disabled="_selectedSlot==null">
+                        <BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUser">
+                            <Content>
+                                <ScheduleForm Callback="@((DTOUser user) => SetUser(user))" />
+                            </Content>
+                        </BaseComponent>
+
                     </MudTabPanel>
                 }
-                <MudTabPanel Text="Three">
-                    <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
-
-                        <Calendar />
-
-                    </div>
-
-                    <div class="d-flex flex-column justify-content-center h-100">
-                        <div class="scheduleDivider"></div>
-                    </div>
-
-                    <div class="d-flex flex-column columnCalendar" style="width:50%;">
-                        <TimeSchedule></TimeSchedule>
-                    </div>
+                <MudTabPanel Text="Conferma" Disabled="@((_user==null || !CurrentViewModel.IsLoggedIn()) || _selectedSlot==null)">
+                    <ConfirmSchedule Booking="@CurrentViewModel.Booking"/>
                 </MudTabPanel>
             </MudTabs>
         </div>
@@ -65,20 +59,61 @@
 </MudDialog>
 
 @code {
+    private MudTabs tabs;
+    private int selectedIndex = 0;
     public DialogOptions Options = new DialogOptions
         {
             CloseOnEscapeKey = true,
             MaxWidth = MaxWidth.ExtraLarge,
             NoHeader = true,
         };
-    private DateTime _dateTimeSelected{ get; set; }
+    private DTOTimeSlot _selectedSlot { get; set; }
 
+    private DateTime _dateTimeSelected { get; set; }
+    private DTOUser _user { get; set; }
+    private void SetSlot(DTOTimeSlot slot)
+    {
+        if (slot != null)
+        {
+            _selectedSlot = slot;
+            CurrentViewModel.Booking.StartDateTime = CurrentViewModel.Booking.StartDateTime.Date.Add(slot.StartTime);
+            CurrentViewModel.Booking.EndDateTime = CurrentViewModel.Booking.EndDateTime.Date.Add(slot.EndTime);
+            selectedIndex = 1;
+        }
+    }
+
+    private void SetUser(DTOUser user)
+    {
+        if (user != null)
+        {
+            CurrentViewModel.Booking.User = user;
+            _user = user;
+            selectedIndex = 2;
+        }
+    }
     private async Task OnBackdropClickHandler(MouseEventArgs e)
     {
         CurrentViewModel.Close();
     }
+
+}
+@if (selectedIndex == 1)
+{
+    <style>
+        .mud-tab-slider.mud-tab-slider-horizontal {
+            left: 32% !important;
+        }
+    </style>
 }
 
+@if (selectedIndex == 2)
+{
+    <style>
+        .mud-tab-slider.mud-tab-slider-horizontal {
+            left: 67% !important;
+        }
+    </style>
+}
 <style>
     .scheduleDialogCss {
         width: 70%;
@@ -97,7 +132,7 @@
     }
 
     .mud-tab-slider.mud-tab-slider-horizontal {
-        width: 160.29px !important;
+        width: 33% !important;
     }
 
     .mud-tabs-tabbar.mud-tabs-rounded.mud-tabs-tabbar-primary.mud-elevation-4 {

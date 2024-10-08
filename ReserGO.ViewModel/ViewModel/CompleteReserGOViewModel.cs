@@ -26,6 +26,7 @@ namespace ReserGO.ViewModel.ViewModel
                 return _baseServices.Session.User;
             }
         }
+
         private bool _isSmallView { get;set; }
         public bool IsSmallView { get => _isSmallView; set=> _isSmallView = value; }
 
@@ -46,7 +47,8 @@ namespace ReserGO.ViewModel.ViewModel
             _baseServices.Notification.NotifyMessage(text, color, position);
         }
 
-      
+
+        public virtual bool IsLoggedIn() => !String.IsNullOrEmpty(User.FirstName);
 
         public virtual bool UserIs(RoleConst role)
         {
