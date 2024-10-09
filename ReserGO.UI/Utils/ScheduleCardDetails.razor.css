@@ -34,7 +34,6 @@
     border-radius: 0px 0px 30px 30px;
     color: #404040;
     font-size: x-large;
-    padding-inline: 4vw !important;
 }
 
 
@@ -64,3 +63,32 @@
         background-color: #1170FF;
         box-shadow: 0 0 10px 3px rgba(128, 128, 128, 0.5);
     }
+
+
+.descriptionDetails {
+    font-size: larger;
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
+    color: #747474;
+}
+
+.dividerDetailsSchedule {
+    width: 40%;
+    height: 7px;
+    border-radius: 0px 15px 15px 0px;
+    background-color: #0066FF;
+    opacity: 0.6;
+}
+
+.bodyDescription {
+    color: #747474;
+    font-size: smaller;
+    padding-block: 2vh;
+}
+
+.dividerSectionSchedule {
+    width: 50%;
+    height: 3px;
+    border-radius: 15px;
+    opacity: 0.6;
+    background-color: lightgray;
+}
