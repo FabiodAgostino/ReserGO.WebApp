@@ -30,7 +30,7 @@
 
                 <div class="d-flex flex-row p-3 headerDialogSmall">
                     <span class="d-flex align-items-center h-100 headerTextSmall">Prenotazione</span>
-                    <span class="d-flex align-items-end"  style="width:10%;height:100%;">
+                    <span class="d-flex align-items-end"  style="width:10%;height:100%;" onclick="@(() => CurrentViewModel.Close())">
                         <MudIcon Icon="@Icons.Material.Filled.Close" Style="font-size: x-large; color:white;" />
                     </span>
                 </div>
@@ -139,9 +139,11 @@
     {
         CurrentViewModel.Close();
     }
-
-
-
+    
+    private void CloseModal()
+    {
+        CurrentViewModel.Close();
+    }
 
     protected override async Task OnInitializedAsync()
     {
