@@ -7,12 +7,16 @@
 @using ReserGO.ViewModel.Interface.Schedule
 @using ReserGO.DTO;
 @using ReserGO.Utils.DTO.Utils
+@using Utils
 
 @inherits BaseComponentChild<IScheduleViewModel,DTOResource>
+@inject IDialogService DialogService
 
 <div class="d-flex flex-column p-0 h-100 homeGuestScheduleContainer">
     <div class="d-flex flex-row justify-content-between p-0 h-100 homeGuestScheduleBody">
-        <div class="d-flex leftSideSchedule justify-content-center align-items-center" style="@(CurrentViewModel.IsSmallView ? "display:none !important":"")" >
+        @if (!CurrentViewModel.IsSmallView)
+        {
+             <div class="d-flex leftSideSchedule justify-content-center align-items-center">
             @if (OpenDetailsCard)
             {
                 <ScheduleCardDetails CardStyle="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? "width:90%;height:80vh;" : "width:95%;height:80vh;")" Icon="@InformationIcon" CallbackOpenModal="@( async (int idResource) => await CurrentViewModel.OpenModalCalendar())" Resource="@CurrentViewModel.SelectedItem" IsLoading="@CurrentViewModel.LoadingFullResource" />
@@ -22,17 +26,19 @@
                 @if (CurrentViewModel.IsLoading)
                 {
                     <div style="position:fixed;">
-                        <span class="loadingText" >In attessa della risorsa...</span>
+                        <span class="loadingText">In attessa della risorsa...</span>
                     </div>
                 }
                 else
-                {   
+                {
                     <CardReserGo Title=" " Description="Seleziona Risorsa" CardStyle="opacity:0.5;" BodyStyle="@CardItemEmptyStyle" Icon="@InformationIcon" />
                 }
             }
         </div>
+        }
+       
         <div class="d-felx @(CurrentViewModel.IsSmallView ? "rightSideScheduleSmall h-100":"rightSideSchedule")">
-            <ListSchedules Callback="@( async (int idResource) => await OpenModalCalendar(idResource))" Resources="CurrentViewModel.List" IsLoading="CurrentViewModel.IsLoading" IsSmallView="@CurrentViewModel.IsSmallView" />
+            <ListSchedules Callback="@( async (int idResource) => await OpenDetails(idResource))" Resources="CurrentViewModel.List" IsLoading="CurrentViewModel.IsLoading" IsSmallView="@CurrentViewModel.IsSmallView" />
         </div>
     </div>
 </div>
@@ -55,7 +61,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await CurrentViewModel.RegisterOnScreenResize(800);
+        await CurrentViewModel.RegisterOnScreenResize(900);
         InformationIcon = Icons.Material.Filled.Today;
         CardItemEmptyStyle = "background-color:#0066FF;color:#FFFFFF;font-size:xx-large;justify-content: center;font-family:ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;";
         await CurrentViewModel.Refresh();
@@ -66,14 +72,41 @@
         OpenDetailsCard = true;
     }
 
-    private async Task OpenModalCalendar(int idResource)
+    private async Task OpenDetails(int idResource)
     {
         await CurrentViewModel.GetFullResource(idResource);
 
         if (CurrentViewModel.IsSmallView)
-            await CurrentViewModel.OpenModalCalendar();
+            await OpenDialogAsync();
         else
             OpenDetailsCard = true;
+    }
+
+    private async Task OpenDialogAsync()
+    {
+        var scheduleDetails = new DTOScheduleCardDetailsModal
+            {
+                Resource = CurrentViewModel.SelectedItem,
+                CallbackOpenModal = EventCallback.Factory.Create<int>(this, HandleCallback)
+            };
+
+        var dialogParameters = new DialogParameters
+    {
+        { "ResourceDetails", scheduleDetails }  // Passa l'oggetto direttamente
+    };
+
+        var options = new DialogOptions
+            {
+                CloseOnEscapeKey = true,
+                Position = DialogPosition.Center
+            };
+
+        var result = await DialogService.Show<ScheduleCardDetailsModal>("Dettagli Programmazione", dialogParameters, options).Result;
+    }
+
+    private async Task HandleCallback(int value)
+    {
+        await CurrentViewModel.OpenModalCalendar();
     }
 
 }

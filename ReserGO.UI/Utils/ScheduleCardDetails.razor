@@ -89,7 +89,7 @@
         @if ((!String.IsNullOrEmpty(Description) || Resource != null) && !IsLoading)
         {
             <div class="mb-3 d-flex justify-content-center align-items-end h-100">
-                <MudButton OnClick="@(async () => await ClickOpenModal(2))" class="confirmScheduleDetailsButton btn-primary" style="width:15vw;" type="submit">Seleziona</MudButton>
+                <MudButton OnClick="@(async () => await ClickOpenModal(Resource.Id.Value))" class="confirmScheduleDetailsButton btn-primary" style="width:15vw;" type="submit">Seleziona</MudButton>
             </div>
         }
     </div>

@@ -12,7 +12,7 @@
                     this.listeners.forEach(listener => {
                         listener.dotnetHelper.invokeMethodAsync('OnScreenResize', window.innerWidth < listener.breakpoint);
                     });
-                    if(this.listener!=undefined)
+                    if (this.listener != undefined)
                         this.firstLoad = false;
                 }
 

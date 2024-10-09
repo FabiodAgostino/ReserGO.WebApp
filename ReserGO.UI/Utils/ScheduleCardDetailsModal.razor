@@ -1,0 +1,114 @@
+﻿@using MudBlazor
+@using ReserGO.DTO
+@using System.Globalization;
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.Utils.DTO.ExtensionMethod;
+@using ReserGO.Utils.DTO.Utils
+<MudDialog Options="@Options" Class="dialogClassSmall">
+    <TitleContent>
+        @ResourceDetails.Resource.ResourceName
+    </TitleContent>
+    <DialogContent>
+        <div class="d-flex flex-column shadow cardScheduleDetails">
+            <div class="d-flex flex-column align-items-center cardScheduleDetailsBody h-100">
+
+                <div>
+                    @ResourceDetails.Resource.Description
+                </div>
+                @if (ResourceDetails.Resource.RequestToConfirm)
+                {
+                    <div>
+                        Riceverai una mail per la conferma della prenotazione
+                    </div>
+                }
+                @if (ResourceDetails.Resource.Price.HasValue)
+                {
+                    <div>
+                        Costo del servizio: @($"{ResourceDetails.Resource.Price.Value.ToString()}€")
+                    </div>
+                }
+                @if (ResourceDetails.Resource.AvailabilityAdv.UnavailableByDaysOfTheWeek.Data.Count() > 0)
+                {
+                    <div>Servizio non disponibile nei giorni:</div>
+                    @foreach (var giorniNonDisponibili in ResourceDetails.Resource.AvailabilityAdv.UnavailableByDaysOfTheWeek.Data)
+                    {
+                        <div>@giorniNonDisponibili</div>
+                    }
+                }
+
+                @if (ResourceDetails.Resource.AvailabilityAdv.UnavailableRecurringTimeDays.Count() > 0)
+                {
+                    <div>Orari di disponibilità:</div>
+                    @foreach (var giorniConRegole in ResourceDetails.Resource.AvailabilityAdv.UnavailableRecurringTimeDays)
+                    {
+                        <div>@giorniConRegole.DayOfTheWeek @giorniConRegole.RangeAvailability</div>
+                    }
+                }
+
+                @if (ResourceDetails.Resource.AvailabilityAdv.UnavailableTimeDatesSlot.Count() > 0)
+                {
+                    <div>Orari straordinari:</div>
+                    @foreach (var giorniSpecificiConRegole in ResourceDetails.Resource.AvailabilityAdv.UnavailableTimeDatesSlot)
+                    {
+                        <div>@giorniSpecificiConRegole.SpecificDate @giorniSpecificiConRegole.RangeAvailability</div>
+                    }
+                }
+
+                @if (ResourceDetails.Resource.AvailabilityAdv.UnavailableSpecificDays.Data.Count() > 0)
+                {
+                    <div>Giorni di chiusura:</div>
+                    @foreach (var giorniChiusura in ResourceDetails.Resource.AvailabilityAdv.UnavailableSpecificDays.Data)
+                    {
+                        <div>@giorniChiusura</div>
+                    }
+                }
+                <div class="mb-3 d-flex justify-content-center align-items-end h-100">
+                    <MudButton OnClick="@(async () => await ClickOpenModal(ResourceDetails.Resource.Id.Value))" class="confirmScheduleDetailsButton btn-primary" style="width:15vw;" type="submit">Seleziona</MudButton>
+                </div>
+            </div>
+        </div>
+    </DialogContent>
+</MudDialog>
+
+
+
+@code {
+
+    [Parameter]
+    public DTOScheduleCardDetailsModal ResourceDetails { get; set; }
+    public DialogOptions Options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.ExtraLarge,
+            NoHeader = true,
+        };
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    private async Task ClickOpenModal(int idResource)
+    {
+        if (ResourceDetails.CallbackOpenModal.HasDelegate)
+        {
+            await ResourceDetails.CallbackOpenModal.InvokeAsync(idResource);
+            MudDialog.Close();
+        }
+    }
+
+}
+
+<style>
+    .iconCardscheduleDetailsCss {
+        color: white;
+        font-size: 2.5vw !important;
+    }
+
+    .mudProgressScheduleDetail {
+        height: 150px !important;
+        width: 150px !important;
+    }
+
+    .mud-progress-circular.mud-progress-medium {
+        height: 150px !important;
+        width: 150px !important;
+    }
+</style>
