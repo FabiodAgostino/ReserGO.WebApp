@@ -114,7 +114,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        CurrentViewModel.RegisterOnScreenResize(800);
+        await CurrentViewModel.RegisterOnScreenResize(800);
         await CurrentViewModel.CheckUser();
         StateHasChanged();
     }

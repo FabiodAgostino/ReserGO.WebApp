@@ -1,4 +1,4 @@
-﻿@using ReserGO.ViewModel.Interface.LoginHome;
+﻿
 @using ReserGO.ViewModel.Interface.Home;
 @using ReserGO.ViewModel.Interface.Authentication;
 @using ReserGO.Utils.UI
@@ -8,20 +8,22 @@
 
 @if (CurrentViewModel.User.Roles is null || CurrentViewModel.UserIs(RoleConst.GUEST))
 {
-    <GuestHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))"/>
+    <GuestHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))" IsSmallView="@CurrentViewModel.IsSmallView"  />
 }
 
 @if (CurrentViewModel.User.Roles!=null && CurrentViewModel.UserIs(RoleConst.CUSTOMER))
 {
-    <BaseComponent TViewModel="ILoginHomeViewModel" TModel="object">
-        <Content>
-            <LoginHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))" />
-        </Content>
-    </BaseComponent>
+    <LoginHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))" IsSmallView="@CurrentViewModel.IsSmallView"/> 
 }
 
 @if (CurrentViewModel.User.Roles != null && CurrentViewModel.UserIs(RoleConst.ADMIN))
 {
-     <AdminHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))"/>    
+     <AdminHome ChoiceSelectedComponent="@((string component) => CurrentViewModel.ChangeComponent(component))" IsSmallView="@CurrentViewModel.IsSmallView"/>    
 }
 
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentViewModel.RegisterOnScreenResize(800);
+    }
+}

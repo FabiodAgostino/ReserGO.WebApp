@@ -25,9 +25,8 @@
 
 .textSchedule {
     color: #404040;
-    font-size: xx-large;
+    font-size: 2vw;
     font-family: var(--mud-typography-button-family);
     font-weight: var(--mud-typography-button-weight);
     line-height: var(--mud-typography-button-lineheight);
-    letter-spacing: var(--mud-typography-button-letterspacing);
 }

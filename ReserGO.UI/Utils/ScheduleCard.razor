@@ -1,22 +1,22 @@
 ﻿@using MudBlazor
 
-<div class="d-flex cardScheduleContainer">
+<div class="d-flex cardScheduleContainer @(IsSmallView ? "w-100" :"")">
 
-    <div class="d-flex flex-column cardSchedule" @onclick="@Click">
-        <div class="d-flex w-100 align-items-center headerScheduleCard">
+    <div class="d-flex flex-column cardSchedule @(IsSmallView ? "w-100" :"")" @onclick="@Click">
+        <div class="d-flex w-100 align-items-center headerScheduleCard" style="@(IsSmallView ? "padding-inline:5px" :"")">
             
             @if(Icon.Length > 1)
             {
-                <MudIcon Icon="@Icon" Class="iconCardSchedule" />
+                <MudIcon Icon="@Icon" Class="@(IsSmallView ? "iconCardScheduleSmall" :"iconCardSchedule")" />
             }
             @if (Title.Length > 1)
             {
-                <span class="textSchedule" style="padding-inline:1vw;">@Title</span>
+                <span class="textSchedule" style="@(IsSmallView ? "font-size: x-large; padding-inline:2vw;" :"padding-inline:1vw;")">@Title</span>
             }
   
         </div>
 
-        <div class="d-flex w-100 bodyScheduleCard">
+        <div class="d-flex w-100 bodyScheduleCard p-3">
             @Description
         </div>
     </div>
@@ -37,6 +37,9 @@
     [Parameter]
     public string Icon { get; set; } = "";
 
+    [Parameter]
+    public bool IsSmallView { get; set; }
+
 
     protected override void OnInitialized()
     {
@@ -56,6 +59,11 @@
     .iconCardSchedule {
         color: #0066FF;
         font-size: 2.5vw !important;
+    }
+
+    .iconCardScheduleSmall {
+        color: #0066FF;
+        font-size: 7vw !important;
     }
 </style>
 

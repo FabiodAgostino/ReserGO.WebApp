@@ -2,32 +2,57 @@
 @using ReserGO.UI.Utils
 @using ReserGO.DTO;
 
-<div class="d-flex flex-column align-items-center justify-content-center h-100 w-100 listScheduleContainer">
-    <div class="d-flex justify-content-center gridContainer">
+<div class="d-flex flex-column h-100 w-100 listScheduleContainer  @(IsSmallView ? "flex-column w-100":"align-items-center justify-content-center")">
+    <div class="d-flex gridContainer @(IsSmallView ? "flex-column w-100 p-3":"justify-content-center")">
 
-        <MudGrid Spacing="@Spacing" Justify="Justify.Center" Style="align-items:center;">
+        @if (IsSmallView)
+        {
             @if (Resources != null && Resources.Any())
             {
                 @foreach (var resource in Resources)
                 {
-                    <MudItem>
-                        <div class="d-flex flex-row">
-                            <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" />
-                        </div>
-                    </MudItem>
+                    <div class="d-flex flex-row" style="padding-block:0.5vh;">
+                        <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" IsSmallView="IsSmallView" Title="@resource.ResourceName" Description="@resource.Description" />
+                    </div>
                 }
             }
-            @if (!IsLoading && Resources==null)
+            @if (!IsLoading && Resources == null)
             {
                 <div>No data...</div>
             }
-            @if(IsLoading)
+            @if (IsLoading)
             {
-                <div style="position:fixed;">
+                <div class="d-flex align-items-center justify-content-center h-100 w-100">
                     <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="mudProgressSchedules" />
                 </div>
             }
-        </MudGrid>
+        }
+        else
+        {
+            <MudGrid Spacing="@Spacing" Justify="Justify.Center" Style="align-items:center;">
+                @if (Resources != null && Resources.Any())
+                {
+                    @foreach (var resource in Resources)
+                    {
+                        <MudItem>
+                            <div class="d-flex flex-row">
+                                <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" />
+                            </div>
+                        </MudItem>
+                    }
+                }
+                @if (!IsLoading && Resources == null)
+                {
+                    <div>No data...</div>
+                }
+                @if (IsLoading)
+                {
+                    <div style="position:fixed;">
+                        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="mudProgressSchedules" />
+                    </div>
+                }
+            </MudGrid>
+        }
 
     </div>
 </div>
@@ -43,6 +68,9 @@
 
     [Parameter]
     public bool IsLoading { get; set; } = true;
+
+    [Parameter]
+    public bool IsSmallView { get; set; } = true;
 
     public int Spacing { get; set; } = 1;
     private string InformationIcon = "";

@@ -26,9 +26,8 @@ namespace ReserGO.ViewModel.ViewModel
                 return _baseServices.Session.User;
             }
         }
-
-        private bool _isSmallView { get;set; }
-        public bool IsSmallView { get => _isSmallView; set=> _isSmallView = value; }
+        private bool _isSmallView { get; set; }
+        public bool IsSmallView { get => _isSmallView; set => _isSmallView = value; }
 
         public virtual async Task RegisterOnScreenResize(int width=1200)
         {
@@ -46,7 +45,6 @@ namespace ReserGO.ViewModel.ViewModel
         {
             _baseServices.Notification.NotifyMessage(text, color, position);
         }
-
 
         public virtual bool IsLoggedIn() => !String.IsNullOrEmpty(User.FirstName);
 

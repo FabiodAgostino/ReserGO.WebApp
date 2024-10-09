@@ -12,7 +12,8 @@
                     this.listeners.forEach(listener => {
                         listener.dotnetHelper.invokeMethodAsync('OnScreenResize', window.innerWidth < listener.breakpoint);
                     });
-                    this.firstLoad = false;
+                    if(this.listener!=undefined)
+                        this.firstLoad = false;
                 }
 
                 // Aggiungi il listener dell'evento resize solo una volta

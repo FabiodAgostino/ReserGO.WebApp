@@ -3,6 +3,8 @@
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.Header
 @using ReserGO.UI.Admin;
+
+
 <div class="d-flex flex-column homeLoginContainer">
     <div class="d-flex flex-column homeLoginBody">
 
@@ -39,6 +41,8 @@
 @code {
     [Parameter]
     public EventCallback<string> ChoiceSelectedComponent { get; set; }
+    [Parameter]
+    public bool IsSmallView { get; set; }
     private string ReservationIcon = "";
     private string InformationIcon = "";
     private string HourDesc = "";
