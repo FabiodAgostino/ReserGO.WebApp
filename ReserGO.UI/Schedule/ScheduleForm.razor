@@ -8,7 +8,7 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 @using ReserGO.ViewModel.Interface.Schedule
-@inherits BaseComponentChild<IScheduleFormViewModel, DTOUser>
+@inherits BaseComponentChild<IScheduleFormViewModel, DTOUserLight>
 
 <div class="d-flex flex-column w-100 h-100">
 
@@ -62,7 +62,7 @@
 @code {
 
     [Parameter]
-    public EventCallback<DTOUser> Callback { get; set; }
+    public EventCallback<DTOUserLight> Callback { get; set; }
     private bool _success;
     MudForm form;
 

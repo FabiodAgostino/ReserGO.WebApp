@@ -38,7 +38,7 @@
                     <MudTabs Elevation="4" Rounded="true" Color="@Color.Secondary">
                         <MudTabPanel Text="Giorno">
                             <div class="d-flex p-2 justify-content-center w-100 h-100">
-                                <MudDatePicker IsDateDisabledFunc="@DisabledWhen" Class="scheduleCalendarCss" PickerVariant="PickerVariant.Static" Date="@(_date)" DateChanged="OnDateChanged" />
+                                <MudDatePicker IsDateDisabledFunc="@CurrentViewModel.DayDisabled" Class="scheduleCalendarCss" PickerVariant="PickerVariant.Static" Date="@(_date)" DateChanged="OnDateChanged" />
                             </div>
                         </MudTabPanel>
                         <MudTabPanel Text="Orario" />
@@ -53,10 +53,10 @@
         {
 
             <div class="d-flex dialogScheduleContainer p-1">
-                <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary" @ref="tabs" @bind-ActivePanelIndex="selectedIndex">
+                <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary" @ref="tabs" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
                     <MudTabPanel Text="Giorno e ora">
                         <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
-                            <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" />
+                            <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" OnChangeMonth="@(async (DateTime dateMonth) =>await CurrentViewModel.GetFullResource(dateMonth))"/>
                         </div>
 
                         <div class="d-flex flex-column justify-content-center h-100">
@@ -64,22 +64,23 @@
                         </div>
 
                         <div class="d-flex flex-column columnCalendar" style="width:50%;">
-                            <TimeSchedule TimeSlots="CurrentViewModel.TimeSlots" OnClick="@((DTOTimeSlot selectedSlot) => SetSlot(selectedSlot))"></TimeSchedule>
+                            <TimeSchedule TimeSlots="CurrentViewModel.TimeSlots" 
+                            OnClick="@((DTOTimeSlot selectedSlot) => SetSlot(selectedSlot))" IsLoading="@CurrentViewModel.SlotLoading" IsFirstLoading="@CurrentViewModel.IsFirstLoad"></TimeSchedule>
                         </div>
                     </MudTabPanel>
                     @if (CurrentViewModel.UserIs(RoleConst.GUEST))
                     {
                         <MudTabPanel Text="Anagrafica" Disabled="_selectedSlot==null">
-                        <BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUser">
+                        <BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUserLight">
                             <Content>
-                                <ScheduleForm Callback="@((DTOUser user) => SetUser(user))" />
+                                <ScheduleForm Callback="@((DTOUserLight user) => SetUser(user))" />
                             </Content>
                         </BaseComponent>
 
                     </MudTabPanel>
                     }
-                    <MudTabPanel Text="Conferma" Disabled="@((_user==null || !CurrentViewModel.IsLoggedIn()) || _selectedSlot==null)">
-                        <ConfirmSchedule Booking="@CurrentViewModel.Booking"/>
+                    <MudTabPanel Text="Conferma" Disabled="@((CurrentViewModel.Booking.User==null || !CurrentViewModel.IsLoggedIn()) || _selectedSlot==null)">
+                        <ConfirmSchedule Booking="@CurrentViewModel.Booking" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))"/>
                     </MudTabPanel>
                 </MudTabs>
             </div>
@@ -92,10 +93,6 @@
 @code {
 
     private MudTabs tabs;
-    private int selectedIndex = 0;
-
-    [Parameter]
-    public Func<DateTime, bool> DisabledWhen { get; set; }
 
     [Parameter]
     public EventCallback<DateTime> OnClick { get; set; }
@@ -114,7 +111,6 @@
 
     private DateTime _dateTimeSelected{ get; set; }
 
-    private DTOUser _user { get; set; }
     private void SetSlot(DTOTimeSlot slot)
     {
         if (slot != null)
@@ -122,17 +118,16 @@
             _selectedSlot = slot;
             CurrentViewModel.Booking.StartDateTime = CurrentViewModel.Booking.StartDateTime.Date.Add(slot.StartTime);
             CurrentViewModel.Booking.EndDateTime = CurrentViewModel.Booking.EndDateTime.Date.Add(slot.EndTime);
-            selectedIndex = 1;
+            CurrentViewModel.SelectedIndex = 1;
         }
     }
 
-    private void SetUser(DTOUser user)
+    private void SetUser(DTOUserLight user)
     {
         if (user != null)
         {
             CurrentViewModel.Booking.User = user;
-            _user = user;
-            selectedIndex = 2;
+            CurrentViewModel.SelectedIndex = 2;
         }
     }
     private async Task OnBackdropClickHandler(MouseEventArgs e)
@@ -142,7 +137,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        CurrentViewModel.RegisterOnScreenResize(800);
+        await CurrentViewModel.RegisterOnScreenResize(800);
     }
 
     public async Task OnDateChanged(DateTime? date)
@@ -154,7 +149,7 @@
 
 }
 
-@if (selectedIndex == 1)
+@if (CurrentViewModel.SelectedIndex == 1)
 {
     <style>
         .mud-tab-slider.mud-tab-slider-horizontal {
@@ -163,7 +158,7 @@
     </style>
 }
 
-@if (selectedIndex == 2)
+@if (CurrentViewModel.SelectedIndex == 2)
 {
     <style>
         .mud-tab-slider.mud-tab-slider-horizontal {
@@ -238,7 +233,7 @@
             width:100% !important;
             height:100% !important;
         }
-        @if (selectedIndex == 1)
+        @if (CurrentViewModel.SelectedIndex == 1)
         {
             <style>
                 .mud-tab-slider.mud-tab-slider-horizontal {
@@ -247,7 +242,7 @@
             </style>
         }
 
-        @if (selectedIndex == 2)
+        @if (CurrentViewModel.SelectedIndex == 2)
         {
             <style>
                 .mud-tab-slider.mud-tab-slider-horizontal {

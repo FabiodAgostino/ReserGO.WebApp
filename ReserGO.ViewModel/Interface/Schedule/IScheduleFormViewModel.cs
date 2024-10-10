@@ -2,7 +2,7 @@
 
 namespace ReserGO.ViewModel.Interface.Schedule
 {
-    public interface IScheduleFormViewModel : ILightReserGOViewModel<DTOUser>
+    public interface IScheduleFormViewModel : ILightReserGOViewModel<DTOUserLight>
     {
     }
 }

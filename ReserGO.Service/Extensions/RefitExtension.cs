@@ -41,7 +41,17 @@ namespace ReserGO.Service.Extensions
                 {
                     BaseAddress = new Uri($"{serverapi}api/Resource")
                 };
-                return RestService.For<IScheduleService>(httpClient);
+                return RestService.For<IResourceService>(httpClient);
+            });
+
+            services.AddScoped(provider =>
+            {
+                var handler = provider.GetRequiredService<ApiMessageHandler>();
+                var httpClient = new HttpClient(handler)
+                {
+                    BaseAddress = new Uri($"{serverapi}api/Booking")
+                };
+                return RestService.For<IBookingService>(httpClient);
             });
 
             services.AddScoped(provider =>

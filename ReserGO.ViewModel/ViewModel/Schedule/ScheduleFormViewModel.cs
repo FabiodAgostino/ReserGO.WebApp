@@ -5,7 +5,7 @@ using ReserGO.ViewModel.Interface.Schedule;
 
 namespace ReserGO.ViewModel.ViewModel.Schedule
 {
-    public class ScheduleFormViewModel : LightReserGOViewModel<DTOUser>, IScheduleFormViewModel
+    public class ScheduleFormViewModel : LightReserGOViewModel<DTOUserLight>, IScheduleFormViewModel
     {
         public ScheduleFormViewModel(IEvent aggregator, ILogger<ScheduleFormViewModel> logger) : base(aggregator, logger)
         {

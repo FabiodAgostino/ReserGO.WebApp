@@ -4,12 +4,14 @@ using ReserGO.Utils.DTO.Service;
 
 namespace ReserGO.Service.Interface.Schedule
 {
-    public interface IScheduleService
+    public interface IResourceService
     {
         [Get("/GetResourcesByCompany")]
         Task<ServiceResponse<IEnumerable<DTOResource>>> GetResourcesByCompany();
 
         [Get("/GetFullResource")]
-        Task<ServiceResponse<DTOResource>> GetFullResource(int idResource);
+        Task<ServiceResponse<DTOResource>> GetFullResource(int idResource, DateTime? monthDate);
+        [Get("/GetDetailResource")]
+        Task<ServiceResponse<DTOResource>> GetDetailResource(int idResource);
     }
 }

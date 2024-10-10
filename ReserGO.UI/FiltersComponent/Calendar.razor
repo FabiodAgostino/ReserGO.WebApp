@@ -1,7 +1,7 @@
 ﻿@using MudBlazor
 
 <div class="d-flex align-items-center justify-content-center calendarContainer">
-    <MudDatePicker IsDateDisabledFunc="@DisabledWhen" Class="scheduleCalendarCss" PickerVariant="PickerVariant.Static" Date="@(_date)" DateChanged="OnDateChanged" />
+    <MudDatePicker IsDateDisabledFunc="@DisabledWhen" Class="scheduleCalendarCss" PickerVariant="PickerVariant.Static" DateChanged="OnDateChanged" PickerMonthChanged="OnClickMonth" />
 </div>
 
 
@@ -12,6 +12,9 @@
     [Parameter]
     public EventCallback<DateTime> OnClick { get; set; }
 
+    [Parameter]
+    public EventCallback<DateTime> OnChangeMonth { get; set; }
+
     private DateTime _date { get; set; } = DateTime.Now;
 
     public async Task OnDateChanged(DateTime? date)
@@ -21,12 +24,18 @@
             await OnClick.InvokeAsync(date.Value);
     }
 
+    public async Task OnClickMonth(DateTime? date)
+    {
+        if (OnChangeMonth.HasDelegate && date.HasValue)
+            await OnChangeMonth.InvokeAsync(date.Value);
+    }
+
 }
 
 <style>
-    .scheduleCalendarCss{
+    .scheduleCalendarCss {
         border: 1px solid lightgray;
-        border-radius:15px;
+        border-radius: 15px;
     }
 
     /* Per lo stile del giorno disabilitato */
@@ -38,9 +47,9 @@
     .mud-picker-static {
         display: flex;
         overflow: hidden;
-        min-width: 95%!important;
+        min-width: 95% !important;
         flex-direction: column;
-        height: 100%!important;
+        height: 100% !important;
     }
 
     .mud-picker-calendar-container {
@@ -88,20 +97,20 @@
         height: 100% !important;
     }
 
-        .mud-picker-calendar .mud-day {
-            color: var(--mud-palette-text-primary);
-            width: 4vw !important;
-            height: 4vh !important;
-            margin: 0 2px;
-            padding: 0;
-            font-size: .75rem;
-            font-weight: 500;
-        }
+    .mud-picker-calendar .mud-day {
+        color: var(--mud-palette-text-primary);
+        width: 4vw !important;
+        height: 4vh !important;
+        margin: 0 2px;
+        padding: 0;
+        font-size: .75rem;
+        font-weight: 500;
+    }
 
-            .mud-picker-calendar .mud-day .mud-typography {
-                margin-top: 2px;
-                font-size: large !important;
-            }
+        .mud-picker-calendar .mud-day .mud-typography {
+            margin-top: 2px;
+            font-size: large !important;
+        }
 
     .mud-picker-calendar-transition {
         margin-top: 12px;

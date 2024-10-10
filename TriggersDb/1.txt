@@ -1,0 +1,25 @@
+CREATE TRIGGER PreventOverlappingBookings
+ON Bookings
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    DECLARE @StartDateTime DATETIME, @EndDateTime DATETIME, @ResourceId INT;
+    
+    -- Prendi i dati del booking appena inserito o aggiornato
+    SELECT @StartDateTime = START_DATE_TIME, @EndDateTime = END_DATE_TIME, @ResourceId = RESOURCE_ID
+    FROM INSERTED;
+    
+    -- Verifica se c'è una prenotazione che si sovrappone con quella appena inserita
+    IF EXISTS (
+        SELECT 1
+        FROM Bookings
+        WHERE RESOURCE_ID = @ResourceId
+        AND ((@StartDateTime < END_DATE_TIME AND @EndDateTime > START_DATE_TIME) OR
+             (@StartDateTime < START_DATE_TIME AND @EndDateTime > END_DATE_TIME))
+    )
+    BEGIN
+        -- Se c'è una sovrapposizione, annulla l'operazione
+        RAISERROR('Le date si sovrappongono con una prenotazione esistente.', 16, 1);
+        ROLLBACK;
+    END
+END

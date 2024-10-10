@@ -6,14 +6,21 @@
         <p>@Booking.User.FirstName @Booking.User.LastName</p>
         <p>Prenotazione del servizio dalle @GetDate()</p>
         <p>Servizio prenotatato: @Booking.Resource.ResourceName</p>
-    </div>
-    <div class="d-flex justify-content-center align-items-center p-2">
-        <MudButton @onclick="@(() => Submit(false))" class="cancelButtonSmall btn-primary" style="width:100%; margin-top:3vh" type="submit">Annulla</MudButton>
-    </div>
+        @if(Booking.Resource.RequestToConfirm)
+        {
+            <p>Ti verrà inviata una mail nel momento della conferma della prenotazione</p>
+        }
+        @if (Booking.Resource.Price.HasValue)
+        {
+            <p>Prezzo: @Booking.Resource.Price.Value</p>
+        }
 
-    <div class="d-flex justify-content-center align-items-center p-2">
-        <MudButton @onclick="@(() => Submit(true))" class="registerButtonSmall btn-primary" style="width:100%;" type="submit">Salva</MudButton>
+        <div class="d-flex justify-content-around align-items-center p-2">
+            <MudButton @onclick="@(() => Submit(false))" class="cancelButtonSmall btn-primary" style="width:100%; margin-top:3vh" type="submit">Annulla</MudButton>
+            <MudButton @onclick="@(() => Submit(true))" class="registerButtonSmall btn-primary" style="width:100%;" type="submit">Salva</MudButton>
+        </div>
     </div>
+   
 }
 @code {
     [Parameter]

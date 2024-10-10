@@ -17,32 +17,40 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
 {
     public class ModalScheduleViewModel : CompleteReserGOViewModell<DTOResource, ModalScheduleViewModel>, IModalScheduleViewModel
     {
-        private readonly IScheduleService _service;
-        public ModalScheduleViewModel(IBaseServicesReserGO<ModalScheduleViewModel> baseServices, IScheduleService service) : base(baseServices)
+        private readonly IBookingService _bookService;
+        private readonly IResourceService _service;
+
+        public ModalScheduleViewModel(IBaseServicesReserGO<ModalScheduleViewModel> baseServices, IBookingService bookService, IResourceService service) : base(baseServices)
         {
             Aggregator.Subscribe<ObjectMessage<GenericModal<DTOResource>>>(GetType(), OpenModal);
+            _bookService = bookService;
             _service = service;
+            IsFirstLoad = false;
         }
         public bool IsOpen { get; set; }
         public Func<DateTime, bool> DayDisabled { get; set; }
         public List<DTOTimeSlot> TimeSlots { get; set; } = new();
         public DTOBooking Booking { get; set; } = new();
+        public int SelectedIndex { get; set; } = 0;
+        public bool SlotLoading { get; set; }
 
         public async void OpenModal(ObjectMessage<GenericModal<DTOResource>> message)
         {
+            IsFirstLoad = true;
+            SelectedIndex = 0;
+            Booking = new();
             IsOpen = true;
             SelectedItem = message.Value.Data;
-            Booking.Resource = SelectedItem;
+            Booking.Resource = (DTOResource)SelectedItem.Clone();
             if(!UserIs(RoleConst.GUEST))
             {
                 Booking.User = User.GetFromDTOSession();
             }
-            await SetDayDisabled();
-            await GetSlot(DateTime.Now);
             OnPropertyChanged();
+            await SetDayDisabled(true);
         }
 
-        public async Task SetDayDisabled()
+        public async Task SetDayDisabled(bool firstLoad=false)
         {
             DayDisabled = item =>
             {
@@ -57,12 +65,17 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                 bool oldDays = item.Date < DateTime.Now.AddDays(-1);
                 if (oldDays)
                     return true;
+                if (!TimeSlots.Any() && item.Date == DateTime.Now.Date && !firstLoad)
+                    return true;
                 return false;
             };
         }
 
         public async Task GetSlot(DateTime day)
         {
+            if(IsFirstLoad)
+                IsFirstLoad = false;
+            SlotLoading = true;
             Booking.StartDateTime = day.Date;
             Booking.EndDateTime = day.Date;
             var slotOccupati = new List<DTOTimeSlot>();
@@ -78,7 +91,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             {
                 var recurringSlot = firstSlot.SingleOrDefault(x => x.DayOfTheWeek.Contains(day.DayOfWeek.DayToItalianString()));
                 if (recurringSlot != null)
-                    slotOccupati = recurringSlot.TimeSlots;
+                    slotOccupati.AddRange(recurringSlot.TimeSlots);
             }
 
             var secondSlot = SelectedItem.AvailabilityAdv.UnavailableTimeDatesSlot;
@@ -88,23 +101,91 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                 if (timeDateSlot != null)
                     slotOccupati.AddRange(timeDateSlot.TimeSlots);
             }
+
+            var timeSLotsBooking = await GetBookingSlot(day);
+            if(timeSLotsBooking.Count() > 0)
+            {
+                slotOccupati.AddRange(timeSLotsBooking);
+            }
+
             if (slotOccupati.Count() > 0)
             {
                 slotOccupati = DTOResourceExtension.MergeTimeSlots(slotOccupati);
             }
-            TimeSlots = DTOResourceExtension.GetAvailableSlots(slotOccupati, SelectedItem.DurationBooking.Value);
+            TimeSlots = DTOResourceExtension.GetAvailableSlots(slotOccupati, SelectedItem.DurationBooking.Value, day);
+            SlotLoading = false;
+        }
+
+        public async Task<List<DTOTimeSlot>> GetBookingSlot(DateTime day)
+        {
+            var list = new List<DTOTimeSlot>();
+            try
+            {
+                var r = await _bookService.GetBookingSlotUnavailableFromResource(SelectedItem.Id.Value, day);
+                list = r.Data.ToList();
+            }
+            catch (Exception ex)
+            {
+            }
+            return list;
 
         }
 
-        public async Task GetFullResource(int idResource)
+        public async Task InsertBooking(bool submit)
         {
+            if(submit)
+            {
+                try
+                {
+                    var bookingToInsert = (DTOBooking)Booking.Clone();
+                    bookingToInsert.ResourceId= SelectedItem.Id.Value;
+                    bookingToInsert.Resource.AvailabilityAdv = null;
+                    bookingToInsert.Resource.ResourcesAvailability = null;
+
+
+                    var result = await _bookService.InsertBooking(bookingToInsert);
+                    if(result.Success)
+                    {
+                        Notification("Prenotazione inserita correttamente", NotificationColor.Success);
+                        IsOpen = false;
+                    }
+                    else
+                        Notification(result.Message, NotificationColor.Warning);
+
+                }
+                catch (Exception ex)
+                {
+                    Notification(ex.Message, NotificationColor.Error);
+                }
+            }
+            else
+            {
+                Notification("Prenotazione non salvata!", NotificationColor.Warning);
+                IsOpen = false;
+            }
+        }
+
+        public async Task GetFullResource(DateTime date)
+        {
+            IsLoading = true;
+            Loading();
             try
             {
-                await _service.GetFullResource(idResource);
+                var res = await _service.GetFullResource(SelectedItem.Id.Value, date);
+                if (res.Success)
+                    SelectedItem = res.Data;
+                else
+                    Notification(res.Message, NotificationColor.Warning);
             }
             catch (Exception ex)
             {
                 Notification(ex.Message, NotificationColor.Error);
+            }
+            finally
+            {
+                OnPropertyChanged();
+                IsLoading = false;
+                Loading();
             }
         }
 

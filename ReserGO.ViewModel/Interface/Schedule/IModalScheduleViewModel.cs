@@ -13,5 +13,9 @@ namespace ReserGO.ViewModel.Interface.Schedule
         Task GetSlot(DateTime day);
         List<DTOTimeSlot> TimeSlots { get; set; }
         DTOBooking Booking { get; set; }
+        Task InsertBooking(bool submit);
+        public int SelectedIndex { get; set; }
+        Task GetFullResource(DateTime date);
+        public bool SlotLoading { get; set; }
     }
 }

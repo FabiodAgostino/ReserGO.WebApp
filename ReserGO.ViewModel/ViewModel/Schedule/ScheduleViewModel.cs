@@ -10,9 +10,9 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
 {
     public class ScheduleViewModel : CompleteReserGOViewModell<DTOResource, ScheduleViewModel>, IScheduleViewModel
     {
-        private readonly IScheduleService _service;
+        private readonly IResourceService _service;
 
-        public ScheduleViewModel(IBaseServicesReserGO<ScheduleViewModel> baseServices, IScheduleService service) : base(baseServices)
+        public ScheduleViewModel(IBaseServicesReserGO<ScheduleViewModel> baseServices, IResourceService service) : base(baseServices)
         {
             _service = service;
         }
@@ -49,7 +49,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             try
             {
                 LoadingFullResource = true;
-                var res = await _service.GetFullResource(IdResource);
+                var res = await _service.GetFullResource(IdResource, null);
                 if (res.Success)
                     SelectedItem = res.Data;
                 else

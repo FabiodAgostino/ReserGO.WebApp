@@ -110,7 +110,7 @@
                     <div><span class="descriptionDetails">Prezzo</span></div>
                     @if (Resource.Price.HasValue)
                     {
-                        <div><span class="descriptionDetails">Costo del servizio: @($"{Resource.Price.Value.ToString()}€")</span></div>
+                        <div><span class="descriptionDetails">@($"{Resource.Price.Value.ToString()}€")</span></div>
                     }
                     else
                     {
