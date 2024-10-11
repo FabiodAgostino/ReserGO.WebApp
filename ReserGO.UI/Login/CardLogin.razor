@@ -6,6 +6,7 @@
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.Authentication
 @using ReserGO.DTO;
+@using System.ComponentModel.DataAnnotations
 @inherits BaseComponentChild<ILoginViewModel, DTOLoginRequest>
 
 <MudDialog Class="@(CurrentViewModel.IsSmallView ? "dialogClassSmall":"dialogClass")" OnBackdropClick="@HandleBackdropClick" Visible="CurrentViewModel.IsOpen" Options="@Options">
@@ -22,43 +23,42 @@
                     <MudForm @ref="form" @bind-IsValid="@_success">
                         <div class="d-flex flex-column pt-2">
                             <span class="textInputCardLogin" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"")">Email:</span>
-                            <MudTextField @bind-Value="CurrentViewModel.SelectedItem.Email"
-                                          class="inputText"
-                                          Label="Email"
-                                          Required="true"
-                                          Immediate="true"
-                                          Variant="Variant.Outlined"
-                                          Margin="Margin.Dense"
-                                          OnKeyDown="HandleKeyDown">
-                            </MudTextField>
-                            @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("utente"))
-                            {
-                                <div class="d-flex w-100 justify-content-end p-1">
-                                    <bold style="color:white">@CurrentViewModel.LoginError!</bold>
-                                </div>
-                            }
+                            <div class="inputSpace">
+                                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email" Label="E-mail" class="inputText"
+                                Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Required="true" 
+                                RequiredError="Inserire Email corretta" Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })" OnKeyDown="HandleKeyDown"/>
+
+                                @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("email"))
+                                {
+                                    <div class="d-flex w-100 justify-content-end p-1">
+                                        <bold style="color:white">@CurrentViewModel.LoginError!</bold>
+                                    </div>
+                                }
+                            </div>
                         </div>
                         <div class="d-flex flex-column pt-3">
                             <span class="textInputCardLogin" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"")">Password:</span>
-                            <MudTextField @bind-Value="CurrentViewModel.SelectedItem.Password"
-                                          InputType="InputType.Password"
-                                          Required="true"
-                                          Immediate="true"
-                                          Label="inserisci password"
-                                          class="inputText"
-                                          Variant="Variant.Outlined"
-                                          Margin="Margin.Dense"
-                                          OnKeyDown="HandleKeyDown">
-                            </MudTextField>
-                            @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("password"))
-                            {
-                                <div class="d-flex w-100 justify-content-end p-1">
-                                    <bold style="color:white">@CurrentViewModel.LoginError!</bold>
-                                </div>
-                            }
+                            <div class="inputSpace">
+                                <MudTextField @bind-Value="CurrentViewModel.SelectedItem.Password"
+                                              InputType="InputType.Password"
+                                              Required="true"
+                                              Immediate="true"
+                                              Label="inserisci password"
+                                              class="inputText"
+                                              Variant="Variant.Outlined"
+                                              Margin="Margin.Dense"
+                                              OnKeyDown="HandleKeyDown">
+                                </MudTextField>
+                                @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("password"))
+                                {
+                                    <div class="d-flex w-100 justify-content-end p-1">
+                                        <bold style="color:white">@CurrentViewModel.LoginError!</bold>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </MudForm>
-                    <div class="d-flex justify-content-center pt-5 align-items-center">
+                    <div class="d-flex justify-content-center pt-10 align-items-center">
                         <MudButton Disabled="@(!_success)" style="width:15vw;" Class="@GetButtonClass()" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</MudButton>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        CurrentViewModel.RegisterOnScreenResize(800);
+        await CurrentViewModel.RegisterOnScreenResize(800);
     }
 
     void HandleBackdropClick(MouseEventArgs eArgs)
@@ -175,9 +175,14 @@
     .mud-form {
         flex-direction: unset !important;
     }
+
     .inputText {
         border-radius: 15px !important;
         background-color: white;
+    }
+
+    .inputSpace {
+        height: 45px;
     }
 
     .mud-input-outlined-border {

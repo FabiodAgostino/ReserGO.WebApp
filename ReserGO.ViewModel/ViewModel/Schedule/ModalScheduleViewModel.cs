@@ -42,7 +42,8 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             IsOpen = true;
             SelectedItem = message.Value.Data;
             Booking.Resource = (DTOResource)SelectedItem.Clone();
-            if(!UserIs(RoleConst.GUEST))
+            TimeSlots = new();
+            if (!UserIs(RoleConst.GUEST))
             {
                 Booking.User = User.GetFromDTOSession();
             }
@@ -142,7 +143,6 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                     bookingToInsert.Resource.AvailabilityAdv = null;
                     bookingToInsert.Resource.ResourcesAvailability = null;
 
-
                     var result = await _bookService.InsertBooking(bookingToInsert);
                     if(result.Success)
                     {
@@ -162,30 +162,6 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             {
                 Notification("Prenotazione non salvata!", NotificationColor.Warning);
                 IsOpen = false;
-            }
-        }
-
-        public async Task GetFullResource(DateTime date)
-        {
-            IsLoading = true;
-            Loading();
-            try
-            {
-                var res = await _service.GetFullResource(SelectedItem.Id.Value, date);
-                if (res.Success)
-                    SelectedItem = res.Data;
-                else
-                    Notification(res.Message, NotificationColor.Warning);
-            }
-            catch (Exception ex)
-            {
-                Notification(ex.Message, NotificationColor.Error);
-            }
-            finally
-            {
-                OnPropertyChanged();
-                IsLoading = false;
-                Loading();
             }
         }
 

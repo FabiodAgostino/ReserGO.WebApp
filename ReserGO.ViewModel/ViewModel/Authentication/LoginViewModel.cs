@@ -34,6 +34,7 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
         {
             if(message.Value.Event.HasDelegate)
             {
+                LoginError = String.Empty;
                 Callback = message.Value.Event;
                 IsOpen = true;
                 SelectedItem = new();

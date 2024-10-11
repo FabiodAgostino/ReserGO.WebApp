@@ -46,34 +46,6 @@
                                 <MudDatePicker @bind-Date="@CurrentViewModel.SelectedItem.DateOfBirth" Immediate="true" Label="Data di nascita" Required="true" RequiredError="Inserire data di nascita" Variant="Variant.Outlined" />
                             </div>
                         </MudItem>
-                        <MudItem xs="12" sm="6">
-                            <div class="inputSpace" style="margin-top:6px">
-                                <BaseComponent TViewModel="INazioneViewModel" TModel="DTONazione">
-                                    <Content>
-                                        <NationalityCombo OnNazioneSelected="@((string? nazione) => OnNazioneChanged(nazione))" Label="Luogo di nascita" />
-                                    </Content>
-                                </BaseComponent>
-                            </div>
-                        </MudItem>
-
-                        <MudItem xs="12" sm="6">
-                            <div class="inputSpace">
-                                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.FiscalCode"
-                                              Required="true"
-                                              Pattern="@GetMinLenght()"
-                                              RequiredError="inserire codice fiscale"
-                                              ErrorText="@GetErrorText()"
-                                              Label="Codice fiscale"
-                                              Error="GetError()"
-                                              Immediate="true"
-                                              MaxLength="MaxLenghtCF"
-                                              InputType="InputType.Text"
-                                              Variant="Variant.Outlined"
-                                              Margin="Margin.Dense"
-                                              Disabled="!EnableCF" />
-                            </div>
-                        </MudItem>
-
                         @if (CurrentViewModel.ConfigurationServer.ExtendedInput == ExtendedInput.ADVANCED)
                         {
                             <MudItem xs="12" sm="6">

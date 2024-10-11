@@ -30,21 +30,45 @@
 
                 <div class="d-flex flex-row p-3 headerDialogSmall">
                     <span class="d-flex align-items-center h-100 headerTextSmall">Prenotazione</span>
-                    <span class="d-flex align-items-end"  style="width:10%;height:100%;" onclick="@(() => CurrentViewModel.Close())">
+                    <span class="d-flex align-items-end" style="width:10%;height:100%;" onclick="@(() => CurrentViewModel.Close())">
                         <MudIcon Icon="@Icons.Material.Filled.Close" Style="font-size: x-large; color:white;" />
                     </span>
                 </div>
-                <div class="d-flex justify-content-center tabHeader">
-                    <MudTabs Elevation="4" Rounded="true" Color="@Color.Secondary">
+                <div class="d-flex flex-column justify-content-center tabHeader">
+                    <MudTabs Elevation="4" Rounded="true" Color="@Color.Secondary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
                         <MudTabPanel Text="Giorno">
                             <div class="d-flex p-2 justify-content-center w-100 h-100">
-                                <MudDatePicker IsDateDisabledFunc="@CurrentViewModel.DayDisabled" Class="scheduleCalendarCss" PickerVariant="PickerVariant.Static" Date="@(_date)" DateChanged="OnDateChanged" />
+                                <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" />
                             </div>
                         </MudTabPanel>
-                        <MudTabPanel Text="Orario" />
-                        <MudTabPanel Text="Anagrafica" />
-                        <MudTabPanel Text="Conferma" />
+                        <MudTabPanel Text="Orario">
+                            <div class="d-flex flex-column columnCalendar" style="width:50%;">
+                            <TimeSchedule TimeSlots="CurrentViewModel.TimeSlots"
+                                          OnClick="@((DTOTimeSlot selectedSlot) => SetSlot(selectedSlot))" IsLoading="@CurrentViewModel.SlotLoading" IsFirstLoading="@CurrentViewModel.IsFirstLoad"></TimeSchedule>
+                        </div>
+                        </MudTabPanel>
+                        <MudTabPanel Text="Anagrafica" Disabled="_selectedSlot==null">
+                            <BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUserLight">
+                                <Content>
+                                    <ScheduleForm Callback="@((DTOUserLight user) => SetUser(user))" />
+                                </Content>
+                            </BaseComponent>
+                            </MudTabPanel>
+                        <MudTabPanel Text="Conferma" Disabled="@((CurrentViewModel.Booking.User==null || !CurrentViewModel.IsLoggedIn()) || _selectedSlot==null)">
+                                <ConfirmSchedule Booking="@CurrentViewModel.Booking" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))" />
+                            </MudTabPanel>
+
                     </MudTabs>
+                    <div class="d-flex justify-content-around" style="background-color:white">
+                        <MudButtonGroup>
+                            <MudTooltip Text="Prepend a tab">
+                                <MudIconButton Icon="@Icons.Material.Filled.ChevronLeft" OnClick="@( () => CurrentViewModel.SelectedIndex-- )" />
+                            </MudTooltip>
+                            <MudTooltip Text="Append a tab">
+                                <MudIconButton Icon="@Icons.Material.Filled.ChevronRight" OnClick="@( () => CurrentViewModel.SelectedIndex++ )" />
+                            </MudTooltip>
+                        </MudButtonGroup>
+                    </div>
                 </div>
 
             </div>
@@ -56,7 +80,7 @@
                 <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary" @ref="tabs" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
                     <MudTabPanel Text="Giorno e ora">
                         <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
-                            <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" OnChangeMonth="@(async (DateTime dateMonth) =>await CurrentViewModel.GetFullResource(dateMonth))"/>
+                            <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" />
                         </div>
 
                         <div class="d-flex flex-column justify-content-center h-100">
@@ -64,23 +88,23 @@
                         </div>
 
                         <div class="d-flex flex-column columnCalendar" style="width:50%;">
-                            <TimeSchedule TimeSlots="CurrentViewModel.TimeSlots" 
-                            OnClick="@((DTOTimeSlot selectedSlot) => SetSlot(selectedSlot))" IsLoading="@CurrentViewModel.SlotLoading" IsFirstLoading="@CurrentViewModel.IsFirstLoad"></TimeSchedule>
+                            <TimeSchedule TimeSlots="CurrentViewModel.TimeSlots"
+                                          OnClick="@((DTOTimeSlot selectedSlot) => SetSlot(selectedSlot))" IsLoading="@CurrentViewModel.SlotLoading" IsFirstLoading="@CurrentViewModel.IsFirstLoad"></TimeSchedule>
                         </div>
                     </MudTabPanel>
                     @if (CurrentViewModel.UserIs(RoleConst.GUEST))
                     {
                         <MudTabPanel Text="Anagrafica" Disabled="_selectedSlot==null">
-                        <BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUserLight">
-                            <Content>
-                                <ScheduleForm Callback="@((DTOUserLight user) => SetUser(user))" />
-                            </Content>
-                        </BaseComponent>
+                            <BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUserLight">
+                                <Content>
+                                    <ScheduleForm Callback="@((DTOUserLight user) => SetUser(user))" />
+                                </Content>
+                            </BaseComponent>
 
-                    </MudTabPanel>
+                        </MudTabPanel>
                     }
                     <MudTabPanel Text="Conferma" Disabled="@((CurrentViewModel.Booking.User==null || !CurrentViewModel.IsLoggedIn()) || _selectedSlot==null)">
-                        <ConfirmSchedule Booking="@CurrentViewModel.Booking" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))"/>
+                        <ConfirmSchedule Booking="@CurrentViewModel.Booking" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))" />
                     </MudTabPanel>
                 </MudTabs>
             </div>
@@ -109,7 +133,7 @@
 
     private DTOTimeSlot _selectedSlot { get; set; }
 
-    private DateTime _dateTimeSelected{ get; set; }
+    private DateTime _dateTimeSelected { get; set; }
 
     private void SetSlot(DTOTimeSlot slot)
     {
@@ -149,23 +173,6 @@
 
 }
 
-@if (CurrentViewModel.SelectedIndex == 1)
-{
-    <style>
-        .mud-tab-slider.mud-tab-slider-horizontal {
-            left: 32% !important;
-        }
-    </style>
-}
-
-@if (CurrentViewModel.SelectedIndex == 2)
-{
-    <style>
-        .mud-tab-slider.mud-tab-slider-horizontal {
-            left: 67% !important;
-        }
-    </style>
-}
 <style>
     .scheduleDialogCss {
         width: 70%;
@@ -174,7 +181,7 @@
         border-radius: 30px !important;
     }
 
-    .scheduleDialogCssSmall{
+    .scheduleDialogCssSmall {
         width: 90%;
         height: 80%;
         max-width: 90% !important;
@@ -196,14 +203,13 @@
     }
 
     .mud-tab-slider.mud-tab-slider-horizontal {
-        width: 33% !important;
+        /* width: 33% !important; */
     }
 
     .mud-tabs-tabbar.mud-tabs-rounded.mud-tabs-tabbar-primary.mud-elevation-4 {
         border-radius: 20px !important
     }
 
-    
 </style>
 
 @if (CurrentViewModel.IsSmallView)
@@ -228,27 +234,10 @@
             box-shadow: none !important;
         }
 
-        .mud-tabs-panels{
-            background-color:white !important;
-            width:100% !important;
-            height:100% !important;
-        }
-        @if (CurrentViewModel.SelectedIndex == 1)
-        {
-            <style>
-                .mud-tab-slider.mud-tab-slider-horizontal {
-                    left: 40% !important;
-                }
-            </style>
-        }
-
-        @if (CurrentViewModel.SelectedIndex == 2)
-        {
-            <style>
-                .mud-tab-slider.mud-tab-slider-horizontal {
-                    left: 67% !important;
-                }
-            </style>
+        .mud-tabs-panels {
+            background-color: white !important;
+            width: 100% !important;
+            height: 100% !important;
         }
     </style>
 }

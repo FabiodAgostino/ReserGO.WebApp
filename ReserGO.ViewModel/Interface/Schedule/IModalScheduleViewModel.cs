@@ -15,7 +15,6 @@ namespace ReserGO.ViewModel.Interface.Schedule
         DTOBooking Booking { get; set; }
         Task InsertBooking(bool submit);
         public int SelectedIndex { get; set; }
-        Task GetFullResource(DateTime date);
         public bool SlotLoading { get; set; }
     }
 }
