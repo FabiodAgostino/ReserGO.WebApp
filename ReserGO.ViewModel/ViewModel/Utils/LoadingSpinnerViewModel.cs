@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using ReserGO.Miscellaneous.Message;
+using ReserGO.Miscellaneous.Model;
 using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Utils;
 
@@ -9,12 +10,28 @@ namespace ReserGO.ViewModel.ViewModel.Utils
     {
         public LoadingSpinnerViewModel(IEvent aggregator, ILogger<LoadingSpinnerViewModel> logger) : base(aggregator, logger)
         {
-            Aggregator.Subscribe<ObjectMessage<bool>>(GetType(), SetSpinner);
-            IsLoading = false;
+            Aggregator.Subscribe<ObjectMessage<LoadingSpinner>>(GetType(), SetSpinner);
         }
-        public void SetSpinner(ObjectMessage<bool> message)
+        public LoadingSpinner LoadingSpinner { get; set; }
+        private string _dimension {  get; set; }    
+        public string Dimension
         {
-            IsLoading = message.Value;
+            get
+            {
+                if (LoadingSpinner == null || String.IsNullOrEmpty(LoadingSpinner.Text))
+                    return "250px !important;\n";
+                else
+                    return "350px !important;\n";
+            }
+            set
+            {
+                _dimension = value;
+            }
+        }
+        public void SetSpinner(ObjectMessage<LoadingSpinner> message)
+        {
+            LoadingSpinner = message.Value;
+            OnPropertyChanged();
         }
     }
 }

@@ -11,5 +11,10 @@ namespace ReserGO.Service.Interface.Schedule
         Task<ServiceResponse<bool>> InsertBooking(DTOBooking booking);
         [Get("/GetBookingSlotUnavailableFromResource")]
         Task<ServiceResponse<IEnumerable<DTOTimeSlot>>> GetBookingSlotUnavailableFromResource(int idResource, DateTime day);
+        [Post("/DeleteBookingEmail")]
+        Task<ServiceResponse<bool>> DeleteBookingEmail(DTODeleteBooking deleteBooking);
+        [Delete("/DeleteBooking")]
+        Task<ServiceResponse<bool>> DeleteBooking(int idBooking);
+
     }
 }

@@ -30,6 +30,7 @@ namespace ReserGO.ViewModel.Extensions
             services.AddScoped<IModalScheduleViewModel, ModalScheduleViewModel>();
             services.AddScoped<IScheduleViewModel, ScheduleViewModel>();
             services.AddScoped<IScheduleFormViewModel, ScheduleFormViewModel>();
+            services.AddScoped<IDeleteScheduleViewModel, DeleteScheduleViewModel>();
 
 
 

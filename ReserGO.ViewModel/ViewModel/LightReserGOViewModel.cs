@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using ReserGO.Miscellaneous.Message;
-using ReserGO.Service.Interface.Utils;
+using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Service.Utils;
 using ReserGO.Utils.DTO.Utils;
 using ReserGO.Utils.Event;
@@ -28,9 +27,9 @@ namespace ReserGO.ViewModel.ViewModel
             ConfigurationServer = new() { ExtendedInput = (ExtendedInput)Int32.Parse(ExtendedInput) };
         }
 
-        public virtual void Loading()
+        public virtual void Loading(string text = null)
         {
-            Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(IsLoading), typeof(LoadingSpinnerViewModel));
+            Aggregator.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(IsLoading, text)), typeof(LoadingSpinnerViewModel));
         }
     }
 }

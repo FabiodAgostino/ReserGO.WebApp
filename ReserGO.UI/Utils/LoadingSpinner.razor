@@ -3,17 +3,34 @@
 @using ReserGO.Utils.UI
 
 @inherits BaseComponentChild<ILoadingSpinnerViewModel, object>
-@if (CurrentViewModel is object && CurrentViewModel.IsLoading)
+@if (CurrentViewModel is object && CurrentViewModel.LoadingSpinner is object && CurrentViewModel.LoadingSpinner.IsLoading)
 {
     <div class="overlay">
         <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="mudProgressCircular" />
+        @if (!String.IsNullOrEmpty(CurrentViewModel.LoadingSpinner.Text))
+        {
+            <div class="textSpinner">
+                <b>@CurrentViewModel.LoadingSpinner.Text</b>
+            </div>
+        }
     </div>
 
 }
+@{
+    <style>
+        .mudProgressCircular {
+            height: @CurrentViewModel.Dimension;
+            width: @CurrentViewModel.Dimension;
+        }
 
-
+        ::deep .mud-progress-circular.mud-progress-medium {
+            height: @CurrentViewModel.Dimension;
+            width: @CurrentViewModel.Dimension;
+        }
+    </style>
+}
 <style>
-   .overlay {
+    .overlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -26,13 +43,9 @@
         z-index: 999999; /* Assicurati che sia sopra gli altri elementi */
     }
 
-    .mudProgressCircular {
-        height: 250px !important;
-        width: 250px !important;
-    }
-
-    ::deep .mud-progress-circular.mud-progress-medium {
-        height: 250px !important;
-        width: 250px !important;
+    .textSpinner {
+        position: absolute;
+        text-align:center;
+        color: black;
     }
 </style>

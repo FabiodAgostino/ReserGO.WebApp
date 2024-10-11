@@ -1,4 +1,5 @@
-﻿using Microsoft.JSInterop;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Service.Interface;
 using ReserGO.Utils.DTO.Utils;
@@ -43,6 +44,9 @@ namespace ReserGO.ViewModel.ViewModel
 
         public virtual void Notification(string text, NotificationColor color = NotificationColor.Info, string position = null)
         {
+            if (color == NotificationColor.Warning || color == NotificationColor.Error)
+                _baseServices.Log.LogError(text);
+
             _baseServices.Notification.NotifyMessage(text, color, position);
         }
 

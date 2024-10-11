@@ -1,0 +1,29 @@
+﻿@using ReserGO.DTO
+@using ReserGO.ViewModel.Interface.Register;
+@using ReserGO.Utils.UI;
+@using ReserGO.ViewModel.Interface.Schedule
+@using ReserGO.UI.Schedule;
+@inject NavigationManager Navigation
+@page "/deletebooking/{bookingId}"
+
+<BaseComponent TViewModel="IDeleteScheduleViewModel" TModel="string">
+        <Content>
+            <DeleteSchedule DeleteBooking="@_deleteBooking" />
+        </Content>
+</BaseComponent>
+
+@code {
+    [Parameter]
+    public string bookingId { get; set; } 
+
+    private DTODeleteBooking _deleteBooking {get;set;} 
+    protected override void OnInitialized()
+    {
+        // Estrai il token dalla query string
+        var uri = new Uri(Navigation.Uri);
+        if (Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query).TryGetValue("token", out var token))
+        {
+            _deleteBooking = new(token, bookingId);
+        }
+    }
+}

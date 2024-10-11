@@ -1,0 +1,22 @@
+﻿@using ReserGO.UI.Utils
+@using ReserGO.DTO
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.Schedule
+
+@inherits BaseComponentChild<IDeleteScheduleViewModel,string>
+
+@code
+{
+    [Parameter]
+    public DTODeleteBooking DeleteBooking { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await CurrentViewModel.DeleteSchedule(DeleteBooking);
+        }
+    }
+}
+
+   
