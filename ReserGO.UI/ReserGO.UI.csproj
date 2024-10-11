@@ -33,6 +33,7 @@
     <None Remove="Utils\ScheduleCard - Copy.razor.css" />
     <None Remove="Utils\ScheduleCard.razor.css" />
     <None Remove="Utils\ScheduleCardDetails.razor.css" />
+    <None Remove="Utils\ScheduleCardDetailsModal.razor.css" />
     <None Remove="Utils\SuccessTemplate.razor.css" />
     <None Remove="Utils\SuccesTemplate.razor.css" />
     <None Remove="Utils\TimeCard.razor.css" />
@@ -55,6 +56,7 @@
     <Content Include="Utils\ItemCardReserGo.razor.css" />
     <Content Include="Utils\ScheduleCard.razor.css" />
     <Content Include="Utils\ScheduleCardDetails.razor.css" />
+    <Content Include="Utils\ScheduleCardDetailsModal.razor.css" />
     <Content Include="Utils\SuccessTemplate.razor.css" />
     <Content Include="Utils\TimeCard.razor.css" />
   </ItemGroup>

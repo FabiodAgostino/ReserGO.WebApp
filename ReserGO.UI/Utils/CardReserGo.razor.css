@@ -37,3 +37,14 @@
     padding-inline: 4vw !important;
     font-family: sans-serif;
 }
+
+.cardBodyReserGoSmall {
+    width: 100%;
+    height: 80%;
+    background-color: #FFFFFF;
+    border-radius: 0px 0px 30px 30px;
+    color: #404040;
+    font-size: large;
+    padding-inline: 4vw !important;
+    font-family: sans-serif;
+}

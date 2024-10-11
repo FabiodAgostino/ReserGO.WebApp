@@ -18,7 +18,7 @@
     </TitleContent>
     <DialogContent>
 
-        <div class="d-flex dialogRegisterContainer p-1">
+        <div class="d-flex dialogRegisterContainer p-1 @(CurrentViewModel.IsSmallView ? "flex-column": "")">
             <div class="d-flex flex-column justify-content-around columnFormRegister" style="@(CurrentViewModel.IsSmallView ? "width:100%; overflow:auto":"width:80%;")">
 
                 <MudForm @ref="form" @bind-IsValid="@_success">
@@ -133,18 +133,20 @@
                     </MudGrid>
                 </MudForm>
 
+            </div>
                 @if (CurrentViewModel.IsSmallView)
                 {
-                    <div class="d-flex justify-content-center align-items-center p-2" >
-                        <MudButton OnClick="Cancel" class="cancelButtonSmall btn-primary" style="width:100%; margin-top:3vh" type="submit">Annulla</MudButton>
-                    </div>
+                    <div class="s-flex flex-column" >
+                        <div class="d-flex justify-content-center align-items-center p-2" >
+                            <MudButton OnClick="Cancel" class="cancelButtonSmall btn-primary" type="submit">Annulla</MudButton>
+                        </div>
 
-                    <div class="d-flex justify-content-center align-items-center p-2" >
-                        <MudButton OnClick="Submit" class="registerButtonSmall btn-primary" Disabled="@(!_success)" style="width:100%;" type="submit">Salva</MudButton>
+                        <div class="d-flex justify-content-center align-items-center p-2" >
+                        <MudButton OnClick="Submit" class="registerButtonSmall btn-primary mt-1" Disabled="@(!_success)" type="submit">Salva</MudButton>
+                        </div>
                     </div>
                 }
 
-            </div>
 
             
             <div class="d-flex flex-column justify-content-center h-100" style="@(CurrentViewModel.IsSmallView ? "display:none !important":"")">

@@ -59,7 +59,7 @@
                         </div>
                     </MudForm>
                     <div class="d-flex justify-content-center pt-10 align-items-center">
-                        <MudButton Disabled="@(!_success)" style="width:15vw;" Class="@GetButtonClass()" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</MudButton>
+                        <MudButton Disabled="@(!_success)" style="@(CurrentViewModel.IsSmallView ? "width:100%;" :"width:15vw;")" Class="@GetButtonClass()" type="submit" @onclick="@(()=>Login(EnumLoginType.LOGIN))">Accedi</MudButton>
                     </div>
                 </div>
 

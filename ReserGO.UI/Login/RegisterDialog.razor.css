@@ -1,5 +1,5 @@
 ﻿.dialogTitleRegister {
-    font-family: Arial;
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     font-size: 2vw;
     color: #0066FF;
 }
@@ -92,8 +92,8 @@
 
 ::deep .registerButtonSmall {
     display: inline-block;
-    width: 10vw;
-    height: 8vh;
+    width: 80%;
+    height: 6vh;
     color: #FFFFFF;
     font-weight: 400;
     line-height: 1.5;
@@ -114,8 +114,8 @@
 
 ::deep .cancelButtonSmall {
     display: inline-block;
-    width: 10vw;
-    height: 8vh;
+    width: 80%;
+    height: 6vh;
     color: #404040;
     font-weight: 400;
     line-height: 1.5;

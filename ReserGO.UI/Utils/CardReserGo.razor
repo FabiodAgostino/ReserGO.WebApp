@@ -11,7 +11,7 @@
             <span class="text" style="padding-inline:1vw; @(IsSmallView ? "font-size:x-large;":"")">@Title</span>
         }
     </div>
-    <div class="d-flex align-items-center cardBodyReserGo" style="@BodyStyle">
+    <div class="d-flex align-items-center @(IsSmallView ? "cardBodyReserGoSmall":"cardBodyReserGo") " style="@BodyStyle">
         @Description
     </div>
 </div>

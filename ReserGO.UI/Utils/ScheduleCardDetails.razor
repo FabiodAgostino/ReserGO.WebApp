@@ -51,13 +51,13 @@
                 <div class="d-flex flex-column w-50 h-100" >
                     <div><span class="descriptionDetails">Orari di disponibilità</span></div>
                     <div class="dividerDetailsSchedule" style="width:82%"></div>
-                    <div class="d-felx flex-row w-100 h-100 bodyDescription">
+                    <div class="d-felx flex-row w-100 h-100 bodyDescription" style="overflow:auto;">
                         @if (Resource.AvailabilityAdv.UnavailableRecurringTimeDays.Count() > 0)
                         {
                             @foreach (var giorniConRegole in Resource.AvailabilityAdv.UnavailableRecurringTimeDays)
                             {   
                                 <div>
-                                    <span><b>@giorniConRegole.DayOfTheWeek: </b>@giorniConRegole.RangeAvailability</span>
+                                    <span><b>@giorniConRegole.DayOfTheWeek: </b>@giorniConRegole.RangeAvailability</span><br/>
                                 </div>
                             }
                         }
@@ -78,7 +78,7 @@
                             @foreach (var giorniChiusura in Resource.AvailabilityAdv.UnavailableSpecificDays.Data)
                             {
                                 <div>
-                                    <span><b>@giorniChiusura.ToString("dd/MM/yyyy")</b></span>
+                                    <span><b>@giorniChiusura.ToString("dd/MM/yyyy")</b></span><br />
                                 </div>
                             }
                         }
@@ -91,7 +91,7 @@
                             @foreach (var giorniSpecificiConRegole in Resource.AvailabilityAdv.UnavailableTimeDatesSlot)
                             {
                                 <div>
-                                    <span><b>@giorniSpecificiConRegole.SpecificDate.ToString("dd/MM/yyyy"): </b>@giorniSpecificiConRegole.RangeAvailability</span>
+                                    <span><b>@giorniSpecificiConRegole.SpecificDate.ToString("dd/MM/yyyy"): </b>@giorniSpecificiConRegole.RangeAvailability</span><br />
                                 </div>
                             }
                         }
