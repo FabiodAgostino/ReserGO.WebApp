@@ -38,7 +38,7 @@
                     <MudTabs Elevation="4" Rounded="true" Color="@Color.Secondary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
                         <MudTabPanel Text="Giorno">
                             <div class="d-flex p-2 justify-content-center w-100 h-100">
-                                <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" />
+                                <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" IsSmallView="true" />
                             </div>
                         </MudTabPanel>
                         <MudTabPanel Text="Orario">
@@ -61,12 +61,17 @@
                     </MudTabs>
                     <div class="d-flex justify-content-around" style="background-color:white">
                         <MudButtonGroup>
+                            <div class="btn-calendar-small">
+
                             <MudTooltip Text="Prepend a tab">
                                 <MudIconButton Icon="@Icons.Material.Filled.ChevronLeft" OnClick="@( () => CurrentViewModel.SelectedIndex-- )" />
                             </MudTooltip>
+                            </div>
+                            <div class="btn-calendar-small">
                             <MudTooltip Text="Append a tab">
                                 <MudIconButton Icon="@Icons.Material.Filled.ChevronRight" OnClick="@( () => CurrentViewModel.SelectedIndex++ )" />
                             </MudTooltip>
+                            </div>
                         </MudButtonGroup>
                     </div>
                 </div>
@@ -238,6 +243,16 @@
             background-color: white !important;
             width: 100% !important;
             height: 100% !important;
+        }
+
+        .mud-button-group-root {
+            border-radius: var(--mud-default-borderradius);
+            display: inline-flex;
+            width:85% !important;
+        }
+
+        button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon {
+            border-left:none !important;
         }
     </style>
 }
