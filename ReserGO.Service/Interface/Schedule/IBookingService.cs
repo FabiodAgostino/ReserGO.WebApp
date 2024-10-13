@@ -16,5 +16,8 @@ namespace ReserGO.Service.Interface.Schedule
         [Delete("/DeleteBooking")]
         Task<ServiceResponse<bool>> DeleteBooking(int idBooking);
 
+        [Post("/GetBookings")]
+        Task<ServiceResponse<GenericPagedList<DTOBooking>>> GetBookings(GenericPagedFilter<DTOBookingFilter> data);
+
     }
 }

@@ -1,7 +1,11 @@
-﻿
+﻿@using ReserGO.ViewModel.Interface.Historical
+@using ReserGO.DTO;
+@using ReserGO.UI.Historical;
+@using ReserGO.Utils.UI
 
-<Historical />
+<BaseComponent TViewModel="IHistoricalViewModel" TModel="DTOBooking">
+    <Content>
+        <Historical />
+    </Content>
+</BaseComponent>
 
-@code {
-
-}

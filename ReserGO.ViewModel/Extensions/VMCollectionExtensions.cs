@@ -2,6 +2,7 @@
 using ReserGO.ViewModel.Interface.Authentication;
 using ReserGO.ViewModel.Interface.FiltersComponent;
 using ReserGO.ViewModel.Interface.Header;
+using ReserGO.ViewModel.Interface.Historical;
 using ReserGO.ViewModel.Interface.Home;
 using ReserGO.ViewModel.Interface.Register;
 using ReserGO.ViewModel.Interface.Schedule;
@@ -9,6 +10,7 @@ using ReserGO.ViewModel.Interface.Utils;
 using ReserGO.ViewModel.ViewModel.Authentication;
 using ReserGO.ViewModel.ViewModel.FiltersComponent;
 using ReserGO.ViewModel.ViewModel.Header;
+using ReserGO.ViewModel.ViewModel.Historical;
 using ReserGO.ViewModel.ViewModel.Home;
 using ReserGO.ViewModel.ViewModel.Register;
 using ReserGO.ViewModel.ViewModel.Schedule;
@@ -31,8 +33,7 @@ namespace ReserGO.ViewModel.Extensions
             services.AddScoped<IScheduleViewModel, ScheduleViewModel>();
             services.AddScoped<IScheduleFormViewModel, ScheduleFormViewModel>();
             services.AddScoped<IDeleteScheduleViewModel, DeleteScheduleViewModel>();
-
-
+            services.AddScoped<IHistoricalViewModel, HistoricalViewModel>();
 
             return services;
         }
