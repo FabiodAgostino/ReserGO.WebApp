@@ -18,6 +18,8 @@ namespace ReserGO.Service.Interface.Schedule
 
         [Post("/GetBookings")]
         Task<ServiceResponse<GenericPagedList<DTOBooking>>> GetBookings(GenericPagedFilter<DTOBookingFilter> data);
+        [Put("/UpdateBookingState")]
+        Task<ServiceResponse<bool>> UpdateBookingState(DTOBooking booking);
 
     }
 }

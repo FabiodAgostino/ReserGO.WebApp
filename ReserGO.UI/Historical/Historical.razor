@@ -3,12 +3,11 @@
 @using ReserGO.ViewModel.Interface.Historical
 @using ReserGO.ViewModel.ViewModel.Historical
 @using ReserGO.DTO
-
+@using ReserGO.Utils.DTO.Utils
 @inherits BaseComponentChild<IHistoricalViewModel, DTOBooking>
 
 <div class="d-flex flex-column p-2 w-100 h-100 historicalContainer">
-    <div class="d-flex align-items-center w-100 historicalTitle" Bookings="CurrentViewModel.Bookings"> <h2 style="color:#0066FF"> Storico prenotazioni</h2> </div>
-    <HistoricalTable />
+    <HistoricalTable Bookings="CurrentViewModel.Bookings" PagingOptions="@CurrentViewModel.Pagination" Action="@(async (GridAction<DTOBooking, DTOBookingFilter> action) => await CurrentViewModel.ExecuteAction(action))" IsLoading="@CurrentViewModel.IsLoading"/>
 </div>
 
 @code {

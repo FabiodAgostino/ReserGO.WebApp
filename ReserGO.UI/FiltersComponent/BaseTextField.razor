@@ -6,7 +6,7 @@
               @ref="@textRef"
               RequiredError="@GetErrorRequired()"
               ErrorText="@GetErrorText()" 
-              Label="@Label" Variant="Variant.Outlined" Margin="Margin.Dense" />
+              Label="@Label" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="@HelperText"/>
 
 @code
 {
@@ -36,6 +36,9 @@
 
     [Parameter]
     public string Regex { get; set; } = "";
+
+    [Parameter]
+    public string HelperText { get; set; }
 
     private string _value {get;set;}
 

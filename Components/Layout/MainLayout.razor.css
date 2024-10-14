@@ -102,3 +102,25 @@ main {
     height: 100vh;
 }
 
+
+@media (min-width: 0px) and (max-width:799px) {
+    ::deep .mud-dialog {
+        width: 100% !important;
+    }
+    ::deep .mud-dialog-container.mud-dialog-center {
+        padding: 5%;
+    }
+}
+
+@media (min-width: 800px) {
+    ::deep .mud-dialog {
+        width: unset !important;
+        height: unset !important;
+    }
+
+    ::deep .mud-dialog-container.mud-dialog-center {
+        padding: 0%;
+    }
+}
+
+

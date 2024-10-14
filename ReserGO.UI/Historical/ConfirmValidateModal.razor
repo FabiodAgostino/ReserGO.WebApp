@@ -1,0 +1,59 @@
+﻿@using MudBlazor
+@using ReserGO.Utils.DTO.Utils;
+<MudDialog Options="@Options">
+    <TitleContent>
+        <div class="w-100 h-100 titleContentConfirmValidate">
+            <b>
+                Valida prenotazione
+            </b>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <div class="d-flex flex-column justify-content-center p-5" style="text-align:center">
+            <b>Attenzione, stai per modificare lo stato di questa prenotazione.</b><br />
+            Una volta che avrei scelto di validare la prenotazione verrà inviata una mail all'utente che ha inoltrato la richiesta.
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(BookingStatus.Pending)">Chiudi</MudButton>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="() => Close(BookingStatus.Canceled)">Rifiuta</MudButton>
+        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="() => Close(BookingStatus.Confirmed)">Conferma</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public EventCallback<BookingStatus> Callback { get; set; }
+    public DialogOptions Options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Large,
+            NoHeader = true,
+        };
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    public async Task Close(BookingStatus status)
+    {
+        if (Callback.HasDelegate && status!= BookingStatus.Pending)
+            await Callback.InvokeAsync(status);
+        MudDialog.Close();
+    }
+}
+
+<style>
+    .titleContentConfirmValidate
+    {
+        background: #0066FF;
+        color:white;
+        padding:15px;
+    }
+
+    .mud-dialog .mud-dialog-title {
+        padding: 0 !important;
+    }
+
+    .mud-dialog .mud-dialog-actions {
+        justify-content: space-around !important;
+    }
+</style>
