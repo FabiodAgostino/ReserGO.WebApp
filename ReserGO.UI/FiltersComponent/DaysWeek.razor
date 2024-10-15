@@ -1,0 +1,103 @@
+﻿@using MudBlazor
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.FiltersComponent
+@using ReserGO.ViewModel.ViewModel.FiltersComponent
+
+@inherits BaseComponentChild<IDayOfWeekViewModel, DTODayOfWeekWizard>
+
+<div class="containerDayOfWeek h-100">
+	<MudGrid>
+		<MudItem xs="12">
+			<div class="days-container">
+				@foreach (var day in DaysOfWeek)
+				{
+					<MudButton Class="@($"day-circle {(day.IsSelected ? "selected" : "")}")" OnClick="@(() => ToggleDaySelection(day))" Title="@day.FullName">
+						@day.Initial
+					</MudButton>
+				}
+			</div>
+		</MudItem>
+	</MudGrid>
+	<div class="d-flex h-50">
+		@if (CurrentViewModel.List is object && CurrentViewModel.List.Count()>0)
+		{
+			<b>Giorni Selezionati:</b>
+			@foreach(var day in CurrentViewModel.List)
+			{
+				<span>@($" {day.FullName},")</span>
+			}
+		}
+	</div>
+	<div class="d-flex justify-content-center">
+		<MudButton Color="Color.Info" Variant="Variant.Filled" @onclick="GoNext" Disabled="CurrentViewModel.List.Count()==0">Avanti</MudButton>
+	</div>
+</div>
+
+
+@code {
+	[Parameter]
+	public EventCallback<List<DTODayOfWeekWizard>> Callback { get; set; }
+	// Lista dei giorni della settimana
+	private List<DTODayOfWeekWizard> DaysOfWeek = new()
+	{
+		new DTODayOfWeekWizard { FullName = "Lunedì" },
+		new DTODayOfWeekWizard { FullName = "Martedì" },
+		new DTODayOfWeekWizard { FullName = "Mercoledì" },
+		new DTODayOfWeekWizard { FullName = "Giovedì" },
+		new DTODayOfWeekWizard { FullName = "Venerdì" },
+		new DTODayOfWeekWizard { FullName = "Sabato" },
+		new DTODayOfWeekWizard { FullName = "Domenica" }
+	};
+
+	// Metodo per gestire la selezione dei giorni
+	private void ToggleDaySelection(DTODayOfWeekWizard day)
+	{
+		day.IsSelected = !day.IsSelected;
+		if (day.IsSelected)
+			CurrentViewModel.List.Add(day);
+		else
+			CurrentViewModel.List = CurrentViewModel.List.Where(d => d != day).ToList();
+	}
+
+	public async Task GoNext()
+	{
+		if (Callback.HasDelegate)
+			await Callback.InvokeAsync(CurrentViewModel.List);
+	}
+}
+<style>
+	.days-container {
+		display: flex;
+		gap: 10px;
+		justify-content: center;
+		align-items: center;
+		padding: 20px;
+	}
+
+	.day-circle {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background-color: #e0e0e0;
+		cursor: pointer;
+		font-weight: bold;
+		font-size: 16px;
+		color: black;
+		transition: background-color 0.3s ease;
+		padding: 0;
+		min-width: 40px;
+	}
+
+		.day-circle:hover {
+			background-color: #bdbdbd;
+		}
+
+		.day-circle.selected {
+			background-color: #1976d2;
+			color: white;
+		}
+</style>

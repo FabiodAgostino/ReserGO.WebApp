@@ -31,7 +31,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                 IsLoading = true;
                 var res = await _service.GetResourcesByCompany();
                 if(res.Success)
-                    List = res.Data;
+                    List = res.Data.ToList();
                 else
                     Notification(res.Message, NotificationColor.Warning);
             }catch(Exception ex)

@@ -20,7 +20,7 @@
 
     <BaseComponent TViewModel="IHeaderViewModel" TModel="object">
         <Content>
-            <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFFF"></Header>
+            <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFFF" GoToHome="ChangeComponentHome"></Header>
         </Content>
     </BaseComponent>
     
@@ -88,6 +88,12 @@
     public void ChangeComponent(DTOSettingMenu menu)
     {
         CurrentViewModel.SelectedItem = menu;
+        CurrentViewModel.ChangeComponent();
+    }
+
+    public void ChangeComponentHome()
+    {
+        CurrentViewModel.SelectedItem = CurrentViewModel.ItemsMenu.SingleOrDefault(x=> x.Text.ToLower()=="home");
         CurrentViewModel.ChangeComponent();
     }
 }

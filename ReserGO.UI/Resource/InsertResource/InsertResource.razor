@@ -1,0 +1,91 @@
+﻿@using MudBlazor
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.Utils.UI
+@using ReserGO.DTO
+@using ReserGO.Utils.DTO.Utils
+@using ReserGO.UI.FiltersComponent
+@using ReserGO.ViewModel.Interface.FiltersComponent
+@using ReserGO.ViewModel.Interface.Resource.InsertResource
+
+@inherits BaseComponentChild<IInsertResourceViewModel, DTOResource>
+
+<div class="insertResourceContainer">
+	<div class="d-flex flex-column w-25">
+
+		<BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.ResourceName = value)" Label="Nome" />
+		<BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.Description = value)" Label="Descrizione" />
+		<MudCheckBox @bind-Value="_enablePrice" Label="Abilita prezzo"></MudCheckBox>
+		@if (_enablePrice)
+		{
+			<MudNumericField Label="Prezzo" @bind-Value="CurrentViewModel.SelectedItem.Price" />
+		}
+		<MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma"></MudCheckBox>
+
+	</div>
+	<div>
+		@if (!_enableHoursRule)
+		{
+			<MudIconButton Icon="@Icons.Material.Filled.ControlPoint" Color="Color.Info" @onclick="() => _enableHoursRule=true" />
+			<span>Abilita regole di disponibilità</span>
+		}
+		else
+		{
+			<MudIconButton Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Error" @onclick="() => _enableHoursRule=false" />
+			<span>Disabilita regole di disponibilità</span>
+		}
+		@if (_enableHoursRule)
+		{
+			<div class="d-flex justify-content-center">
+				<div class="w-75">
+					<MudTabs Elevation="4" Rounded="true" Color="@Color.Info" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex" Style="height:100%">
+						<MudTabPanel Text="Giorni disponibilità">
+							<div>Seleziona i giorni in cui la risorsa sarà disponibile</div>
+							<BaseComponent TViewModel="IDayOfWeekViewModel" TModel="DTODayOfWeekWizard">
+								<Content>
+									<DaysWeek Callback="@((List<DTODayOfWeekWizard> days) => {_listDays=days; CurrentViewModel.SelectedIndex++;})" />
+								</Content>
+							</BaseComponent>
+						</MudTabPanel>
+						<MudTabPanel Text="Orari ricorrenti" Disabled="CurrentViewModel.SelectedIndex<1">
+							<div class="d-flex flex-column justify-content-center align-items-center h-100">
+								<div>
+									<b>Inserisci gli orari di disponiblità per i giorni selezionati:</b><br />
+									@foreach (var day in _listDays)
+									{
+										<span>@($" {day.FullName},")</span>
+									}
+								</div>
+								<div class="d-flex w-25 justify-content-around flex-column">
+									@for (int i = 0; i < _numRecurringRules; i++)
+									{
+										<div class="d-flex">
+											<MudTimePicker Label="Ora inizio" MinuteSelectionStep="30" Style="margin:20px" Color="Color.Info" />
+											<MudTimePicker Label="Ora fine" MinuteSelectionStep="30" Style="margin:20px" Color="Color.Info" />
+										</div>
+									}
+								</div>
+								<div>
+									<MudIconButton Icon="@Icons.Material.Filled.ControlPoint" Color="Color.Info" @onclick="() => _numRecurringRules++" />
+									<MudIconButton Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Error" @onclick="() => _numRecurringRules--" />
+
+								</div>
+								<div><b>Aggiungi/rimuovi range orari</b></div>
+							</div>
+						</MudTabPanel>
+						<MudTabPanel Text="Conferma" Disabled="CurrentViewModel.SelectedIndex<2">
+						</MudTabPanel>
+
+					</MudTabs>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+@code {
+
+	private bool _enablePrice = false;
+	private bool _enableHoursRule = false;
+	private int _numRecurringRules = 1;
+	private List<DTODayOfWeekWizard> _listDays { get; set; }
+}

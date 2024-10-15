@@ -20,7 +20,7 @@ namespace ReserGO.ViewModel.ViewModel.FiltersComponent
         public override async Task Refresh()
         {
             var comboList = await _service.GetNazioneAsync(SearchString);
-            List = comboList.Select(x => new DTONazione(x));
+            List = comboList.Select(x => new DTONazione(x)).ToList();
         }
 
 

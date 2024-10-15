@@ -1,21 +1,19 @@
 ﻿@using MudBlazor
 @using ReserGO.Utils.DTO.Utils;
-<MudDialog Options="@Options">
+<MudDialog Options="@Options" >
     <TitleContent>
-        <div class="w-100 h-100 titleContentConfirmValidate">
-            <b>
-                Valida prenotazione
-            </b>
+        <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
+            <b>Valida prenotazione</b>
+            <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Default" OnClick="() => Close(BookingStatus.Pending)" />
         </div>
     </TitleContent>
     <DialogContent>
         <div class="d-flex flex-column justify-content-center p-5" style="text-align:center">
             <b>Attenzione, stai per modificare lo stato di questa prenotazione.</b><br />
-            Una volta che avrei scelto di validare la prenotazione verrà inviata una mail all'utente che ha inoltrato la richiesta.
+            Validata la prenotazione verrà inviata una mail all'utente che ha inoltrato la richiesta e non sarà più possibile modificare il suo stato.
         </div>
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(BookingStatus.Pending)">Chiudi</MudButton>
         <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="() => Close(BookingStatus.Canceled)">Rifiuta</MudButton>
         <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="() => Close(BookingStatus.Confirmed)">Conferma</MudButton>
     </DialogActions>
@@ -29,6 +27,7 @@
             CloseOnEscapeKey = true,
             MaxWidth = MaxWidth.Large,
             NoHeader = true,
+
         };
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }

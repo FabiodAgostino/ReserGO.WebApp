@@ -61,8 +61,10 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
                     }
                 }
                 var data = await _authService.Login(user);
-                if(!data.Success)
+                if (!data.Success)
                     LoginError = data.Message;
+                else
+                    LoginError = String.Empty;
 
             }
             catch (Exception ex)

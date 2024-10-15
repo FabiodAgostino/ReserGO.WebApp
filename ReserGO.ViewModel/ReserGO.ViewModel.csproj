@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <Reference Include="ReserGO.DTO">
-      <HintPath>..\..\ReserGo\ReserGO.DTO\obj\Debug\net8.0\ReserGO.DTO.dll</HintPath>
+      <HintPath>..\..\ReserGo\ReserGO.DTO\bin\Debug\net8.0\ReserGO.DTO.dll</HintPath>
     </Reference>
     <Reference Include="ReserGO.Utils.DTO">
       <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.DTO\obj\Debug\net8.0\ReserGO.Utils.DTO.dll</HintPath>

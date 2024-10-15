@@ -7,247 +7,293 @@
 
 @if (Bookings is object)
 {
-    <MudTable Items="@Bookings.CurrentPageData" Loading="IsLoading"
-              Hover="true" Style="width:100%" Breakpoint="Breakpoint.Sm"
-              LoadingProgressColor="Color.Info" RowsPerPage="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10"
-              TotalItems="PagingOptions.TotalCount.Value"
-              >
-        <ToolBarContent>
-            <MudText Typo="Typo.h6">Storico prenotazioni</MudText>
-            <MudSpacer />
-            <div class="inputSpace m-2" style="width:15%">
-                <MudSelect T="string" Label="Stato" ValueChanged="@((string value) => OnCheckBoxChange(value))" Variant="Variant.Outlined" Value="statusSelected">
-                    @foreach (var stato in status)
-                    {
-                        <MudSelectItem Value="stato">@stato</MudSelectItem>
-                    }
-                </MudSelect>
-            </div>
-            <div class="inputSpace m-2 w-25">
-                <BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca" HelperText="Ricerca per nome, cognome, email"></BaseTextField>
-            </div>
-        </ToolBarContent>
-        <HeaderContent>
-            <MudTh>Nome</MudTh>
-            <MudTh>Cognome</MudTh>
-            <MudTh>Email</MudTh>
-            <MudTh>Telefono</MudTh>
-            <MudTh>Email</MudTh>
-            <MudTh>Data</MudTh>
-            <MudTh>Stato</MudTh>
-            <MudTh>Risorsa</MudTh>
-            <MudTh></MudTh>
-        </HeaderContent>
+	<MudTable Items="@Bookings.CurrentPageData" Loading="IsLoading"
+			  Hover="true" Style="width:100%" Breakpoint="Breakpoint.Sm"
+			  LoadingProgressColor="Color.Info" RowsPerPage="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10"
+			  TotalItems="PagingOptions.TotalCount.Value">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">Storico prenotazioni</MudText>
+			<MudSpacer />
+			<div class="inputSpace m-2" style="width:15%">
+				<MudSelect T="string" Label="Stato" ValueChanged="@((string value) => OnCheckBoxChange(value))" Variant="Variant.Outlined" Value="statusSelected">
+					@foreach (var stato in status)
+					{
+						<MudSelectItem Value="stato">@stato</MudSelectItem>
+					}
+				</MudSelect>
+			</div>
+			<div class="inputSpace m-2 w-25">
+				<BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca" HelperText="Ricerca per nome, cognome, email e poi premi invio"></BaseTextField>
+			</div>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh>Nome</MudTh>
+			<MudTh>Cognome</MudTh>
+			<MudTh>Email</MudTh>
+			<MudTh>Telefono</MudTh>
+			<MudTh>Email</MudTh>
+			<MudTh>Data</MudTh>
+			<MudTh>Stato</MudTh>
+			<MudTh>Risorsa</MudTh>
+			@if (IsAdmin)
+			{
+				<MudTh></MudTh>
+				<MudTh></MudTh>
+			}
+		</HeaderContent>
 
-        <RowTemplate Context="element">
-            <MudTd>@element.User.FirstName</MudTd>
-            <MudTd>@element.User.LastName</MudTd>
-            <MudTd>@element.User.Email</MudTd>
-            <MudTd>@element.User.PhoneNumber</MudTd>
-            <MudTd>@element.User.Email</MudTd>
-            <MudTd>@element.StartDateTime</MudTd>
-            <MudTd>
-                @{
-                    var statusText = GetStatus(element.Status.Value);
-                    <div title="@statusText">
-                        @if (statusText == "Confermata")
-                        {
-                            <MudIcon Icon="@Icons.Material.Filled.Beenhere" Color="Color.Success"></MudIcon>
-                        }
-                        @if (statusText == "Da confermare")
-                        {
-                            <MudIcon Icon="@Icons.Material.Filled.Pending" Color="Color.Secondary"></MudIcon>
-                        }
-                        @if (statusText == "Rifiutata")
-                        {
-                            <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error"></MudIcon>
-                        }
-                    </div>
-                }
-            </MudTd>
-            <MudTd>@element.Resource.ResourceName</MudTd>
-            <MudTd>
-                @if (element.Status.Value == (int)BookingStatus.Pending)
-                {
-                    <MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Color="Color.Info" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
-                }
-            </MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <div class="d-flex flex-row justify-content-between">
-                <MudPagination SelectedChanged="OnPageChangedHandler" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
-                <div class="paginatorPageSize">
-                    <MudSelect T="int" Label="Elementi per pagina" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
-                        @foreach (var size in pageSizes)
-                        {
-                            <MudSelectItem Value="size">@size</MudSelectItem>
-                        }
-                    </MudSelect>
+		<RowTemplate Context="element">
+			<MudTd>@element.User.FirstName</MudTd>
+			<MudTd>@element.User.LastName</MudTd>
+			<MudTd>@element.User.Email</MudTd>
+			<MudTd>@element.User.PhoneNumber</MudTd>
+			<MudTd>@element.User.Email</MudTd>
+			<MudTd>@element.StartDateTime</MudTd>
+			<MudTd>
+				@{
+					var statusText = GetStatus(element.Status.Value);
+					<div title="@statusText">
+						@if (statusText == "Confermata")
+						{
+							<MudIcon Icon="@Icons.Material.Filled.Beenhere" Color="Color.Success"></MudIcon>
+						}
+						@if (statusText == "Da confermare")
+						{
+							<MudIcon Icon="@Icons.Material.Filled.Pending" Color="Color.Secondary"></MudIcon>
+						}
+						@if (statusText == "Rifiutata")
+						{
+							<MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error"></MudIcon>
+						}
+					</div>
+				}
+			</MudTd>
+			<MudTd>@element.Resource.ResourceName</MudTd>
+			@if (IsAdmin)
+			{
+				<MudTd>
+					@if (element.Status.Value == (int)BookingStatus.Pending)
+					{
+						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Color="Color.Info" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
+					}
+				</MudTd>
+				<MudTd>
+					<div title="Elimina">
+						<MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))"></MudIconButton>
+					</div>
+				</MudTd>
+			}
+		</RowTemplate>
+		<PagerContent>
+			<div class="d-flex flex-row justify-content-between">
+				<MudPagination SelectedChanged="OnPageChangedHandler" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
+				<div class="paginatorPageSize">
+					<MudSelect T="int" Label="Elementi per pagina" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
+						@foreach (var size in pageSizes)
+						{
+							<MudSelectItem Value="size">@size</MudSelectItem>
+						}
+					</MudSelect>
 
-                </div>
-            </div>
-        </PagerContent>
-    </MudTable>
+				</div>
+			</div>
+		</PagerContent>
+	</MudTable>
 }
 
 
 @code {
-    [Parameter]
-    public GenericPagedList<DTOBooking> Bookings { get; set; }
-    [Parameter]
-    public GenericPagedFilter<DTOBookingFilter> PagingOptions { get; set; }
-    [Parameter]
-    public EventCallback<GridAction<DTOBooking, DTOBookingFilter>> Action { get; set; }
-    [Parameter]
-    public bool IsLoading { get; set; }
+	[Parameter]
+	public GenericPagedList<DTOBooking> Bookings { get; set; }
+	[Parameter]
+	public GenericPagedFilter<DTOBookingFilter> PagingOptions { get; set; }
+	[Parameter]
+	public EventCallback<GridAction<DTOBooking, DTOBookingFilter>> Action { get; set; }
+	[Parameter]
+	public bool IsLoading { get; set; }
+	[Parameter]
+	public bool IsAdmin { get; set; }
 
-    private DTOBookingFilter Filter = new();
-    private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
-    private List<string> status = new List<string> { "Tutte", "Da confermare", "Confermate", "Rifiutate" }; // Opzioni di conferma
-    private string statusSelected = "Tutte";
+	private DTOBookingFilter Filter = new();
+	private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
+	private List<string> status = new List<string> { "Tutte", "Da confermare", "Confermate", "Rifiutate" }; // Opzioni di conferma
+	private string statusSelected = "Tutte";
 
-    protected override async Task OnParametersSetAsync()
-    {
-        StateHasChanged();
-    }
+	protected override async Task OnParametersSetAsync()
+	{
+		StateHasChanged();
+	}
 
-    private async Task OnPageChangedHandler(int currPageIndex)
-    {
-        if (Action.HasDelegate)
-        {
-            PagingOptions.Page = currPageIndex;
-            var action = new GridAction<DTOBooking, DTOBookingFilter>(PagingOptions, TypeActionsGRID.PAGE_CHANGED, "");
-            await Action.InvokeAsync(action);
-        }
-    }
+	private async Task OnPageChangedHandler(int currPageIndex)
+	{
+		if (Action.HasDelegate)
+		{
+			PagingOptions.Page = currPageIndex;
+			var action = new GridAction<DTOBooking, DTOBookingFilter>(PagingOptions, TypeActionsGRID.PAGE_CHANGED, "");
+			await Action.InvokeAsync(action);
+		}
+	}
 
-    private async Task OnPageSizeHandler(int pageSize)
-    {
-        PagingOptions.PageSize = pageSize;
-        if (Action.HasDelegate)
-        {
-            var action = new GridAction<DTOBooking, DTOBookingFilter>(PagingOptions, TypeActionsGRID.PAGE_SIZE_CHANGED, "");
-            await Action.InvokeAsync(action);
-        }
-    }
+	private async Task OnPageSizeHandler(int pageSize)
+	{
+		PagingOptions.PageSize = pageSize;
+		if (Action.HasDelegate)
+		{
+			var action = new GridAction<DTOBooking, DTOBookingFilter>(PagingOptions, TypeActionsGRID.PAGE_SIZE_CHANGED, "");
+			await Action.InvokeAsync(action);
+		}
+	}
 
-    private string GetStatus(int status)
-    {
+	private string GetStatus(int status)
+	{
 
-        switch (status)
-        {
-            case (int)BookingStatus.Confirmed:
-                return "Confermata";
-            case (int)BookingStatus.Canceled:
-                return "Rifiutata";
-            case (int)BookingStatus.Pending:
-                return "Da confermare";
-            default:
-                return "";
-        }
-    }
-    private async Task OnChangeSearchText(string value)
-    {
-        Filter.SearchText = value;
-        var action = new GridAction<DTOBooking, DTOBookingFilter>(Filter, TypeActionsGRID.FILTER, "");
-        await ChangeFilter(action);
+		switch (status)
+		{
+			case (int)BookingStatus.Confirmed:
+				return "Confermata";
+			case (int)BookingStatus.Canceled:
+				return "Rifiutata";
+			case (int)BookingStatus.Pending:
+				return "Da confermare";
+			default:
+				return "";
+		}
+	}
+	private async Task OnChangeSearchText(string value)
+	{
+		Filter.SearchText = value;
+		var action = new GridAction<DTOBooking, DTOBookingFilter>(Filter, TypeActionsGRID.FILTER, "");
+		await ChangeFilter(action);
 
-    }
-    private async Task OnCheckBoxChange(string value)
-    {
-        switch (value)
-        {
-            case "Da confermare":
-                Filter.Status = (int)BookingStatus.Pending; break;
-            case "Rifiutate":
-                Filter.Status = (int)BookingStatus.Canceled; break;
-            case "Confermate":
-                Filter.Status = (int)BookingStatus.Confirmed; break;
-            default:
-                Filter.Status = null; break;
-        }
-        var action = new GridAction<DTOBooking, DTOBookingFilter>(Filter, TypeActionsGRID.FILTER, "");
-        statusSelected = value;
-        await ChangeFilter(action);
+	}
+	private async Task OnCheckBoxChange(string value)
+	{
+		switch (value)
+		{
+			case "Da confermare":
+				Filter.Status = (int)BookingStatus.Pending; break;
+			case "Rifiutate":
+				Filter.Status = (int)BookingStatus.Canceled; break;
+			case "Confermate":
+				Filter.Status = (int)BookingStatus.Confirmed; break;
+			default:
+				Filter.Status = null; break;
+		}
+		var action = new GridAction<DTOBooking, DTOBookingFilter>(Filter, TypeActionsGRID.FILTER, "");
+		statusSelected = value;
+		await ChangeFilter(action);
 
-    }
+	}
 
-    private async Task ChangeFilter(GridAction<DTOBooking, DTOBookingFilter> filter)
-    {
-        if (Action.HasDelegate)
-        {
-            await Action.InvokeAsync(filter);
-        }
-    }
+	private async Task ChangeFilter(GridAction<DTOBooking, DTOBookingFilter> filter)
+	{
+		if (Action.HasDelegate)
+		{
+			await Action.InvokeAsync(filter);
+		}
+	}
 
-    private async Task ValidateDialog(DTOBooking booking)
-    {
-
-        var dialogParameters = new DialogParameters
-            {
-                { "Callback", EventCallback.Factory.Create<BookingStatus>(this,((BookingStatus status) => HandleCallback(status, booking))) }  // Passa l'oggetto direttamente
+	private async Task ValidateDialog(DTOBooking booking)
+	{
+		if(IsAdmin)
+		{
+			var dialogParameters = new DialogParameters
+			{
+				{ "Callback", EventCallback.Factory.Create<BookingStatus>(this,((BookingStatus status) => HandleCallback(status, booking))) }  // Passa l'oggetto direttamente
             };
 
-        var options = new DialogOptions
-            {
-                CloseOnEscapeKey = true,
-                Position = DialogPosition.Center
+			var options = new DialogOptions
+				{
+					CloseOnEscapeKey = true,
+					Position = DialogPosition.Center
+				};
+
+			var result = await DialogService.Show<ConfirmValidateModal>("Valida prenotazione", dialogParameters, options).Result;
+		}
+
+	}
+
+	private async Task DeleteDialog(DTOBooking booking)
+	{
+		if (IsAdmin)
+		{
+			var dialogParameters = new DialogParameters
+			{
+				{ "Callback", EventCallback.Factory.Create<bool>(this,((bool value) => DeleteCallback(value, booking))) }  // Passa l'oggetto direttamente
             };
 
-        var result = await DialogService.Show<ConfirmValidateModal>("Valida prenotazione", dialogParameters, options).Result;
-    }
+			var options = new DialogOptions
+				{
+					CloseOnEscapeKey = true,
+					Position = DialogPosition.Center
+				};
 
-    private async Task HandleCallback(BookingStatus status, DTOBooking booking)
-    {
-        if (Action.HasDelegate)
-        {
-            booking.Status = (int)status;
-            var list = new List<DTOBooking>();
-            list.Add(booking);
+			var result = await DialogService.Show<DeleteBookingModal>("Elimina prenotazione", dialogParameters, options).Result;
+		}
+	}
 
-            var action = new GridAction<DTOBooking, DTOBookingFilter>(list, TypeActionsGRID.UPDATE, "");
-            await Action.InvokeAsync(action);
-        }
-    }
+	private async Task HandleCallback(BookingStatus status, DTOBooking booking)
+	{
+		if (Action.HasDelegate)
+		{
+			booking.Status = (int)status;
+			var list = new List<DTOBooking>();
+			list.Add(booking);
+
+			var action = new GridAction<DTOBooking, DTOBookingFilter>(list, TypeActionsGRID.UPDATE, "");
+			await Action.InvokeAsync(action);
+		}
+	}
+
+	private async Task DeleteCallback(bool value, DTOBooking booking)
+	{
+		if (Action.HasDelegate && value)
+		{
+			var list = new List<DTOBooking>();
+			list.Add(booking);
+
+			var action = new GridAction<DTOBooking, DTOBookingFilter>(list, TypeActionsGRID.SINGLE_DELETE, "");
+			await Action.InvokeAsync(action);
+		}
+	}
 
 
 }
 
 <style>
-    .mud-table-root .mud-table-head {
-        display: table-header-group;
-        background-color: #0066FF;
-    }
+	.mud-table-root .mud-table-head {
+		display: table-header-group;
+		background-color: #0066FF;
+	}
 
-        .mud-table-root .mud-table-head .mud-table-cell {
-            color: white !important;
-            font-weight: 500;
-            line-height: 1.5rem;
-        }
+		.mud-table-root .mud-table-head .mud-table-cell {
+			color: white !important;
+			font-weight: 500;
+			line-height: 1.5rem;
+		}
 
-    .paginatorPageSize {
-        width: 15%;
-    }
+	.paginatorPageSize {
+		width: 15%;
+	}
 
-    .mud-table-container {
-        max-height: 78vh;
-        height: 78vh;
-    }
+	.mud-table-container {
+		max-height: 78vh;
+		height: 78vh;
+	}
 
 
-    .inputSpace {
-        height: 45px;
-    }
+	.inputSpace {
+		height: 45px;
+	}
 
-    .mud-table-toolbar {
-        margin-bottom: 17px;
-    }
+	.mud-table-toolbar {
+		margin-bottom: 17px;
+	}
 
-    @@media (max-width: 960px) {
-        .mud-sm-table .mud-table-cell {
-            justify-content: unset !important;
-            padding: 0px 16px !important;
-        }
-
-    }
+	@@media (max-width: 960px) {
+		.mud-sm-table .mud-table-cell {
+			justify-content: unset !important;
+			padding: 0px 16px !important;
+		}
+	}
 </style>

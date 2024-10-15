@@ -88,6 +88,9 @@ namespace ReserGO.ViewModel.ViewModel.Historical
                     case TypeActionsGRID.UPDATE:
                         await UpdateStateBooking(action.Items.FirstOrDefault());
                         break;
+                    case TypeActionsGRID.SINGLE_DELETE:
+                        await DeleteBooking(action.Items.FirstOrDefault());
+                        break;
 
                 }
             }
@@ -97,6 +100,8 @@ namespace ReserGO.ViewModel.ViewModel.Historical
         {
             try
             {
+                IsLoading = true;
+                Loading();
                 var result=await _service.UpdateBookingState(booking);
                 if(result.Success)
                 {
@@ -107,6 +112,39 @@ namespace ReserGO.ViewModel.ViewModel.Historical
             catch(Exception ex)
             {
                 Notification(ex.Message, NotificationColor.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+                Loading();
+            }
+        }
+
+        public async Task DeleteBooking(DTOBooking booking)
+        {
+            try
+            {
+                IsLoading = true;
+                Loading();
+                var result = await _service.DeleteBooking(booking.Id);
+                if (result.Success)
+                {
+                    Notification("Prenotazione eliminata correttamente", NotificationColor.Success);
+                    await Refresh();
+                }
+                else
+                {
+                    Notification(result.Message, NotificationColor.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                Notification(ex.Message, NotificationColor.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+                Loading();
             }
         }
 
