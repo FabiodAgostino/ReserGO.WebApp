@@ -16,8 +16,8 @@
         <div class="d-flex align-items-center justify-content-center h-100 w-100">
             <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="mudProgressSchedules" />
         </div>
-    }
-    @if (TimeSlots != null && TimeSlots.Count() > 0)
+    }else
+    if (TimeSlots != null && TimeSlots.Count() > 0 && !IsFirstLoading)
     {
         <div class="d-flex flex-column w-100 h-100" style="overflow:scroll">
             <div class="d-flex flex-wrap align-items-center justify-content-between w-100" style="height:25%">
@@ -36,11 +36,16 @@
 
         </div>
     }
-
-    @if (IsFirstLoading)
+    else if (IsFirstLoading)
     {
         <div class="d-flex w-100 h-100 align-items-center justify-content-center" >
             <span class="descriptionDetails" style="font-size:x-large; opacity:0.5; margin-right:20px;"><i>Seleziona un'altra data'</i></span>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex w-100 h-100 align-items-center justify-content-center">
+            <span class="descriptionDetails" style="font-size:x-large; opacity:0.5; margin-right:20px;"><i>Orari non disponibili</i></span>
         </div>
     }
 

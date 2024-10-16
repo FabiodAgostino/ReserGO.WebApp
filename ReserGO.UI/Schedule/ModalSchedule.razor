@@ -26,6 +26,10 @@
 
         @if (CurrentViewModel.IsSmallView)
         {
+            @if (CurrentViewModel.SelectedIndex != null && resetSmallIndex == true)
+            {
+                ResetSmallView();
+            }
             <div class="d-flex flex-column smallDialogContainer">
 
                 <div class="d-flex flex-row p-3 headerDialogSmall">
@@ -85,9 +89,9 @@
         }
         else
         {
-            @if (CurrentViewModel.SelectedIndex==3)
+            @if (CurrentViewModel.SelectedIndex != null && resetLargeIndex == true)
             {
-                CurrentViewModel.SelectedIndex = 2;
+                ResetLargeView();
             }
 
             <div class="d-flex dialogScheduleContainer p-1">
@@ -139,6 +143,9 @@
 
     private bool desabledNext;
 
+    public bool resetSmallIndex;
+    public bool resetLargeIndex;
+
 
     public DialogOptions Options = new DialogOptions
         {
@@ -181,6 +188,10 @@
     protected override async Task OnInitializedAsync()
     {
         await CurrentViewModel.RegisterOnScreenResize(800);
+        if (CurrentViewModel.IsSmallView)
+            resetSmallIndex = true;
+        else
+            resetLargeIndex = true;
     }
 
     public async Task OnDateChanged(DateTime? date)
@@ -223,6 +234,22 @@
             CurrentViewModel.SelectedIndex ++;
     }
 
+    private void ResetSmallView()
+    {
+        resetLargeIndex = true;
+        CurrentViewModel.SelectedIndex = 0;
+        CurrentViewModel.Booking.StartDateTime = new DateTime();
+        _selectedSlot = null;
+        resetSmallIndex = false;   
+    }
+    private void ResetLargeView()
+    {   
+        resetSmallIndex = true;
+        CurrentViewModel.SelectedIndex = 0;
+        _selectedSlot = null;
+        CurrentViewModel.IsFirstLoad = true;
+        resetLargeIndex = false;   
+    }
 }
 
 <style>
