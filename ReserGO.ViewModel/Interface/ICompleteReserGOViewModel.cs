@@ -5,7 +5,7 @@ namespace ReserGO.ViewModel.Interface
 {
     public interface ICompleteReserGOViewModel<TModel> : ILightReserGOViewModel<TModel>
     {
-        void Notification(string text, NotificationColor color = NotificationColor.Info, string position = null);
+        void Notification(string text, NotificationColor color =NotificationColor.Info, string position = null);
         DTOUserSession User { get; }
         bool UserIs(RoleConst role);
         bool IsLoggedIn();

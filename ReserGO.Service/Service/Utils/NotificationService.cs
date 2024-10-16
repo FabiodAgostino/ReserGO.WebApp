@@ -14,7 +14,7 @@ namespace ReserGO.Service.Service.Utils
         }
 
 
-        public void NotifyMessage(string text, NotificationColor color = NotificationColor.Info, string position = null)
+        public void NotifyMessage(string text, NotificationColor color =NotificationColor.Info, string position = null)
         {
             _service.Clear();
 

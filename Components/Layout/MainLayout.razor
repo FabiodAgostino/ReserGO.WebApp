@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 @using ReserGO.DTO
+@using ReserGO.Service.Extensions
 @using ReserGO.Utils.Event
 @using ReserGO.Utils.UI
 @using ReserGO.UI.Utils
@@ -13,51 +14,63 @@
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
-<div class="pageContainer">
-    <BaseComponent TViewModel="ILoadingSpinnerViewModel" TModel="object">
-        <Content>
-            <LoadingSpinner />
-        </Content>
-    </BaseComponent>
-    <MudThemeProvider />
-    <MudPopoverProvider />
-    <MudDialogProvider />
-    <MudSnackbarProvider />
+    <div class="pageContainer">
+        <BaseComponent TViewModel="ILoadingSpinnerViewModel" TModel="object">
+            <Content>
+                <LoadingSpinner />
+            </Content>
+        </BaseComponent>
+        <MudPopoverProvider />
+        <MudDialogProvider />
+        <MudSnackbarProvider />
+        <MudThemeProvider Theme="@_theme" />
 
-    @if (!IsRedirect)
+        @if (!IsRedirect)
+        {
+            <AuthorizeView>
+                <Authorized>
+                    @if (Render)
+                    {
+                        @Body
+                    }
+                </Authorized>
+                <NotAuthorized>
+                    <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
+                        <Content>
+                            <Login />
+                        </Content>
+                    </BaseComponent>
+                </NotAuthorized>
+            </AuthorizeView>
+        }
+        else
+        {
+            @Body
+        }
+    </div>
+    <div style="height:20vh; width:20vw; border:2px solid @Color.Primary">
+
+    </div>
+@code {
+    private MudTheme _theme = new MudTheme
     {
-        <AuthorizeView>
-            <Authorized>
-                @if (Render)
-                {
-                    @Body
-                }
-            </Authorized>
-            <NotAuthorized>
-                <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
-                    <Content>
-                        <Login />
-                    </Content>
-                </BaseComponent>
-            </NotAuthorized>
-        </AuthorizeView>
-    }
-    else
-    {
-        @Body
-    }
-</div>
+        PaletteLight = new PaletteLight
+        {
+            Primary = "#0066FF"
+        }
+    };
+}
 
 <style>
     .mud-form {
         flex-direction: unset !important;
         display: unset !important
     }
+
     .mud-dialog .mud-dialog-content {
         padding: 0 !important;
         margin: 0 !important;
     }
 
-  
 </style>
 

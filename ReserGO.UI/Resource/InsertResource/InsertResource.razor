@@ -25,7 +25,7 @@
 	<div>
 		@if (!_enableHoursRule)
 		{
-			<MudIconButton Icon="@Icons.Material.Filled.ControlPoint" Color="Color.Info" @onclick="() => _enableHoursRule=true" />
+			<MudIconButton Icon="@Icons.Material.Filled.ControlPoint" Color="Color.Primary" @onclick="() => _enableHoursRule=true" />
 			<span>Abilita regole di disponibilità</span>
 		}
 		else
@@ -37,7 +37,7 @@
 		{
 			<div class="d-flex justify-content-center">
 				<div class="w-75">
-					<MudTabs Elevation="4" Rounded="true" Color="@Color.Info" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex" Style="height:100%">
+					<MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex" Style="height:100%">
 						<MudTabPanel Text="Giorni disponibilità">
 							<div>Seleziona i giorni in cui la risorsa sarà disponibile</div>
 							<BaseComponent TViewModel="IDayOfWeekViewModel" TModel="DTODayOfWeekWizard">
@@ -59,13 +59,13 @@
 									@for (int i = 0; i < _numRecurringRules; i++)
 									{
 										<div class="d-flex">
-											<MudTimePicker Label="Ora inizio" MinuteSelectionStep="30" Style="margin:20px" Color="Color.Info" />
-											<MudTimePicker Label="Ora fine" MinuteSelectionStep="30" Style="margin:20px" Color="Color.Info" />
+											<MudTimePicker Label="Ora inizio" MinuteSelectionStep="30" Style="margin:20px" Color="Color.Primary" />
+											<MudTimePicker Label="Ora fine" MinuteSelectionStep="30" Style="margin:20px" Color="Color.Primary" />
 										</div>
 									}
 								</div>
 								<div>
-									<MudIconButton Icon="@Icons.Material.Filled.ControlPoint" Color="Color.Info" @onclick="() => _numRecurringRules++" />
+									<MudIconButton Icon="@Icons.Material.Filled.ControlPoint" Color="Color.Primary" @onclick="() => _numRecurringRules++" />
 									<MudIconButton Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Error" @onclick="() => _numRecurringRules--" />
 
 								</div>

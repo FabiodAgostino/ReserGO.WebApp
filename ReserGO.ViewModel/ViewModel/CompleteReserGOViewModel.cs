@@ -42,7 +42,7 @@ namespace ReserGO.ViewModel.ViewModel
             OnPropertyChanged();
         }
 
-        public virtual void Notification(string text, NotificationColor color = NotificationColor.Info, string position = null)
+        public virtual void Notification(string text, NotificationColor color =NotificationColor.Info, string position = null)
         {
             if (color == NotificationColor.Warning || color == NotificationColor.Error)
                 _baseServices.Log.LogError(text);
