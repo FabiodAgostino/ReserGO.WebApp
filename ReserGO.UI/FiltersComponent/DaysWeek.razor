@@ -57,7 +57,7 @@
 		if (day.IsSelected)
 			CurrentViewModel.List.Add(day);
 		else
-			CurrentViewModel.List = CurrentViewModel.List.Where(d => d != day).ToList();
+			CurrentViewModel.List = CurrentViewModel.List.Where(d => d.FullName != day.FullName).ToList();
 	}
 
 	public async Task GoNext()

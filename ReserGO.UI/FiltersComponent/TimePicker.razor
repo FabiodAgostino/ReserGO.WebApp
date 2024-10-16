@@ -1,0 +1,92 @@
+﻿@using MudBlazor
+@using ReserGO.DTO.ListAvailability
+@using ReserGO.Miscellaneous.Model
+@inherits MudComponentBase
+
+<MudGrid>
+    <MudItem xs="6">
+        <MudTimePicker Label="Ora inizio"
+                       @bind-Time="StartTime"
+                       AmPm="false"
+                       AutoClose="true"
+                       MinuteSelectionStep="30"
+                       Required="true" />
+    </MudItem>
+    <MudItem xs="6">
+        <MudTimePicker Label="Ora fine"
+                       @bind-Time="EndTime"
+                       AmPm="false"
+                       AutoClose="true"
+                       MinuteSelectionStep="30"
+                       Required="true" />
+    </MudItem>
+</MudGrid>
+
+@code {
+    private TimeSpan? _startTime;
+    private TimeSpan? _endTime;
+
+    [Parameter] public EventCallback<DTOTimeSlot> OnRangeChanged { get; set; }
+
+    [Parameter] public Dictionary<int, DTOTimeSlot> DictionaryTimeSlot { get; set; }
+
+    private bool IsInvalid => _endTime.HasValue && _startTime.HasValue && _endTime <= _startTime;
+
+    private TimeSpan? StartTime
+    {
+        get => _startTime;
+        set
+        {
+            _startTime = value;
+
+            // Se l'orario di inizio è stato impostato, controlla conflitti
+            if (_startTime.HasValue)
+            {
+                if (DictionaryTimeSlot.Any(x => (_startTime < x.Value.EndTime && _endTime > x.Value.StartTime) || _startTime.Value.Hours == x.Value.StartTime.Hours ))
+                {
+                    StartTime = null;
+                    EndTime = null;
+                }
+            }
+
+            // Se il valore di fine è null o non valido, impostalo a +30 minuti
+            if (!_endTime.HasValue || IsInvalid)
+            {
+                _endTime = _startTime?.Add(TimeSpan.FromMinutes(30));
+            }
+
+            NotifyRangeChanged();
+        }
+    }
+
+    private TimeSpan? EndTime
+    {
+        get => _endTime;
+        set
+        {
+            
+            // Controlla se l'orario di fine è minore o uguale all'orario di inizio
+            if (_startTime.HasValue && value <= _startTime)
+            {
+                // Imposta l'orario di fine a +30 minuti dall'orario di inizio
+                _endTime = _startTime?.Add(TimeSpan.FromMinutes(30));
+            }
+            else
+            {
+                _endTime = value;
+            }
+           
+            NotifyRangeChanged();
+        }
+    }
+
+    private void NotifyRangeChanged()
+    {
+        // Invoca l'evento di callback solo se entrambi i tempi sono validi
+        if (_startTime.HasValue && _endTime.HasValue && !IsInvalid)
+        {
+            OnRangeChanged.InvokeAsync(new DTOTimeSlot(_startTime.Value, _endTime.Value));
+        }
+    }
+
+}

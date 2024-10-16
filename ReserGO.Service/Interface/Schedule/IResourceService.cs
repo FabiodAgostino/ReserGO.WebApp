@@ -13,5 +13,7 @@ namespace ReserGO.Service.Interface.Schedule
         Task<ServiceResponse<DTOResource>> GetFullResource(int idResource, DateTime? monthDate);
         [Get("/GetDetailResource")]
         Task<ServiceResponse<DTOResource>> GetDetailResource(int idResource);
+        [Post("/InsertResource")]
+        Task<ServiceResponse<DTOResource>> InsertResource(DTOResource resource);
     }
 }
