@@ -38,7 +38,7 @@
                     <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
                         <MudTabPanel Text="Giorno" >
                             <div class="d-flex p-2 justify-content-center w-100 h-100">
-                                <Calendar Date="@CurrentViewModel.Booking.StartDateTime" DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" IsSmallView="true"/>
+                                <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" IsSmallView="true"/>
                             </div>
                         </MudTabPanel>
                         <MudTabPanel Text="Orario">
@@ -94,7 +94,7 @@
                 <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary" @ref="tabs" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
                     <MudTabPanel Text="Giorno e ora">
                         <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
-                            <Calendar Date="@CurrentViewModel.Booking.StartDateTime" DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" />
+                            <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" />
                         </div>
 
                         <div class="d-flex flex-column justify-content-center h-100">
@@ -201,6 +201,7 @@
             CurrentViewModel.SelectedIndex --;
 
         _selectedSlot = null;
+        CurrentViewModel.Booking.StartDateTime = new DateTime();
     }
 
     private bool GetSmallViewDisabled()

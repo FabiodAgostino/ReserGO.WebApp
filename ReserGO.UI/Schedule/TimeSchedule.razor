@@ -25,7 +25,11 @@
 
                 @foreach (var timeslot in TimeSlots)
                 {
-                    <TimeCard Time="@($"{timeslot.StartTime.Hours:D2}:{timeslot.StartTime.Minutes:D2}")" OnClick="@(() => OnClickSlot(timeslot))"></TimeCard>
+                    <TimeCard 
+                        Time="@($"{timeslot.StartTime.Hours:D2}:{timeslot.StartTime.Minutes:D2}")"
+                        OnClick="@(() => OnClickSlot(timeslot))"
+                        IsSelected="@(timeslot == selectedTimeSlot)">
+                    </TimeCard>
                 }
 
             </div>
@@ -55,10 +59,12 @@
     [Parameter]
     public bool IsSmallView { get; set; }
     private string TimeForCard = "";
+    private DTOTimeSlot selectedTimeSlot;
 
 
     public async Task OnClickSlot(DTOTimeSlot slot)
     {
+        selectedTimeSlot = slot;
         if (OnClick.HasDelegate)
             await OnClick.InvokeAsync(slot);
     }

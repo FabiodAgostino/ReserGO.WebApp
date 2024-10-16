@@ -1,7 +1,7 @@
 ﻿@using MudBlazor
 
 <div class="d-flex timeContainer" @onclick="@(async ()=>await Clicked())">
-    <div class="d-flex justify-content-center align-items-center cardTime" >
+    <div class="d-flex justify-content-center align-items-center @(selected ? "cardTimeSelected" : "cardTime")">
         <span class="timeText">@Time</span>
     </div>
 </div>
@@ -11,6 +11,10 @@
     public string Time { get; set; }
     [Parameter]
     public EventCallback OnClick { get; set; }
+    [Parameter]
+    public bool IsSelected { get; set; } 
+
+    private bool selected => IsSelected; 
 
     private async Task Clicked()
     {
