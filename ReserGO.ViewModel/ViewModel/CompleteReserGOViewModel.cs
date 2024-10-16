@@ -11,7 +11,7 @@ namespace ReserGO.ViewModel.ViewModel
     {
         private readonly IBaseServicesReserGO<T> _baseServices;
 
-        public CompleteReserGOViewModell(IBaseServicesReserGO<T> baseServices) : base(baseServices.Aggregator, baseServices.Log)
+        public CompleteReserGOViewModell(IBaseServicesReserGO<T> baseServices) : base(baseServices.Aggregator, baseServices.Log, baseServices.JS)
         {
             _baseServices = baseServices;
         }
@@ -27,20 +27,7 @@ namespace ReserGO.ViewModel.ViewModel
                 return _baseServices.Session.User;
             }
         }
-        private bool _isSmallView { get; set; }
-        public bool IsSmallView { get => _isSmallView; set => _isSmallView = value; }
-
-        public virtual async Task RegisterOnScreenResize(int width=1200)
-        {
-            await _baseServices.JS.InvokeVoidAsync("onScreenResize.addResizeListener", DotNetObjectReference.Create(this), width);
-        }
-
-        [JSInvokable]
-        public void OnScreenResize(bool isSmall)
-        {
-            IsSmallView = isSmall;
-            OnPropertyChanged();
-        }
+     
 
         public virtual void Notification(string text, NotificationColor color =NotificationColor.Info, string position = null)
         {

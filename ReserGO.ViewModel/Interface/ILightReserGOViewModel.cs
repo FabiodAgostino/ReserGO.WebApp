@@ -7,5 +7,7 @@ namespace ReserGO.ViewModel.Interface
     {
         Task Refresh();
         ConfigurationServer ConfigurationServer { get; set; }
+        Task RegisterOnScreenResize(int width = 1200);
+        bool IsSmallView { get; set; }
     }
 }

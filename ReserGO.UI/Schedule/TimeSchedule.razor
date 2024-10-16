@@ -9,7 +9,8 @@
 @using System.ComponentModel.DataAnnotations
 @using ReserGO.UI.Utils
 @using ReserGO.DTO.ListAvailability
-<div class="d-flex timeScheduleContainer">
+
+<div class="d-flex timeScheduleContainer" style="@(IsSmallView ? "height: 53vh; !important":"")">
     @if (IsLoading)
     {
         <div class="d-flex align-items-center justify-content-center h-100 w-100">
@@ -34,7 +35,9 @@
 
     @if (IsFirstLoading)
     {
-        <div>Seleziona una data</div>
+        <div class="d-flex w-100 h-100 align-items-center justify-content-center" >
+            <span class="descriptionDetails" style="font-size:x-large; opacity:0.5; margin-right:20px;"><i>Seleziona un'altra data'</i></span>
+        </div>
     }
 
 </div>
@@ -49,6 +52,8 @@
     public bool IsLoading { get; set; }
     [Parameter]
     public bool IsFirstLoading { get; set; }
+    [Parameter]
+    public bool IsSmallView { get; set; }
     private string TimeForCard = "";
 
 

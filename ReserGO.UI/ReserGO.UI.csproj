@@ -18,6 +18,7 @@
     <None Remove="Admin\InsertComunication.razor.css" />
     <None Remove="Historical\Historical.razor.css" />
     <None Remove="ScheduleRequest\ScheduleRequest.razor.css" />
+    <None Remove="Schedule\ConfirmSchedule.razor.css" />
     <None Remove="Schedule\Containers\ScheduleContainer.razor.css" />
     <None Remove="Schedule\ListSchedules.razor.css" />
     <None Remove="Schedule\ModalSchedule.razor.css" />
@@ -43,6 +44,7 @@
     <Content Include="Admin\InsertComunication.razor.css" />
     <Content Include="Historical\Historical.razor.css" />
     <Content Include="ScheduleRequest\ScheduleRequest.razor.css" />
+    <Content Include="Schedule\ConfirmSchedule.razor.css" />
     <Content Include="Schedule\Containers\ScheduleContainer.razor.css" />
     <Content Include="Schedule\ListSchedules.razor.css" />
     <Content Include="Schedule\ModalSchedule.razor.css" />

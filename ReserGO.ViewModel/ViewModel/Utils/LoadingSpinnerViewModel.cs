@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Utils.Event;
@@ -8,7 +9,7 @@ namespace ReserGO.ViewModel.ViewModel.Utils
 {
     public class LoadingSpinnerViewModel : LightReserGOViewModel<object>, ILoadingSpinnerViewModel
     {
-        public LoadingSpinnerViewModel(IEvent aggregator, ILogger<LoadingSpinnerViewModel> logger) : base(aggregator, logger)
+        public LoadingSpinnerViewModel(IEvent aggregator, ILogger<LoadingSpinnerViewModel> logger, IJSRuntime js): base(aggregator, logger, js)
         {
             Aggregator.Subscribe<ObjectMessage<LoadingSpinner>>(GetType(), SetSpinner);
         }

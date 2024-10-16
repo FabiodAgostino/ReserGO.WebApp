@@ -36,43 +36,48 @@
                 </div>
                 <div class="d-flex flex-column justify-content-center tabHeader">
                     <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
-                        <MudTabPanel Text="Giorno">
+                        <MudTabPanel Text="Giorno" >
                             <div class="d-flex p-2 justify-content-center w-100 h-100">
-                                <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" IsSmallView="true" />
+                                <Calendar Date="@CurrentViewModel.Booking.StartDateTime" DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" IsSmallView="true"/>
                             </div>
                         </MudTabPanel>
                         <MudTabPanel Text="Orario">
-                            <div class="d-flex flex-column columnCalendar" style="width:50%;">
-                            <TimeSchedule TimeSlots="CurrentViewModel.TimeSlots"
-                                          OnClick="@((DTOTimeSlot selectedSlot) => SetSlot(selectedSlot))" IsLoading="@CurrentViewModel.SlotLoading" IsFirstLoading="@CurrentViewModel.IsFirstLoad"></TimeSchedule>
-                        </div>
+                            <div class="d-flex flex-column w-100 columnCalendar">
+                                <TimeSchedule TimeSlots="CurrentViewModel.TimeSlots"
+                                              OnClick="@((DTOTimeSlot selectedSlot) => SetSlot(selectedSlot))" IsLoading="@CurrentViewModel.SlotLoading" IsFirstLoading="@CurrentViewModel.IsFirstLoad" IsSmallView="@CurrentViewModel.IsSmallView"></TimeSchedule>
+                            </div>
                         </MudTabPanel>
-                        <MudTabPanel Text="Anagrafica" Disabled="_selectedSlot==null">
-                            <BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUserLight">
-                                <Content>
-                                    <ScheduleForm Callback="@((DTOUserLight user) => SetUser(user))" />
-                                </Content>
-                            </BaseComponent>
+                        @if (CurrentViewModel.UserIs(RoleConst.GUEST))
+                        {
+                            <MudTabPanel Text="Anagrafica" Disabled="_selectedSlot==null">
+                                <BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUserLight">
+                                    <Content>
+                                        <ScheduleForm Callback="@((DTOUserLight user) => SetUser(user))" PreviousClick="@(() => PreviousClick())" />
+                                    </Content>
+                                </BaseComponent>
                             </MudTabPanel>
+                        }
                         <MudTabPanel Text="Conferma" Disabled="@((CurrentViewModel.Booking.User==null || !CurrentViewModel.IsLoggedIn()) || _selectedSlot==null)">
-                                <ConfirmSchedule Booking="@CurrentViewModel.Booking" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))" />
-                            </MudTabPanel>
+                            <ConfirmSchedule Booking="@CurrentViewModel.Booking" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))" IsSmallView="true" />
+                        </MudTabPanel>
 
                     </MudTabs>
                     <div class="d-flex justify-content-around" style="background-color:white">
-                        <MudButtonGroup>
-                            <div class="btn-calendar-small">
 
-                            <MudTooltip Text="Prepend a tab">
-                                <MudIconButton Icon="@Icons.Material.Filled.ChevronLeft" OnClick="@( () => CurrentViewModel.SelectedIndex-- )" />
-                            </MudTooltip>
+                        @if (CurrentViewModel.SelectedIndex<2)
+                        {
+                            <div class="d-flex p-2 w-50 h-100">
+                                <MudButton class="registerButton btn-primary" style="width:100%;height:7vh;" type="submit" OnClick="@( () => Previous() )">
+                                    <MudIcon Icon="@Icons.Material.Filled.ArrowBackIos" Style="font-size: x-large; color:white;" />
+                                </MudButton>
                             </div>
-                            <div class="btn-calendar-small">
-                            <MudTooltip Text="Append a tab">
-                                <MudIconButton Icon="@Icons.Material.Filled.ChevronRight" OnClick="@( () => CurrentViewModel.SelectedIndex++ )" />
-                            </MudTooltip>
+                            <div class="d-flex p-2 w-50 h-100">
+                                <MudButton class="registerButton btn-primary" style="width:100%;height:7vh;" Disabled="GetSmallViewDisabled()" type="submit" OnClick="@( () => Next() )">
+                                    <MudIcon Icon="@Icons.Material.Filled.ArrowForwardIos" Style="font-size: x-large; color:white;" />
+                                </MudButton>
                             </div>
-                        </MudButtonGroup>
+                        }
+
                     </div>
                 </div>
 
@@ -80,12 +85,16 @@
         }
         else
         {
+            @if (CurrentViewModel.SelectedIndex==3)
+            {
+                CurrentViewModel.SelectedIndex = 2;
+            }
 
             <div class="d-flex dialogScheduleContainer p-1">
                 <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary" @ref="tabs" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
                     <MudTabPanel Text="Giorno e ora">
                         <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
-                            <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" />
+                            <Calendar Date="@CurrentViewModel.Booking.StartDateTime" DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" />
                         </div>
 
                         <div class="d-flex flex-column justify-content-center h-100">
@@ -128,6 +137,8 @@
 
     private DateTime _date { get; set; } = DateTime.Now;
 
+    private bool desabledNext;
+
 
     public DialogOptions Options = new DialogOptions
         {
@@ -157,6 +168,9 @@
         {
             CurrentViewModel.Booking.User = user;
             CurrentViewModel.SelectedIndex = 2;
+            if(CurrentViewModel.IsSmallView)
+                CurrentViewModel.SelectedIndex = 3;
+
         }
     }
     private async Task OnBackdropClickHandler(MouseEventArgs e)
@@ -176,20 +190,49 @@
             await OnClick.InvokeAsync(date.Value);
     }
 
+    private void PreviousClick()
+    {
+        CurrentViewModel.SelectedIndex = 1;
+        _selectedSlot = null;
+    }
+    private void Previous()
+    {
+        if (CurrentViewModel.SelectedIndex > 0)
+            CurrentViewModel.SelectedIndex --;
+
+        _selectedSlot = null;
+    }
+
+    private bool GetSmallViewDisabled()
+    {
+        switch (CurrentViewModel.SelectedIndex)
+        {
+            case 0:
+                return CurrentViewModel.Booking.StartDateTime < DateTime.Now.AddDays(-1);
+            case 1:
+                return _selectedSlot is null;
+            default:
+                return false;
+        }
+    }
+
+    private void Next()
+    {
+        if (CurrentViewModel.SelectedIndex < 3)
+            CurrentViewModel.SelectedIndex ++;
+    }
+
 }
 
 <style>
     .scheduleDialogCss {
-        width: 70%;
-        height: 60%;
-        max-width: 70% !important;
+        
         border-radius: 30px !important;
     }
 
     .scheduleDialogCssSmall {
-        width: 90%;
-        height: 80%;
-        max-width: 90% !important;
+        width: 100%;
+        height: 100%;
         border-radius: 30px !important;
     }
 
@@ -199,7 +242,7 @@
     }
 
     .mud-tabs {
-        width: 100%;
+        width: 100%;    
     }
 
     .mud-tabs-panels {
@@ -215,11 +258,31 @@
         border-radius: 20px !important
     }
 
+    .mud-tabs-tabbar-primary {
+        background-color: #0066FF !important;
+        color: var(--mud-palette-primary-text);
+    }
+
+    .mud-dialog-content{
+        width:71vw;
+        height:65vh;
+    }
+
+    .mud-tabs-panels {
+        display: flex;
+        height: 93% !important;
+    }
+
 </style>
 
 @if (CurrentViewModel.IsSmallView)
 {
     <style>
+        .mud-dialog-content {
+            width: 100%;
+            height: 100%;
+        }
+
         .mud-tabs-tabbar-secondary {
             background-color: #0066FF !important;
             color: var(--mud-palette-secondary-text);
@@ -244,16 +307,7 @@
             width: 100% !important;
             height: 100% !important;
         }
-
-        .mud-button-group-root {
-            border-radius: var(--mud-default-borderradius);
-            display: inline-flex;
-            width:85% !important;
-        }
-
-        button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon {
-            border-left:none !important;
-        }
     </style>
 }
+
 

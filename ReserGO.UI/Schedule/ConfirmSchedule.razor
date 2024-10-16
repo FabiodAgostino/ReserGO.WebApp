@@ -2,22 +2,65 @@
 @using MudBlazor
 @if (Booking is object)
 {
-    <div>
-        <p>@Booking.User.FirstName @Booking.User.LastName</p>
-        <p>Prenotazione del servizio dalle @GetDate()</p>
-        <p>Servizio prenotatato: @Booking.Resource.ResourceName</p>
-        @if(Booking.Resource.RequestToConfirm)
-        {
-            <p>Ti verrà inviata una mail nel momento della conferma della prenotazione</p>
-        }
-        @if (Booking.Resource.Price.HasValue)
-        {
-            <p>Prezzo: @Booking.Resource.Price.Value</p>
-        }
+    <div class="d-flex flex-column justify-content-between w-100 h-100">
 
-        <div class="d-flex justify-content-around align-items-center p-2">
-            <MudButton @onclick="@(() => Submit(false))" class="cancelButtonSmall btn-primary" style="width:100%; margin-top:3vh" type="submit">Annulla</MudButton>
-            <MudButton @onclick="@(() => Submit(true))" class="registerButtonSmall btn-primary" style="width:100%;" type="submit">Salva</MudButton>
+        <div class="d-flex flex-column justify-content-around w-100 p-4" style="height:70%" >
+            <div class="d-flex @(IsSmallView ? "descriptionConfirmModalSmall flex-column" : "descriptionConfirmModal flex-row")">
+                <div class="d-flex h-100 align-items-center" >
+                    <span>Richiedente: </span>
+                </div>
+                <div class="d-flex h-100 align-items-center">
+                    <i style="color:#474747">@Booking.User.FirstName @Booking.User.LastName</i>
+                </div>
+            </div>
+
+            <div class="d-flex flex-row @(IsSmallView ? "descriptionConfirmModalSmall flex-column" : "descriptionConfirmModal flex-row")">
+                <div class="d-flex h-100 align-items-center">
+                    <span>Data:</span>
+                </div>
+
+                <div class="d-flex h-100 align-items-center">
+                    <i style="color:#474747">@GetDate()</i>
+                </div>
+            </div>
+
+            <div class="d-flex flex-row @(IsSmallView ? "descriptionConfirmModalSmall flex-column" : "descriptionConfirmModal flex-row")">
+                <div class="d-flex h-100 align-items-center">
+                    <span> Ora:</span>
+                </div>
+                <div class="d-flex h-100 align-items-center">
+                    <i style="color:#474747">@GetTime()</i>
+                </div>
+            </div>
+            <div class="d-flex flex-row @(IsSmallView ? "descriptionConfirmModalSmall flex-column" : "descriptionConfirmModal flex-row")">
+                <div class="d-flex h-100 align-items-center">
+                    <span>Servizio prenotatato: </span>
+                </div>
+                <div class="d-flex h-100 align-items-center">
+                    <i style="color:#474747">@Booking.Resource.ResourceName</i>
+                </div>
+            </div>
+            @if (Booking.Resource.Price.HasValue)
+            {
+                <div class="@(IsSmallView ? "descriptionConfirmModalSmall pt-3" : "descriptionConfirmModal")">
+                    <span>Prezzo: <i style="color:#474747">@($"{@Booking.Resource.Price.Value}€")</i></span>
+                </div>
+            }
+            @if (Booking.Resource.RequestToConfirm)
+            {
+                <div class="d-flex justify-content-center pt-4 w-100 @(IsSmallView ? "infoMailSmall" : "infoMail") ">
+                    <span><b>* Ti verrà inviata una mail nel momento della conferma della prenotazione *</b></span>
+                </div>
+            }
+        </div>
+
+        <div class="d-flex justify-content-around align-items-center p-4" style="height:30%">
+            <div class="d-flex p-1" style=" @(IsSmallView ? "width:100%" : "width:25%") ">
+                <MudButton @onclick="@(() => Submit(false))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Annulla</MudButton>
+            </div>
+            <div class="d-flex p-1" style="@(IsSmallView ? "width:100%" : "width:25%")">
+                <MudButton @onclick="@(() => Submit(true))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Salva</MudButton>
+            </div>
         </div>
     </div>
    
@@ -27,6 +70,8 @@
     public DTOBooking Booking { get; set; }
     [Parameter]
     public EventCallback<bool> OnClick { get; set; }
+    [Parameter]
+    public bool IsSmallView { get; set; }
 
     private async Task Submit(bool submit)
     {
@@ -37,6 +82,10 @@
 
     public string GetDate()
     {
-        return $"{Booking.StartDateTime.Hour:D2}:{Booking.StartDateTime.Minute:D2} alle {Booking.EndDateTime.Hour:D2}:{Booking.EndDateTime.Minute:D2} del giorno {Booking.StartDateTime:yyyy-MM-dd}";
+        return $"{Booking.StartDateTime:yyyy-MM-dd}";
+    }
+    public string GetTime()
+    {
+        return $"{Booking.StartDateTime.Hour:D2}:{Booking.StartDateTime.Minute:D2} - {Booking.EndDateTime.Hour:D2}:{Booking.EndDateTime.Minute:D2}";
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Service.Interface.Schedule;
@@ -16,7 +17,8 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
         private readonly NavigationManager _navigationManager;
         private readonly INotificationService notification;
 
-        public DeleteScheduleViewModel(IEvent aggregator, ILogger<DeleteScheduleViewModel> logger, IBookingService service, NavigationManager navigationManager, INotificationService notification) : base(aggregator, logger)
+        public DeleteScheduleViewModel(IEvent aggregator, ILogger<DeleteScheduleViewModel> logger, 
+            IBookingService service, NavigationManager navigationManager, INotificationService notification, IJSRuntime js) : base(aggregator, logger, js)
         {
             this.logger = logger;
             this.service = service;

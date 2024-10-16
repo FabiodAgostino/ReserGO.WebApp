@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Service.Utils;
@@ -12,9 +13,12 @@ namespace ReserGO.ViewModel.ViewModel
 {
     public class LightReserGOViewModel<TModel> : BaseViewModel<TModel>, ILightReserGOViewModel<TModel> where TModel : class
     {
-        public LightReserGOViewModel(IEvent aggregator, ILogger logger) : base(aggregator, logger)
+        private readonly IJSRuntime _js;
+
+        public LightReserGOViewModel(IEvent aggregator, ILogger logger, IJSRuntime js) : base(aggregator, logger)
         {
           InitConfigurationServer();
+            _js = js;
         }
         public virtual async Task Refresh()
         {
@@ -30,6 +34,21 @@ namespace ReserGO.ViewModel.ViewModel
         public virtual void Loading(string text = null)
         {
             Aggregator.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(IsLoading, text)), typeof(LoadingSpinnerViewModel));
+        }
+
+        private bool _isSmallView { get; set; }
+        public bool IsSmallView { get => _isSmallView; set => _isSmallView = value; }
+
+        public virtual async Task RegisterOnScreenResize(int width = 1200)
+        {
+            await _js.InvokeVoidAsync("onScreenResize.addResizeListener", DotNetObjectReference.Create(this), width);
+        }
+
+        [JSInvokable]
+        public void OnScreenResize(bool isSmall)
+        {
+            IsSmallView = isSmall;
+            OnPropertyChanged();
         }
     }
 }

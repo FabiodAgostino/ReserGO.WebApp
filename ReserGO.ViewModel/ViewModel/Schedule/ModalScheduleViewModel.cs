@@ -74,7 +74,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
 
         public async Task GetSlot(DateTime day)
         {
-            if(IsFirstLoad)
+            if (IsFirstLoad)
                 IsFirstLoad = false;
             SlotLoading = true;
             Booking.StartDateTime = day.Date;

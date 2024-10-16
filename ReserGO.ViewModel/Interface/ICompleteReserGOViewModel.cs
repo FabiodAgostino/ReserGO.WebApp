@@ -9,7 +9,6 @@ namespace ReserGO.ViewModel.Interface
         DTOUserSession User { get; }
         bool UserIs(RoleConst role);
         bool IsLoggedIn();
-        Task RegisterOnScreenResize(int width = 1200);
-        bool IsSmallView { get; set; }
+        
     }
 }

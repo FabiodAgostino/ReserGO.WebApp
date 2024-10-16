@@ -10,59 +10,111 @@
 @using ReserGO.ViewModel.Interface.Schedule
 @inherits BaseComponentChild<IScheduleFormViewModel, DTOUserLight>
 
-<div class="d-flex flex-column w-100 h-100">
+<div class="d-flex flex-column w-100" style="@(CurrentViewModel.IsSmallView ? "height:67vh !important;":"")">
 
-    <div class="d-flex flex-row justify-content-around columnFormRegister" style="width:100%; height:80%;">
+    <div class="d-flex @(CurrentViewModel.IsSmallView ? "p-3":"p-5")">
+        <span class="descriptionFormDetails" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">Inserisci i tuoi dati</span>
+    </div>
+
+    <div class="d-flex justify-content-around columnFormRegister w-100  @(CurrentViewModel.IsSmallView ? "flex-column":"flex-row")" style="@(CurrentViewModel.IsSmallView ? "height:59vh;":"height:80%;")">
 
         <MudForm @ref="form" @bind-IsValid="@_success">
-            <table style="border-collapse: collapse; width: 100%; border: none;">
-                <tr>
-                    <td>
-                        <div class="inputSpace">
-                            <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FirstName = value)" Label="Nome" Value="@CurrentViewModel.SelectedItem.FirstName" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="inputSpace">
-                            <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.LastName = value)" Label="Cognome" Value="@CurrentViewModel.SelectedItem.LastName" />
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="inputSpace">
-                            <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido" Value="@CurrentViewModel.SelectedItem.PhoneNumber" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="inputSpace">
-                            <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
-                                <Content>
-                                    <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email"
-                                                  Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                                  Required="true" RequiredError="Inserire Email corretta"
-                                                  Immediate="true"
-                                                  Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
-                                    </MudTextField>
-                                </Content>
-                            </BaseComponent>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+
+            @if (CurrentViewModel.IsSmallView)
+            {
+                <div class="inputSpace" style="height:65px;" >
+                    <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FirstName = value)" Label="Nome" Value="@CurrentViewModel.SelectedItem.FirstName" />
+                </div>
+                <div class="inputSpace" style="height:65px;">
+                    <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.LastName = value)" Label="Cognome" Value="@CurrentViewModel.SelectedItem.LastName" />
+                </div>
+                <div class="inputSpace" style="height:65px;">
+                    <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido" Value="@CurrentViewModel.SelectedItem.PhoneNumber" />
+                </div>
+                <div class="inputSpace" style="height:65px;">
+                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                        <Content>
+                            <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email"
+                                            Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                            Required="true" RequiredError="Inserire Email corretta"
+                                            Immediate="true"
+                                            Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
+                            </MudTextField>
+                        </Content>
+                    </BaseComponent>
+                </div>
+            }
+            else
+            {
+                <table style="border-collapse: collapse; width: 100%; border: none;">
+                    <tr>
+                        <td>
+                            <div class="inputSpace">
+                                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FirstName = value)" Label="Nome" Value="@CurrentViewModel.SelectedItem.FirstName" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="inputSpace">
+                                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.LastName = value)" Label="Cognome" Value="@CurrentViewModel.SelectedItem.LastName" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="inputSpace">
+                                <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido" Value="@CurrentViewModel.SelectedItem.PhoneNumber" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="inputSpace">
+                                <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
+                                    <Content>
+                                        <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email"
+                                                      Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                      Required="true" RequiredError="Inserire Email corretta"
+                                                      Immediate="true"
+                                                      Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
+                                        </MudTextField>
+                                    </Content>
+                                </BaseComponent>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            }
         </MudForm>
 
     </div>
-
-    <div class="d-flex flex-row justify-content-center columnFormRegister" style="width:100%; height:30%">
-        <MudButton class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw;height:10vh;" type="submit" OnClick="Click">Salva</MudButton>
-    </div>
+    @if (CurrentViewModel.IsSmallView) 
+    {
+        <div class="d-flex justify-content-around" style="background-color:white">
+            <div class="d-flex p-2 w-50 h-100">
+                <MudButton class="registerButton btn-primary" style="width:100%;height:7vh;" type="submit" OnClick="Previous">
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowBackIos" Style="font-size: x-large; color:white;" />
+                </MudButton>
+            </div>
+            <div class="d-flex p-2 w-50 h-100">
+                <MudButton class="registerButton btn-primary" Disabled="@(!_success)" style="width:100%;height:7vh;" type="submit" OnClick="Click">Conferma</MudButton>
+            </div>
+        </div>
+    }
+    else 
+    {
+        <div class="d-flex flex-row justify-content-center w-100 columnFormRegister" style="height:30%">
+            <MudButton class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw; height:8vh;" type="submit" OnClick="Click">Conferma</MudButton>
+        </div>
+    }
+    
 </div>
 
 @code {
 
     [Parameter]
     public EventCallback<DTOUserLight> Callback { get; set; }
+
+    [Parameter]
+    public EventCallback PreviousClick { get; set; }
+
     private bool _success;
     MudForm form;
 
@@ -82,6 +134,18 @@
         {
             await Callback.InvokeAsync(CurrentViewModel.SelectedItem);
         }
+    }
+
+    private async Task Previous(){
+        if (PreviousClick.HasDelegate)
+        {
+            await PreviousClick.InvokeAsync();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CurrentViewModel.RegisterOnScreenResize(800);
     }
 
 

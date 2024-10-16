@@ -1,11 +1,14 @@
 ﻿@using MudBlazor
 
-<div class="d-flex align-items-center justify-content-center calendarContainer">
-    <MudDatePicker IsDateDisabledFunc="@DisabledWhen" Class="scheduleCalendarCss" PickerVariant="PickerVariant.Static" DateChanged="OnDateChanged" PickerMonthChanged="OnClickMonth" />
+<div class="d-flex align-items-center justify-content-center calendarContainer" style="@(IsSmallView ? "height:56.8vh;":"")" >
+    <MudDatePicker IsDateDisabledFunc="@DisabledWhen" Date="@Date" Class="scheduleCalendarCss" PickerVariant="PickerVariant.Static" DateChanged="OnDateChanged" PickerMonthChanged="OnClickMonth" />
 </div>
 
 
 @code {
+    [Parameter]
+    public DateTime? Date { get; set; } = DateTime.Now;
+
     [Parameter]
     public Func<DateTime, bool> DisabledWhen { get; set; }
 
