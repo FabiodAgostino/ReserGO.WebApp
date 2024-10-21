@@ -1,0 +1,78 @@
+﻿@using MudBlazor
+@using ReserGO.DTO
+@using ReserGO.Miscellaneous.Model
+
+<div class="d-flex p-3 @(IsSmallView ? "p-3":"")">
+    <span class="titleServiceSelection" style="@(IsSmallView ? "font-size:x-large":"")">Seleziona i servizi che intendi prenotare</span>
+</div>
+
+<div class="d-flex w-100 h-100" style="padding-block:2vh" >
+    <div class="d-flex flex-wrap w-100 descriptionServiceSelection" style="overflow:auto; height:60%; ">
+        @foreach (var service in ServicesListCheckable)
+        {
+            <div class="d-flex p-3" style="height:9vh" >
+                <div class="d-flex p-2 shadow align-items-center justify-content-center checkboxCard w-100 h-100">
+                    <span>@($"{service.Service.ServiceName} | {service.Service.Price?.ToString() ?? "N/A"} €")</span>
+                    <!-- Usa un checkbox con binding per ogni servizio -->
+                    <MudCheckBox Value="service.IsSelected" Color="Color.Primary" ValueChanged="@((bool value) => UpdateTotal(value, service))"></MudCheckBox>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Totale aggiornato dinamicamente -->
+<div class="d-flex flex-row align-self-end justify-content-end priceServiceSelection">
+    <span>Totale: @TotalPrice €</span>
+</div>
+
+<div class="d-flex flex-row align-self-end justify-content-center">
+    <div class="d-flex" style="height:30%">
+        <MudButton class="registerButton btn-primary" style="width:15vw; height:8vh;" type="submit">Procedi</MudButton>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback<List<DTOService>?> CallBack { get; set; }
+
+    [Parameter]
+    public bool IsSmallView { get; set; }
+
+    [Parameter]
+    public List<DTOService>? ServicesList { get; set; }
+
+    public List<DTOServiceSelectable>? ServicesListCheckable = new();
+
+    private List<DTOService> _callbackList = new();
+
+
+
+    // Proprietà per tracciare il totale
+    public decimal TotalPrice { get; set; } = 0;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(ServicesList is object && ServicesList.Count()>0)
+        {
+            ServicesListCheckable = ServicesList.Select(x => new DTOServiceSelectable(x)).ToList();
+        }
+    }
+
+    // Metodo per aggiornare il totale quando cambia la selezione
+    private async Task UpdateTotal(bool value, DTOServiceSelectable service)
+    {
+        if (ServicesList == null)
+            return;
+
+        service.IsSelected = value;
+        // Somma solo i prezzi dei servizi selezionati che hanno un prezzo valido (non null)
+        TotalPrice = ServicesListCheckable
+            .Where(s => s.IsSelected && s.Service.Price.HasValue)
+            .Sum(s => s.Service.Price.Value);
+        
+        if (CallBack.HasDelegate)
+            await CallBack.InvokeAsync(_callbackList);
+    }
+}

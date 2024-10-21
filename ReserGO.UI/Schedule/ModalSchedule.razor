@@ -110,6 +110,11 @@
                                           OnClick="@((DTOTimeSlot selectedSlot) => SetSlot(selectedSlot))" IsLoading="@CurrentViewModel.SlotLoading" IsFirstLoading="@CurrentViewModel.IsFirstLoad"></TimeSchedule>
                         </div>
                     </MudTabPanel>
+                    <MudTabPanel Text="Servizio">
+                        <div class="d-flex flex-column w-100 justify-content-around columnCalendar">
+                            <ScheduleServices CallBack="@((List<DTOService> services) => UpdatePrice(services))" ServicesList="@CurrentViewModel.SelectedItem.Services" IsSmallView="CurrentViewModel.IsSmallView" />
+                        </div>
+                    </MudTabPanel>
                     @if (CurrentViewModel.UserIs(RoleConst.GUEST))
                     {
                         <MudTabPanel Text="Anagrafica" Disabled="_selectedSlot==null">
@@ -249,6 +254,11 @@
         _selectedSlot = null;
         CurrentViewModel.IsFirstLoad = true;
         resetLargeIndex = false;   
+    }
+
+    private void UpdatePrice(List<DTOService> services)
+    {
+        CurrentViewModel.SelectedItem.Services = services;
     }
 }
 

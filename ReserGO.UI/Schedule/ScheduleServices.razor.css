@@ -1,0 +1,51 @@
+﻿.titleServiceSelection {
+    font-size: xx-large;
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
+    color: #0066FF;
+}
+
+.descriptionServiceSelection {
+    font-size: large;
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
+}
+
+.priceServiceSelection {
+    font-size: x-large;
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
+    color: #0066FF;
+    padding-block:2vh;
+}
+
+
+.checkboxCard {
+    background-color: #F7F7F7;
+    border-radius: 15px;
+    border: 1px solid lightgray;
+}
+
+::deep .registerButton {
+    display: inline-block;
+    width: 10vw;
+    height: 8vh;
+    color: #FFFFFF;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    background-color: #0066FF;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: large;
+    border-radius: 30px;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+    ::deep .registerButton:hover {
+        background-color: #1170FF;
+        box-shadow: 0 0 10px 3px rgba(128, 128, 128, 0.5);
+    }
