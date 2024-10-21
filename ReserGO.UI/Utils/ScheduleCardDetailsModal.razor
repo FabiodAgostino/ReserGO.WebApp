@@ -4,6 +4,7 @@
 @using ReserGO.Miscellaneous.Model
 @using ReserGO.Utils.DTO.ExtensionMethod;
 @using ReserGO.Utils.DTO.Utils
+@using ReserGO.DTO.Extensions;
 <MudDialog Options="@Options" Class="dialogClassSmall">
     <TitleContent>
         <div class="d-flex flex-row align-items-center w-100 h-100">
@@ -99,9 +100,9 @@
             <div class="d-flex flex-column justify-content-between  w-100 p-3" style="height:13%;">
                 <div class="d-flex flex-row w-100 justify-content-between" style="height:40%">
                     <div><span class="descriptionDetailsSmall">Prezzo</span></div>
-                    @if (ResourceDetails.Resource.Price.HasValue)
+                    @if (ResourceDetails.Resource.HavePrice())
                     {
-                        <div><span class="descriptionDetailsSmall">@($"{ResourceDetails.Resource.Price.Value.ToString()}€")</span></div>
+                        <div><span class="descriptionDetailsSmall">@($"{ResourceDetails.Resource.GetTotalPrice().ToString()}€")</span></div>
                     }
                     else
                     {

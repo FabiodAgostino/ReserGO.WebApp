@@ -15,11 +15,6 @@
 
         <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.ResourceName = value)" Label="Nome" />
         <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.Description = value)" Label="Descrizione" />
-        <MudCheckBox @bind-Value="_enablePrice" Label="Abilita prezzo"></MudCheckBox>
-        @if (_enablePrice)
-        {
-            <MudNumericField Label="Prezzo" @bind-Value="CurrentViewModel.SelectedItem.Price" />
-        }
         <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma"></MudCheckBox>
 
     </div>

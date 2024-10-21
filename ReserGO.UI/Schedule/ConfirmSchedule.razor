@@ -1,5 +1,6 @@
 ﻿@using ReserGO.DTO
 @using MudBlazor
+@using ReserGO.DTO.Extensions;
 @if (Booking is object)
 {
     <div class="d-flex flex-column justify-content-between w-100 h-100">
@@ -40,10 +41,10 @@
                     <i style="color:#474747">@Booking.Resource.ResourceName</i>
                 </div>
             </div>
-            @if (Booking.Resource.Price.HasValue)
+            @if (Booking.Resource.HavePrice())
             {
                 <div class="@(IsSmallView ? "descriptionConfirmModalSmall pt-3" : "descriptionConfirmModal")">
-                    <span>Prezzo: <i style="color:#474747">@($"{@Booking.Resource.Price.Value}€")</i></span>
+                    <span>Prezzo: <i style="color:#474747">@($"{@Booking.Resource.GetTotalPrice()}€")</i></span>
                 </div>
             }
             @if (Booking.Resource.RequestToConfirm)
