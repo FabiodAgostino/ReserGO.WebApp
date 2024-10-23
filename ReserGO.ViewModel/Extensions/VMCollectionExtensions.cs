@@ -7,6 +7,7 @@ using ReserGO.ViewModel.Interface.Home;
 using ReserGO.ViewModel.Interface.Register;
 using ReserGO.ViewModel.Interface.Resource.InsertResource;
 using ReserGO.ViewModel.Interface.Schedule;
+using ReserGO.ViewModel.Interface.Service;
 using ReserGO.ViewModel.Interface.Utils;
 using ReserGO.ViewModel.ViewModel.Authentication;
 using ReserGO.ViewModel.ViewModel.FiltersComponent;
@@ -16,6 +17,7 @@ using ReserGO.ViewModel.ViewModel.Home;
 using ReserGO.ViewModel.ViewModel.Register;
 using ReserGO.ViewModel.ViewModel.Resource.InsertResource;
 using ReserGO.ViewModel.ViewModel.Schedule;
+using ReserGO.ViewModel.ViewModel.Service;
 using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.Extensions
@@ -38,7 +40,7 @@ namespace ReserGO.ViewModel.Extensions
             services.AddScoped<IHistoricalViewModel, HistoricalViewModel>();
             services.AddScoped<IInsertResourceViewModel, InsertResourceViewModel>();
             services.AddScoped<IDayOfWeekViewModel, DayOfWeekViewModel>();
-
+            services.AddScoped<IServiceViewModel, ServiceViewModel>();
 
 
             return services;

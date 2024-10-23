@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ReserGO.Utils.DTO.Utils;
 
 namespace ReserGO.Miscellaneous.Model
 {
@@ -14,12 +10,30 @@ namespace ReserGO.Miscellaneous.Model
         public string Title { get; set; }
         public T Data { get; set; }
         public int Action { get; set; }
+        public TypeActionsGRID TypeActionsGRID { get; set; }
 
         public GenericModal(EventCallback<T> Event, string text, string title)
         {
             this.Event = Event;
             this.Text = text;
             this.Title = title;
+        }
+
+        public GenericModal(EventCallback<T> Event, string text, string title, TypeActionsGRID action)
+        {
+            this.Event = Event;
+            this.Text = text;
+            this.Title = title;
+            this.TypeActionsGRID = action;
+        }
+
+        public GenericModal(EventCallback<T> Event, string text, string title, TypeActionsGRID action, T data)
+        {
+            this.Event = Event;
+            this.Text = text;
+            this.Title = title;
+            this.TypeActionsGRID = action;
+            Data = data;
         }
         public GenericModal(EventCallback<T> Event, string text, string title, T data, int action)
         {

@@ -4,6 +4,7 @@ using Refit;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Home;
 using ReserGO.Service.Interface.Schedule;
+using ReserGO.Service.Interface.Service;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Service.Service.Authentication;
 
@@ -52,6 +53,16 @@ namespace ReserGO.Service.Extensions
                     BaseAddress = new Uri($"{serverapi}api/Booking")
                 };
                 return RestService.For<IBookingService>(httpClient);
+            });
+
+            services.AddScoped(provider =>
+            {
+                var handler = provider.GetRequiredService<ApiMessageHandler>();
+                var httpClient = new HttpClient(handler)
+                {
+                    BaseAddress = new Uri($"{serverapi}api/Service")
+                };
+                return RestService.For<IServiceService>(httpClient);
             });
 
             services.AddScoped(provider =>

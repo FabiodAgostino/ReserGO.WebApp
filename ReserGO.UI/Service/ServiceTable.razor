@@ -1,0 +1,229 @@
+﻿@using MudBlazor
+@using ReserGO.DTO;
+@using ReserGO.Utils.DTO.Service;
+@using ReserGO.Utils.DTO.Utils
+@using ReserGO.UI.FiltersComponent
+@using ReserGO.UI.Utils
+@using ReserGO.Miscellaneous.Model;
+@using ReserGO.Utils.DTO.Utils;
+@inject IDialogService DialogService
+
+@if (Services is object)
+{
+    <MudTable Items="@Services.CurrentPageData" Loading="IsLoading"
+              Hover="true" Style="width:100%" Breakpoint="Breakpoint.Sm"
+              LoadingProgressColor="Color.Primary" RowsPerPage="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10"
+              TotalItems="PagingOptions.TotalCount.Value">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Servizi</MudText>
+            <MudSpacer />
+                <div class="inputSpace m-3 pt-3 d-flex justify-content-end align-items-center" style="width:22%">
+                <MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.INSERT))">Nuovo servizio</MudButton>
+            </div>
+            <div class="inputSpace m-2 w-25">
+                <BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca" HelperText="Ricerca per nome servizio e poi premi invio"></BaseTextField>
+            </div>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Nome servizio</MudTh>
+            <MudTh>Descrizione</MudTh>
+            <MudTh>Prezzo</MudTh>
+            <MudTh>Durata</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+
+        <RowTemplate Context="element">
+            <MudTd>@element.ServiceName</MudTd>
+            <MudTd>@element.Description</MudTd>
+            <MudTd>@element.Price</MudTd>
+            <MudTd>@element.Duration</MudTd>
+            <MudTd>
+                <div class="d-flex flex-row">
+                    <div title="Elimina" class="m-3">
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))" Size="Size.Small"></MudIconButton>
+                    </div>
+                     <div title="Modifica" class="m-3">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.UPDATE, element))" Size="Size.Small"></MudIconButton>
+                    </div>
+                </div>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <div class="d-flex flex-row justify-content-between">
+                <MudPagination SelectedChanged="OnPageChangedHandler" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
+                <div class="paginatorPageSize">
+                    <MudSelect T="int" Label="Elementi per pagina" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
+                        @foreach (var size in pageSizes)
+                        {
+                            <MudSelectItem Value="size">@size</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                </div>
+            </div>
+        </PagerContent>
+    </MudTable>
+}
+
+@code {
+    [Parameter]
+    public GenericPagedList<DTOService> Services { get; set; }
+    [Parameter]
+    public GenericPagedFilter<DTOServiceFilter> PagingOptions { get; set; }
+    [Parameter]
+    public EventCallback<GridAction<DTOService, DTOServiceFilter>> Action { get; set; }
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    private DTOServiceFilter Filter = new();
+    private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
+    private List<string> status = new List<string> { "Tutte", "Da confermare", "Confermate", "Rifiutate" }; // Opzioni di conferma
+    private string statusSelected = "Tutte";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        StateHasChanged();
+    }
+
+    private async Task OnPageChangedHandler(int currPageIndex)
+    {
+        if (Action.HasDelegate)
+        {
+            PagingOptions.Page = currPageIndex;
+            var action = new GridAction<DTOService, DTOServiceFilter>(PagingOptions, TypeActionsGRID.PAGE_CHANGED, "");
+            await Action.InvokeAsync(action);
+        }
+    }
+
+    private async Task OnPageSizeHandler(int pageSize)
+    {
+        PagingOptions.PageSize = pageSize;
+        if (Action.HasDelegate)
+        {
+            var action = new GridAction<DTOService, DTOServiceFilter>(PagingOptions, TypeActionsGRID.PAGE_SIZE_CHANGED, "");
+            await Action.InvokeAsync(action);
+        }
+    }
+
+
+    private async Task OnChangeSearchText(string value)
+    {
+        Filter.SearchText = value;
+        var action = new GridAction<DTOService, DTOServiceFilter>(Filter, TypeActionsGRID.FILTER, "");
+        await ChangeFilter(action);
+
+    }
+
+    private async Task ChangeFilter(GridAction<DTOService, DTOServiceFilter> filter)
+    {
+        if (Action.HasDelegate)
+        {
+            await Action.InvokeAsync(filter);
+        }
+    }
+
+
+    private async Task DeleteDialog(DTOService service)
+    {
+        var callback = EventCallback.Factory.Create<bool>(this,((bool value) => DeleteCallback(value, service)));
+        string text = "<b>Questa azione è irreversibile.</b><br/>Sei sicuro di voler eliminare il servizio?";
+        var modal = new GenericModal<bool>(callback, text, "Eliminazione servizio", TypeActionsGRID.GENERIC_DELETE);
+
+        var dialogParameters = new DialogParameters
+            {
+                { "Modal", modal }  // Passa l'oggetto direttamente
+            };
+
+        var options = new DialogOptions
+            {
+                CloseOnEscapeKey = true,
+                Position = DialogPosition.Center
+            };
+
+        var result = await DialogService.Show<ConfirmModal>("Elimina servizio", dialogParameters, options).Result;
+    }
+
+    private async Task DeleteCallback(bool value, DTOService service)
+    {
+        if (Action.HasDelegate && value)
+        {
+            var list = new List<DTOService>();
+            list.Add(service);
+
+            var action = new GridAction<DTOService, DTOServiceFilter>(list, TypeActionsGRID.SINGLE_DELETE, "");
+            await Action.InvokeAsync(action);
+        }
+    }
+
+    private async Task InsertUpdateDialog(TypeActionsGRID typeActionGrid, DTOService service = null)
+    {
+        var callback = EventCallback.Factory.Create<DTOService>(this, ((DTOService value) => InsertUpdateCallback(value, typeActionGrid)));
+        string text = "<b>Questa azione è irreversibile.</b><br/>Sei sicuro di voler eliminare il servizio?";
+        var modal = new GenericModal<DTOService>(callback, text, "", typeActionGrid, service);
+
+        var dialogParameters = new DialogParameters
+            {
+                { "Modal", modal }  // Passa l'oggetto direttamente
+            };
+
+        var options = new DialogOptions
+            {
+                CloseOnEscapeKey = true,
+                Position = DialogPosition.Center
+            };
+
+        var result = await DialogService.Show<ServiceModalInsertUpdate>("Modifica servizio", dialogParameters, options).Result;
+    }
+
+    private async Task InsertUpdateCallback(DTOService service, TypeActionsGRID actiongrid)
+    {
+        if (Action.HasDelegate && service!=null)
+        {
+            var list = new List<DTOService>();
+            list.Add(service);
+
+            var action = new GridAction<DTOService, DTOServiceFilter>(list, actiongrid, "");
+            await Action.InvokeAsync(action);
+        }
+    }
+
+
+}
+
+<style>
+    .mud-table-root .mud-table-head {
+        display: table-header-group;
+        background-color: #0066FF;
+    }
+
+        .mud-table-root .mud-table-head .mud-table-cell {
+            color: white !important;
+            font-weight: 500;
+            line-height: 1.5rem;
+        }
+
+    .paginatorPageSize {
+        width: 15%;
+    }
+
+    .mud-table-container {
+        max-height: 78vh;
+        height: 78vh;
+    }
+
+
+    .inputSpace {
+        height: 45px;
+    }
+
+    .mud-table-toolbar {
+        margin-bottom: 17px;
+    }
+
+    @@media (max-width: 960px) {
+        .mud-sm-table .mud-table-cell {
+            justify-content: unset !important;
+            padding: 0px 16px !important;
+        }
+    }
+</style>

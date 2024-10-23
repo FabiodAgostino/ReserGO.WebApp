@@ -1,0 +1,22 @@
+﻿@using MudBlazor
+@using ReserGO.Utils.DTO.Utils
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.Service
+@using ReserGO.ViewModel.ViewModel.Historical
+@using ReserGO.DTO
+@using ReserGO.UI.Service;
+@inherits BaseComponentChild<IServiceViewModel, DTOService>
+@if (CurrentViewModel.UserIs(RoleConst.ADMIN))
+{
+    <div class="d-flex flex-column p-2 w-100 h-100 historicalContainer">
+        <ServiceTable Services="CurrentViewModel.Services" PagingOptions="@CurrentViewModel.Pagination" Action="@(async (GridAction<DTOService, DTOServiceFilter> action) => await CurrentViewModel.ExecuteAction(action))" IsLoading="@CurrentViewModel.IsLoading" />
+    </div>
+}
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await CurrentViewModel.GetServices();
+    }
+}

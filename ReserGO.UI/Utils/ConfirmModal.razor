@@ -1,27 +1,30 @@
 ﻿@using MudBlazor
 @using ReserGO.Utils.DTO.Utils;
+@using ReserGO.Miscellaneous.Model;
 <MudDialog Options="@Options">
     <TitleContent>
         <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
-            <b>Elimina prenotazione</b>
+            <b>@Modal.Title</b>
             <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Default" OnClick="() => Close(false)" />
         </div>
     </TitleContent>
     <DialogContent>
         <div class="d-flex flex-column justify-content-center p-5" style="text-align:center">
-            <b>Attenzione, stai per eliminare questa prenotazione.</b><br />
-            Eliminata la prenotazione verrà inviata una mail all'utente che ha inoltrato la richiesta e non sarà più possibile visualizzarla. 
+            @((MarkupString)Modal.Text)
         </div>
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">Chiudi</MudButton>
-        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="() => Close(true)">Elimina</MudButton>
+        @if (Modal.TypeActionsGRID == TypeActionsGRID.GENERIC_DELETE)
+        {
+            <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">Chiudi</MudButton>
+            <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="() => Close(true)">Elimina</MudButton>
+        }
     </DialogActions>
 </MudDialog>
 
 @code {
     [Parameter]
-    public EventCallback<bool> Callback { get; set; }
+    public GenericModal<bool> Modal { get; set; }
     public DialogOptions Options = new DialogOptions
         {
             CloseOnEscapeKey = true,
@@ -34,8 +37,8 @@
 
     public async Task Close(bool value)
     {
-        if (Callback.HasDelegate && value)
-            await Callback.InvokeAsync(value);
+        if (Modal.Event.HasDelegate && value)
+            await Modal.Event.InvokeAsync(value);
         MudDialog.Close();
     }
 }

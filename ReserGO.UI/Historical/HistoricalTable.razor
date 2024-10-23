@@ -3,6 +3,9 @@
 @using ReserGO.Utils.DTO.Service;
 @using ReserGO.Utils.DTO.Utils
 @using ReserGO.UI.FiltersComponent
+@using ReserGO.UI.Utils
+@using ReserGO.Miscellaneous.Model;
+@using ReserGO.Utils.DTO.Utils;
 @inject IDialogService DialogService
 
 @if (Bookings is object)
@@ -74,12 +77,12 @@
 				<MudTd>
 					@if (element.Status.Value == (int)BookingStatus.Pending)
 					{
-						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Color="Color.Primary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
+						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
 					}
 				</MudTd>
 				<MudTd>
 					<div title="Elimina">
-						<MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))"></MudIconButton>
+						<MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))"></MudIconButton>
 					</div>
 				</MudTd>
 			}
@@ -217,9 +220,13 @@
 	{
 		if (IsAdmin)
 		{
+			var callback = EventCallback.Factory.Create<bool>(this, ((bool value) => DeleteCallback(value, booking)));
+			string text = "<b>Attenzione, stai per eliminare questa prenotazione.</b><br />Eliminata la prenotazione verrà inviata una mail all'utente che ha inoltrato la richiesta e non sarà più possibile visualizzarla. ";
+			var modal = new GenericModal<bool>(callback, text, "Elimina prenotazione", TypeActionsGRID.GENERIC_DELETE);
+
 			var dialogParameters = new DialogParameters
 			{
-				{ "Callback", EventCallback.Factory.Create<bool>(this,((bool value) => DeleteCallback(value, booking))) }  // Passa l'oggetto direttamente
+				{ "Modal", modal }  // Passa l'oggetto direttamente
             };
 
 			var options = new DialogOptions
@@ -228,7 +235,7 @@
 					Position = DialogPosition.Center
 				};
 
-			var result = await DialogService.Show<DeleteBookingModal>("Elimina prenotazione", dialogParameters, options).Result;
+			var result = await DialogService.Show<ConfirmModal>("Elimina prenotazione", dialogParameters, options).Result;
 		}
 	}
 

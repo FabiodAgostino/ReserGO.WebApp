@@ -1,0 +1,101 @@
+﻿@using MudBlazor
+@using ReserGO.Utils.DTO.Utils;
+@using ReserGO.Miscellaneous.Model;
+@using ReserGO.UI.FiltersComponent;
+@using ReserGO.DTO
+<MudDialog Options="@Options">
+    <TitleContent>
+        <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
+            <b>@(Modal.TypeActionsGRID == TypeActionsGRID.INSERT ? "Inserisci nuovo servizio" : "Modifica servizio")</b>
+            <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Default" OnClick="() => Close()" />
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <div class="d-flex flex-column justify-content-center p-5" style="text-align:center">
+            <MudForm @ref="form" @bind-IsValid="@_success">
+                <MudGrid>
+                    <MudItem xs="12" sm="6">
+                        <div class="inputSpace">
+                            <BaseTextField Bind="@((string value) => _service.ServiceName = value)" Label="Nome servizio" Value="@_service.ServiceName"/>
+                        </div>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <div class="inputSpace">
+                            <BaseTextField Bind="@((string value) =>  _service.Description = value)" Label="Descrizione" Required="false"/>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <div class="inputSpace">
+                            <MudNumericField @bind-Value="_service.Duration" Label="Durata" Variant="Variant.Text" Min="0" Immediate="true" Required="true"/>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <div class="inputSpace">
+                            <MudNumericField @bind-Value="_service.Price" Label="Prezzo" Variant="Variant.Text" Min="0" Step=".2M" />
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudForm>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close()">Chiudi</MudButton>
+        <MudButton Color="@(Modal.TypeActionsGRID == TypeActionsGRID.INSERT ? Color.Success : Color.Warning)" Variant="Variant.Filled" OnClick="() => Save()">@(Modal.TypeActionsGRID == TypeActionsGRID.INSERT ? "Salva" : "Modifica")</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [Parameter]
+    public GenericModal<DTOService> Modal { get; set; }
+    MudForm form;
+    private bool _success;
+    public DialogOptions Options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Large,
+            NoHeader = true,
+
+        };
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    private DTOService _service = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Modal is object && Modal.Data is object)
+        {
+            _service = Modal.Data;
+        }
+    }
+
+    public async Task Close()
+    {
+        MudDialog.Close();
+    }
+
+    public async Task Save()
+    {
+        if (Modal.Event.HasDelegate && _success)
+            await Modal.Event.InvokeAsync(_service);
+        MudDialog.Close();
+    }
+}
+
+<style>
+    .titleContentConfirmValidate {
+        background: #0066FF;
+        color: white;
+        padding: 15px;
+    }
+
+    .mud-dialog .mud-dialog-title {
+        padding: 0 !important;
+    }
+
+    .mud-dialog .mud-dialog-actions {
+        justify-content: space-around !important;
+    }
+</style>
