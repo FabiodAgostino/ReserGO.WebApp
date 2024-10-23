@@ -40,9 +40,15 @@
                 </div>
                 <div class="d-flex flex-column justify-content-center tabHeader">
                     <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
-                        <MudTabPanel Text="Giorno" >
+                        <MudTabPanel Text="Servizio">
+                            <div class="d-flex flex-column w-100 justify-content-around columnCalendar">
+                                <ScheduleServices CallBack="@((List<DTOService> services) => UpdatePrice(services))" ServicesList="@CurrentViewModel.SelectedItem.Services" IsSmallView="CurrentViewModel.IsSmallView" />
+                            </div>
+                        </MudTabPanel>
+
+                        <MudTabPanel Text="Giorno" Disabled="@(_services.Count() == 0)" >
                             <div class="d-flex p-2 justify-content-center w-100 h-100">
-                                <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" IsSmallView="true"/>
+                                <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" IsSmallView="true" />
                             </div>
                         </MudTabPanel>
                         <MudTabPanel Text="Orario">
@@ -61,14 +67,14 @@
                                 </BaseComponent>
                             </MudTabPanel>
                         }
-                        <MudTabPanel Text="Conferma" Disabled="@((CurrentViewModel.Booking.User==null || !CurrentViewModel.IsLoggedIn()) || _selectedSlot==null)">
+                        <MudTabPanel Text="Conferma" Disabled="@((CurrentViewModel.Booking.User==null || !CurrentViewModel.IsLoggedIn()) || _selectedSlot==null || _services.Count()==0)">
                             <ConfirmSchedule Booking="@CurrentViewModel.Booking" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))" IsSmallView="true" />
                         </MudTabPanel>
 
                     </MudTabs>
                     <div class="d-flex justify-content-around" style="background-color:white">
 
-                        @if (CurrentViewModel.SelectedIndex<2)
+                        @if (CurrentViewModel.SelectedIndex < 2)
                         {
                             <div class="d-flex p-2 w-50 h-100">
                                 <MudButton class="registerButton btn-primary" style="width:100%;height:7vh;" type="submit" OnClick="@( () => Previous() )">
@@ -96,7 +102,14 @@
 
             <div class="d-flex dialogScheduleContainer p-1">
                 <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary" @ref="tabs" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
-                    <MudTabPanel Text="Giorno e ora">
+
+                    <MudTabPanel Text="Servizio">
+                        <div class="d-flex flex-column w-100 justify-content-around columnCalendar">
+                            <ScheduleServices CallBack="@((List<DTOService> services) => UpdatePrice(services))" ServicesList="@CurrentViewModel.SelectedItem.Services" IsSmallView="CurrentViewModel.IsSmallView" />
+                        </div>
+                    </MudTabPanel>
+
+                    <MudTabPanel Text="Giorno e ora" Disabled="@(_services.Count() == 0)">
                         <div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
                             <Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => await CurrentViewModel.GetSlot(date) )" />
                         </div>
@@ -110,11 +123,7 @@
                                           OnClick="@((DTOTimeSlot selectedSlot) => SetSlot(selectedSlot))" IsLoading="@CurrentViewModel.SlotLoading" IsFirstLoading="@CurrentViewModel.IsFirstLoad"></TimeSchedule>
                         </div>
                     </MudTabPanel>
-                    <MudTabPanel Text="Servizio">
-                        <div class="d-flex flex-column w-100 justify-content-around columnCalendar">
-                            <ScheduleServices CallBack="@((List<DTOService> services) => UpdatePrice(services))" ServicesList="@CurrentViewModel.SelectedItem.Services" IsSmallView="CurrentViewModel.IsSmallView" />
-                        </div>
-                    </MudTabPanel>
+
                     @if (CurrentViewModel.UserIs(RoleConst.GUEST))
                     {
                         <MudTabPanel Text="Anagrafica" Disabled="_selectedSlot==null">
@@ -126,7 +135,7 @@
 
                         </MudTabPanel>
                     }
-                    <MudTabPanel Text="Conferma" Disabled="@((CurrentViewModel.Booking.User==null || !CurrentViewModel.IsLoggedIn()) || _selectedSlot==null)">
+                    <MudTabPanel Text="Conferma" Disabled="@((CurrentViewModel.Booking.User==null || !CurrentViewModel.IsLoggedIn()) || _selectedSlot==null || _services.Count() == 0)">
                         <ConfirmSchedule Booking="@CurrentViewModel.Booking" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))" />
                     </MudTabPanel>
                 </MudTabs>
@@ -162,6 +171,15 @@
     private DTOTimeSlot _selectedSlot { get; set; }
 
     private DateTime _dateTimeSelected { get; set; }
+    public List<DTOService> _services = new();
+
+    private void UpdatePrice(List<DTOService> services)
+    {
+        _services = services;
+        CurrentViewModel.Booking.Services = services;
+        if(!CurrentViewModel.IsSmallView)
+            CurrentViewModel.SelectedIndex++;
+    }
 
     private void SetSlot(DTOTimeSlot slot)
     {
@@ -170,7 +188,7 @@
             _selectedSlot = slot;
             CurrentViewModel.Booking.StartDateTime = CurrentViewModel.Booking.StartDateTime.Date.Add(slot.StartTime);
             CurrentViewModel.Booking.EndDateTime = CurrentViewModel.Booking.EndDateTime.Date.Add(slot.EndTime);
-            CurrentViewModel.SelectedIndex = 1;
+            CurrentViewModel.SelectedIndex++;
         }
     }
 
@@ -180,7 +198,7 @@
         {
             CurrentViewModel.Booking.User = user;
             CurrentViewModel.SelectedIndex = 2;
-            if(CurrentViewModel.IsSmallView)
+            if (CurrentViewModel.IsSmallView)
                 CurrentViewModel.SelectedIndex = 3;
 
         }
@@ -214,7 +232,7 @@
     private void Previous()
     {
         if (CurrentViewModel.SelectedIndex > 0)
-            CurrentViewModel.SelectedIndex --;
+            CurrentViewModel.SelectedIndex--;
 
         _selectedSlot = null;
         CurrentViewModel.Booking.StartDateTime = new DateTime();
@@ -225,8 +243,10 @@
         switch (CurrentViewModel.SelectedIndex)
         {
             case 0:
-                return CurrentViewModel.Booking.StartDateTime < DateTime.Now.AddDays(-1);
+                return _services.Count() == 0;
             case 1:
+                return CurrentViewModel.Booking.StartDateTime < DateTime.Now.AddDays(-1);
+            case 2:
                 return _selectedSlot is null;
             default:
                 return false;
@@ -236,7 +256,7 @@
     private void Next()
     {
         if (CurrentViewModel.SelectedIndex < 3)
-            CurrentViewModel.SelectedIndex ++;
+            CurrentViewModel.SelectedIndex++;
     }
 
     private void ResetSmallView()
@@ -245,26 +265,22 @@
         CurrentViewModel.SelectedIndex = 0;
         CurrentViewModel.Booking.StartDateTime = new DateTime();
         _selectedSlot = null;
-        resetSmallIndex = false;   
+        resetSmallIndex = false;
     }
     private void ResetLargeView()
-    {   
+    {
         resetSmallIndex = true;
         CurrentViewModel.SelectedIndex = 0;
         _selectedSlot = null;
         CurrentViewModel.IsFirstLoad = true;
-        resetLargeIndex = false;   
+        resetLargeIndex = false;
     }
 
-    private void UpdatePrice(List<DTOService> services)
-    {
-        CurrentViewModel.SelectedItem.Services = services;
-    }
+
 }
 
 <style>
     .scheduleDialogCss {
-        
         border-radius: 30px !important;
     }
 
@@ -280,7 +296,7 @@
     }
 
     .mud-tabs {
-        width: 100%;    
+        width: 100%;
     }
 
     .mud-tabs-panels {
@@ -288,9 +304,6 @@
         height: 100%;
     }
 
-    .mud-tab-slider.mud-tab-slider-horizontal {
-        /* width: 33% !important; */
-    }
 
     .mud-tabs-tabbar.mud-tabs-rounded.mud-tabs-tabbar-primary.mud-elevation-4 {
         border-radius: 20px !important
@@ -301,9 +314,9 @@
         color: var(--mud-palette-primary-text);
     }
 
-    .mud-dialog-content{
-        width:71vw;
-        height:65vh;
+    .mud-dialog-content {
+        width: 71vw;
+        height: 65vh;
     }
 
     .mud-tabs-panels {

@@ -6,11 +6,11 @@
     <span class="titleServiceSelection" style="@(IsSmallView ? "font-size:x-large":"")">Seleziona i servizi che intendi prenotare</span>
 </div>
 
-<div class="d-flex w-100 h-100" style="padding-block:2vh" >
+<div class="d-flex w-100 h-100" style="padding-block:2vh">
     <div class="d-flex flex-wrap w-100 descriptionServiceSelection" style="overflow:auto; height:60%; ">
         @foreach (var service in ServicesListCheckable)
         {
-            <div class="d-flex p-3" style="height:9vh" >
+            <div class="d-flex p-3" style="height:9vh">
                 <div class="d-flex p-2 shadow align-items-center justify-content-center checkboxCard w-100 h-100">
                     <span>@($"{service.Service.ServiceName} | {service.Service.Price?.ToString() ?? "N/A"} €")</span>
                     <!-- Usa un checkbox con binding per ogni servizio -->
@@ -26,11 +26,15 @@
     <span>Totale: @TotalPrice €</span>
 </div>
 
-<div class="d-flex flex-row align-self-end justify-content-center">
-    <div class="d-flex" style="height:30%">
-        <MudButton class="registerButton btn-primary" style="width:15vw; height:8vh;" type="submit">Procedi</MudButton>
+@if (!IsSmallView)
+{
+    <div class="d-flex flex-row align-self-end justify-content-center">
+        <div class="d-flex" style="height:30%">
+            <MudButton class="registerButton btn-primary" style="width:15vw; height:8vh;" @onclick="(() => Next())">Procedi</MudButton>
+        </div>
     </div>
-</div>
+}
+
 
 @code {
 
@@ -46,17 +50,17 @@
     public List<DTOServiceSelectable>? ServicesListCheckable = new();
 
     private List<DTOService> _callbackList = new();
-
-
+    private bool _firstLoad = true;
 
     // Proprietà per tracciare il totale
     public decimal TotalPrice { get; set; } = 0;
 
     protected override async Task OnParametersSetAsync()
     {
-        if(ServicesList is object && ServicesList.Count()>0)
+        if (ServicesList is object && ServicesList.Count() > 0 && _firstLoad)
         {
             ServicesListCheckable = ServicesList.Select(x => new DTOServiceSelectable(x)).ToList();
+            _firstLoad = false;
         }
     }
 
@@ -71,8 +75,19 @@
         TotalPrice = ServicesListCheckable
             .Where(s => s.IsSelected && s.Service.Price.HasValue)
             .Sum(s => s.Service.Price.Value);
-        
-        if (CallBack.HasDelegate)
+        if (value)
+            _callbackList.Add(service.Service);
+        else
+            _callbackList.Remove(service.Service);
+
+        if (CallBack.HasDelegate && IsSmallView)
+            await CallBack.InvokeAsync(_callbackList);
+
+    }
+
+    public async Task Next()
+    {
+        if (CallBack.HasDelegate && !IsSmallView)
             await CallBack.InvokeAsync(_callbackList);
     }
 }

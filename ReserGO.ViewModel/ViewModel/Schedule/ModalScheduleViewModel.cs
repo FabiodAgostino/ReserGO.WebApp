@@ -42,6 +42,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             IsOpen = true;
             SelectedItem = message.Value.Data;
             Booking.Resource = (DTOResource)SelectedItem.Clone();
+            Booking.Services = new();
             TimeSlots = new();
             if (!UserIs(RoleConst.GUEST))
             {
@@ -70,6 +71,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                     return true;
                 return false;
             };
+
         }
 
         public async Task GetSlot(DateTime day)
