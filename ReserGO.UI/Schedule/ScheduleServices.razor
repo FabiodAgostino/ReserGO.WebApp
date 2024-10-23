@@ -6,16 +6,23 @@
 
 @inherits BaseComponentChild<IScheduleServicesViewModel, DTOService>
 <div class="d-flex p-3 @(IsSmallView ? "p-3":"")">
-    <span class="titleServiceSelection" style="@(IsSmallView ? "font-size:x-large":"")">Seleziona i servizi che intendi prenotare</span>
+    <span class="titleServiceSelection" style="@(IsSmallView ? "font-size:larger; text-align:center;":"")">Seleziona i servizi che intendi prenotare</span>
 </div>
 
-<div class="d-flex w-100 h-100" style="padding-block:2vh">
-    <div class="d-flex flex-wrap w-100 descriptionServiceSelection" style="overflow:auto; height:60%; ">
+<div class="d-flex w-100 h-100" style="@(IsSmallView ? "padding-block:1vh":"padding-block:2vh")">
+    <div class="d-flex w-100 descriptionServiceSelection @(IsSmallView ? "flex-column":"flex-wrap")" style="@(IsSmallView ? "font-size:medium; height:100%;":"height:60%;")">
         @foreach (var service in CurrentViewModel.ServicesListCheckable)
         {
-            <div class="d-flex p-3" style="height:9vh">
+            <div class="d-flex p-3" style="@(IsSmallView ? "height:12vh ":"height:9vh")">
                 <div class="d-flex p-2 shadow align-items-center justify-content-center checkboxCard w-100 h-100">
-                    <span>@($"{service.Service.ServiceName} | {service.Service.Price?.ToString() ?? "N/A"} €")</span>
+                    @if (IsSmallView)
+                    {
+                        <span>@((MarkupString)$"{service.Service.ServiceName} <br/> {service.Service.Price?.ToString() ?? "N/A"} €")</span>
+                    }
+                    else
+                    {                        
+                        <span>@($"{service.Service.ServiceName} | {service.Service.Price?.ToString() ?? "N/A"} €")</span>
+                    }
                     <!-- Usa un checkbox con binding per ogni servizio -->
                     <MudCheckBox Value="service.IsSelected" Color="Color.Primary" ValueChanged="@((bool value) => UpdateTotal(value, service))"></MudCheckBox>
                 </div>
@@ -24,11 +31,19 @@
     </div>
 </div>
 
-<div class="d-flex flex-row align-self-end justify-content-end">
+<div class="d-flex flex-row align-self-end justify-content-end priceServiceSelection">
     <span>Tempo stimato: @GetMinutes()</span>
 </div>
+<!-- Totale aggiornato dinamicamente -->
 <div class="d-flex flex-row align-self-end justify-content-end priceServiceSelection">
-    <span>Totale: @GetTotalPrice() €</span>
+    @if (IsSmallView)
+    {
+        <span style="font-size:large;">Tot: @GetTotalPrice() €</span>
+    }
+    else
+    {
+        <span>Totale: @GetTotalPrice() €</span>
+    }
 </div>
 
 

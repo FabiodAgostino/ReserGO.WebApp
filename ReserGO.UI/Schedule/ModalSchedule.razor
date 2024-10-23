@@ -41,7 +41,7 @@
                 <div class="d-flex flex-column justify-content-center tabHeader">
                     <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
                         <MudTabPanel Text="Servizio">
-                            <div class="d-flex flex-column w-100 justify-content-around columnCalendar">
+                             <div class="d-flex flex-column w-100 justify-content-around columnCalendar" style="height:65vh;">
                                   <BaseComponent TViewModel="IScheduleServicesViewModel" TModel="DTOService">
                                     <Content>
                                         <ScheduleServices CallBack="@((List<DTOService> services) => UpdatePrice(services))" ServicesList="@CurrentViewModel.SelectedItem.Services" IsSmallView="CurrentViewModel.IsSmallView" />
