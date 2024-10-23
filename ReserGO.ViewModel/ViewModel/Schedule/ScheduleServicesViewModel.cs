@@ -15,6 +15,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
         }
 
         public List<DTOServiceSelectable> ServicesListCheckable { get; set; }
+        public int IdOldResource { get; set; }
 
     }
 }

@@ -13,108 +13,109 @@
 @inject IDialogService DialogService
 
 <div class="d-flex flex-column p-0 h-100 homeGuestScheduleContainer">
-    <div class="d-flex flex-row justify-content-between p-0 h-100 homeGuestScheduleBody">
-        @if (!CurrentViewModel.IsSmallView)
-        {
-             <div class="d-flex leftSideSchedule justify-content-center align-items-center">
-            @if (OpenDetailsCard)
-            {
-                <ScheduleCardDetails CardStyle="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? "width:90%;height:95%;" : "width:95%;height:80vh;")" Icon="@InformationIcon" CallbackOpenModal="@( async (int idResource) => await CurrentViewModel.OpenModalCalendar())" Resource="@CurrentViewModel.SelectedItem" IsLoading="@CurrentViewModel.LoadingFullResource" />
-            }
-            else
-            {
-                @if (CurrentViewModel.IsLoading)
-                {
-                    <div style="position:fixed;">
-                        <span class="loadingText">In attessa della risorsa...</span>
-                    </div>
-                }
-                else
-                {
-                    <CardReserGo Title=" " Description="Seleziona Risorsa" CardStyle="opacity:0.5;" BodyStyle="@CardItemEmptyStyle" Icon="@InformationIcon" />
-                }
-            }
-        </div>
-        }
-       
-        <div class="d-felx @(CurrentViewModel.IsSmallView ? "rightSideScheduleSmall h-100":"rightSideSchedule")">
-            <ListSchedules Callback="@( async (int idResource) => await OpenDetails(idResource))" Resources="CurrentViewModel.List" IsLoading="CurrentViewModel.IsLoading" IsSmallView="@CurrentViewModel.IsSmallView" />
-        </div>
-    </div>
+	<div class="d-flex flex-row justify-content-between p-0 h-100 homeGuestScheduleBody">
+		@if (!CurrentViewModel.IsSmallView)
+		{
+			<div class="d-flex leftSideSchedule justify-content-center align-items-center">
+				@if (OpenDetailsCard)
+				{
+					<ScheduleCardDetails CardStyle="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? "width:90%;height:95%;" : "width:95%;height:80vh;")" Icon="@InformationIcon" CallbackOpenModal="@( async (int idResource) => await CurrentViewModel.OpenModalCalendar())" Resource="@CurrentViewModel.SelectedItem" IsLoading="@CurrentViewModel.LoadingFullResource" />
+				}
+				else
+				{
+					@if (CurrentViewModel.IsLoading)
+					{
+						<div style="position:fixed;">
+							<span class="loadingText">In attessa della risorsa...</span>
+						</div>
+					}
+					else
+					{
+						<CardReserGo Title=" " Description="Seleziona Risorsa" CardStyle="opacity:0.5;" BodyStyle="@CardItemEmptyStyle" Icon="@InformationIcon" />
+					}
+				}
+			</div>
+		}
+
+		<div class="d-felx @(CurrentViewModel.IsSmallView ? "rightSideScheduleSmall h-100":"rightSideSchedule")">
+			<ListSchedules Callback="@( async (int idResource) => await OpenDetails(idResource))" Resources="CurrentViewModel.List" IsLoading="CurrentViewModel.IsLoading" IsSmallView="@CurrentViewModel.IsSmallView" />
+		</div>
+	</div>
 </div>
 
 <BaseComponent TViewModel="IModalScheduleViewModel" TModel="DTOResource">
-    <Content>
-        <ModalSchedule />
-    </Content>
+	<Content>
+		<ModalSchedule />
+	</Content>
 </BaseComponent>
 
 
 @code {
 
-    private string InformationIcon = "";
+	private string InformationIcon = "";
 
-    private string CardItemEmptyStyle = "";
+	private string CardItemEmptyStyle = "";
 
-    private bool OpenDetailsCard;
+	private bool OpenDetailsCard;
 
-    private bool ShowModal = false;
+	private bool ShowModal = false;
+	private bool _refresh { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        await CurrentViewModel.RegisterOnScreenResize(900);
-        InformationIcon = Icons.Material.Filled.Today;
-        CardItemEmptyStyle = "background-color:#0066FF;color:#FFFFFF;font-size:xx-large;justify-content: center;font-family:ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;";
-        await CurrentViewModel.Refresh();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		await CurrentViewModel.RegisterOnScreenResize(900);
+		InformationIcon = Icons.Material.Filled.Today;
+		CardItemEmptyStyle = "background-color:#0066FF;color:#FFFFFF;font-size:xx-large;justify-content: center;font-family:ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;";
+		await CurrentViewModel.Refresh();
+	}
 
-    private async Task GetData(int idResource)
-    {
-        OpenDetailsCard = true;
-    }
+	private async Task GetData(int idResource)
+	{
+		OpenDetailsCard = true;
+	}
 
-    private async Task OpenDetails(int idResource)
-    {
-        await CurrentViewModel.GetFullResource(idResource);
+	private async Task OpenDetails(int idResource)
+	{
+		await CurrentViewModel.GetFullResource(idResource);
 
-        if (CurrentViewModel.IsSmallView)
-            await OpenDialogAsync();
-        else
-            OpenDetailsCard = true;
-    }
+		if (CurrentViewModel.IsSmallView)
+			await OpenDialogAsync();
+		else
+			OpenDetailsCard = true;
+	}
 
-    private async Task OpenDialogAsync()
-    {
-        var scheduleDetails = new DTOScheduleCardDetailsModal
-            {
-                Resource = CurrentViewModel.SelectedItem,
-                CallbackOpenModal = EventCallback.Factory.Create<int>(this, HandleCallback)
-            };
+	private async Task OpenDialogAsync()
+	{
+		var scheduleDetails = new DTOScheduleCardDetailsModal
+			{
+				Resource = CurrentViewModel.SelectedItem,
+				CallbackOpenModal = EventCallback.Factory.Create<int>(this, HandleCallback)
+			};
 
-        var dialogParameters = new DialogParameters
-    {
-        { "ResourceDetails", scheduleDetails }  // Passa l'oggetto direttamente
+		var dialogParameters = new DialogParameters
+	{
+		{ "ResourceDetails", scheduleDetails }  // Passa l'oggetto direttamente
     };
 
-        var options = new DialogOptions
-            {
-                CloseOnEscapeKey = true,
-                Position = DialogPosition.Center
-            };
+		var options = new DialogOptions
+			{
+				CloseOnEscapeKey = true,
+				Position = DialogPosition.Center
+			};
 
-        var result = await DialogService.Show<ScheduleCardDetailsModal>("Dettagli Programmazione", dialogParameters, options).Result;
-    }
+		var result = await DialogService.Show<ScheduleCardDetailsModal>("Dettagli Programmazione", dialogParameters, options).Result;
+	}
 
-    private async Task HandleCallback(int value)
-    {
-        await CurrentViewModel.OpenModalCalendar();
-    }
+	private async Task HandleCallback(int value)
+	{
+		await CurrentViewModel.OpenModalCalendar();
+	}
 
 }
 
 
 <style>
-    .mud-paper.mud-elevation-1 {
-        background: white !important;
-    }
+	.mud-paper.mud-elevation-1 {
+		background: white !important;
+	}
 </style>

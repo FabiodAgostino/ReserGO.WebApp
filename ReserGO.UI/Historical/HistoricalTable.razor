@@ -79,7 +79,7 @@
                     var servizi = string.Join(", ", @element.Services.Select(x => x.ServiceName));
                     @if (servizi.Length > 50)
                     {
-                        <MudButton StartIcon="@Icons.Material.Filled.ShoppingBasket" Size="Size.Small" Color="Color.Secondary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Mostra servizi</MudButton>
+                        <MudButton StartIcon="@Icons.Material.Filled.ShoppingBasket" Size="Size.Small" Color="Color.Secondary" Variant="Variant.Filled" @onclick="(() => ShowServices(element.Services))">Mostra servizi</MudButton>
                     }
                     else
                     {
@@ -227,6 +227,26 @@
                 };
 
             var result = await DialogService.Show<ConfirmValidateModal>("Valida prenotazione", dialogParameters, options).Result;
+        }
+
+    }
+
+    private async Task ShowServices(List<DTOService> services)
+    {
+        if (IsAdmin)
+        {
+            var dialogParameters = new DialogParameters
+            {
+                { "Services", services}  
+            };
+
+            var options = new DialogOptions
+                {
+                    CloseOnEscapeKey = true,
+                    Position = DialogPosition.Center
+                };
+
+            var result = await DialogService.Show<ModalServicesHistorical>("Servizi", dialogParameters, options).Result;
         }
 
     }

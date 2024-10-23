@@ -44,6 +44,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             Booking.Resource = (DTOResource)SelectedItem.Clone();
             Booking.Services = new();
             TimeSlots = new();
+
             if (!UserIs(RoleConst.GUEST))
             {
                 Booking.User = User.GetFromDTOSession();
@@ -117,6 +118,8 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             }
             var duration = Booking.Services
              .Sum(s => s.Duration);
+            duration = duration == 0 ? SelectedItem.DurationBooking.HasValue ? SelectedItem.DurationBooking.Value: 25 : duration;
+
             TimeSlots = DTOResourceExtension.GetAvailableSlots(slotOccupati, duration, day);
             SlotLoading = false;
         }
