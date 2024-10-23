@@ -115,7 +115,9 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             {
                 slotOccupati = DTOResourceExtension.MergeTimeSlots(slotOccupati);
             }
-            TimeSlots = DTOResourceExtension.GetAvailableSlots(slotOccupati, SelectedItem.DurationBooking.Value, day);
+            var duration = Booking.Services
+             .Sum(s => s.Duration);
+            TimeSlots = DTOResourceExtension.GetAvailableSlots(slotOccupati, duration, day);
             SlotLoading = false;
         }
 

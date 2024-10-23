@@ -42,7 +42,11 @@
                     <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex">
                         <MudTabPanel Text="Servizio">
                             <div class="d-flex flex-column w-100 justify-content-around columnCalendar">
-                                <ScheduleServices CallBack="@((List<DTOService> services) => UpdatePrice(services))" ServicesList="@CurrentViewModel.SelectedItem.Services" IsSmallView="CurrentViewModel.IsSmallView" />
+                                  <BaseComponent TViewModel="IScheduleServicesViewModel" TModel="DTOService">
+                                    <Content>
+                                        <ScheduleServices CallBack="@((List<DTOService> services) => UpdatePrice(services))" ServicesList="@CurrentViewModel.SelectedItem.Services" IsSmallView="CurrentViewModel.IsSmallView" />
+                                    </Content>
+                                </BaseComponent>
                             </div>
                         </MudTabPanel>
 
@@ -105,8 +109,12 @@
 
                     <MudTabPanel Text="Servizio">
                         <div class="d-flex flex-column w-100 justify-content-around columnCalendar">
-                            <ScheduleServices CallBack="@((List<DTOService> services) => UpdatePrice(services))" ServicesList="@CurrentViewModel.SelectedItem.Services" IsSmallView="CurrentViewModel.IsSmallView" />
-                        </div>
+                           <BaseComponent TViewModel="IScheduleServicesViewModel" TModel="DTOService">
+                                    <Content>
+                                        <ScheduleServices CallBack="@((List<DTOService> services) => UpdatePrice(services))" ServicesList="@CurrentViewModel.SelectedItem.Services" IsSmallView="CurrentViewModel.IsSmallView" />
+                                    </Content>
+                                </BaseComponent>
+                            </div>
                     </MudTabPanel>
 
                     <MudTabPanel Text="Giorno e ora" Disabled="@(_services.Count() == 0)">
@@ -175,6 +183,7 @@
 
     private void UpdatePrice(List<DTOService> services)
     {
+        CurrentViewModel.TimeSlots = new();
         _services = services;
         CurrentViewModel.Booking.Services = services;
         if(!CurrentViewModel.IsSmallView)
@@ -197,7 +206,7 @@
         if (user != null)
         {
             CurrentViewModel.Booking.User = user;
-            CurrentViewModel.SelectedIndex = 2;
+            CurrentViewModel.SelectedIndex++;
             if (CurrentViewModel.IsSmallView)
                 CurrentViewModel.SelectedIndex = 3;
 

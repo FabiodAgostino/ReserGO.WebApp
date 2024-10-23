@@ -41,6 +41,7 @@ namespace ReserGO.ViewModel.Extensions
             services.AddScoped<IInsertResourceViewModel, InsertResourceViewModel>();
             services.AddScoped<IDayOfWeekViewModel, DayOfWeekViewModel>();
             services.AddScoped<IServiceViewModel, ServiceViewModel>();
+            services.AddScoped<IScheduleServicesViewModel, ScheduleServicesViewModel>();
 
 
             return services;
