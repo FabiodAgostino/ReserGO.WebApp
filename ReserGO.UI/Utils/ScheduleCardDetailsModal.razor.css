@@ -75,9 +75,9 @@
     color: #747474;
 }
 
-.dividerDetailsSchedule {
+.dividerDetailsScheduleSmall {
     width: 40%;
-    height: 7px;
+    height: 3px;
     border-radius: 0px 15px 15px 0px;
     background-color: #0066FF;
     opacity: 0.6;
@@ -95,4 +95,9 @@
     border-radius: 15px;
     opacity: 0.6;
     background-color: lightgray;
+}
+
+.serviceDescriptionSmall {
+    color: #747474;
+    font-size: large;
 }

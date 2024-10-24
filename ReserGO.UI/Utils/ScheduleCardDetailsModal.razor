@@ -20,9 +20,9 @@
     <DialogContent>
         <div class="d-flex flex-column cardScheduleDetailsBodySmall h-100">
             <div class="d-flex flex-column w-100" style="overflow:auto; height:90%;" >
-                <div class="d-flex pt-2 flex-column w-100" style="height:35%;">
+                <div class="d-flex pt-2 flex-column w-100 h-100">
                     <span class="descriptionDetailsSmall">Descrizione</span>
-                    <div class="dividerDetailsSchedule"></div>
+                    <div class="dividerDetailsScheduleSmall"></div>
                     @if (ResourceDetails.Resource != null)
                     {
                         <p class="bodyDescriptionSmall">@ResourceDetails.Resource.Description</p>
@@ -33,13 +33,31 @@
                     }
                 </div>
 
+                <div class="d-flex flex-column w-100 h-100">
+                    <span class="descriptionDetailsSmall">Servizi</span>
+                    <div class="dividerDetailsScheduleSmall"></div>
+                    <div class="d-flex flex-column h-100" style="padding-top:1vh;">
+                        @if (ResourceDetails.Resource.Services != null && ResourceDetails.Resource != null)
+                        {
+                            @foreach (var service in ResourceDetails.Resource.Services)
+                            {
+                                <span class="serviceDescriptionSmall">@service.ServiceName</span>
+                            }
+                        }
+                        else
+                        {
+                            <div><span class="descriptionDetails" style="font-size:x-large; opacity:0.5; margin-right:20px;"><i>( Nessun dato )</i></span></div>
+                        }
+                    </div>
+                </div>
+
 
                
 
 
                     <div class="d-flex flex-column w-100 h-100">
                     <div><span class="descriptionDetailsSmall">Orari di disponibilità</span></div>
-                        <div class="dividerDetailsSchedule" style="width:82%"></div>
+                        <div class="dividerDetailsScheduleSmall" style="width:82%"></div>
                     <div class="d-felx flex-row w-100 h-100 bodyDescriptionSmall" style="overflow:auto;">
                             @if (ResourceDetails.Resource.AvailabilityAdv.UnavailableRecurringTimeDays.Count() > 0)
                             {
@@ -60,7 +78,7 @@
 
                     <div class="d-flex flex-column w-100 h-100">
                     <div><span class="descriptionDetailsSmall">Giorni chiusura</span></div>
-                        <div class="dividerDetailsSchedule" style="width:80%"></div>
+                        <div class="dividerDetailsScheduleSmall" style="width:80%"></div>
                     <div class="d-felx flex-row w-100 h-100 bodyDescriptionSmall">
                             @if (ResourceDetails.Resource.AvailabilityAdv.UnavailableSpecificDays.Data.Count() > 0)
                             {
@@ -92,26 +110,6 @@
                         </div>
                     </div>
 
-              
-
-                    
-            
-            </div>
-            <div class="d-flex flex-column justify-content-between  w-100 p-3" style="height:13%;">
-                <div class="d-flex flex-row w-100 justify-content-between" style="height:40%">
-                    <div><span class="descriptionDetailsSmall">Prezzo</span></div>
-                    @if (ResourceDetails.Resource.HavePrice())
-                    {
-                        <div><span class="descriptionDetailsSmall">@($"{ResourceDetails.Resource.GetTotalPrice().ToString()}€")</span></div>
-                    }
-                    else
-                    {
-                        <div><span class="descriptionDetailsSmall" style="font-size:large; margin-right:20px;"><i>N/S</i></span></div>
-                    }
-                </div>
-                <div>
-                    <div class="dividerDetailsSchedule" style="width:100%;opacity:1;border-radius:15px;"></div>
-                </div>
             </div>
             @if (ResourceDetails.Resource != null)
             {
