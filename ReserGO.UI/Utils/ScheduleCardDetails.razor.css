@@ -92,3 +92,8 @@
     opacity: 0.6;
     background-color: lightgray;
 }
+
+.serviceDescription {
+    color: #747474;
+    font-size: smaller;
+}

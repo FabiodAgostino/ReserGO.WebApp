@@ -23,10 +23,8 @@
     height:70%;
 }
 
-.textSchedule {
+.textScheduleTitle {
     color: #404040;
-    font-size: 2vw;
-    font-family: var(--mud-typography-button-family);
-    font-weight: var(--mud-typography-button-weight);
-    line-height: var(--mud-typography-button-lineheight);
+    font-size: 1.5vw;
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
 }
