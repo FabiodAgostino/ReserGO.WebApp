@@ -1,0 +1,60 @@
+﻿@using MudBlazor
+@using ReserGO.DTO
+@using ReserGO.Utils.DTO.Utils;
+@using ReserGO.Miscellaneous.Model;
+<MudDialog Options="@Options">
+    <TitleContent>
+        <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
+            <b>Dettaglio servizi</b>
+            <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Default" OnClick="() => Close(false)" />
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <div class="d-flex flex-column justify-content-center p-5" style="text-align:center">
+            <ul>
+            @foreach(var service in Services)
+            {
+                <li>@service.ServiceName</li>
+            }
+            </ul>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">Chiudi</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public List<DTOService> Services { get; set; }
+    public DialogOptions Options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Large,
+            NoHeader = true,
+
+        };
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    public async Task Close(bool value)
+    {
+        MudDialog.Close();
+    }
+}
+
+<style>
+    .titleContentConfirmValidate {
+        background: #0066FF;
+        color: white;
+        padding: 15px;
+    }
+
+    .mud-dialog .mud-dialog-title {
+        padding: 0 !important;
+    }
+
+    .mud-dialog .mud-dialog-actions {
+        justify-content: space-around !important;
+    }
+</style>

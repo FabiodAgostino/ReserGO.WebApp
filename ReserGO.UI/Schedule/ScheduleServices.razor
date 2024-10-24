@@ -73,15 +73,17 @@
     public bool IsSmallView { get; set; }
 
     [Parameter]
-    public List<DTOService>? ServicesList { get; set; }
+    public DTOResource Resource { get; set; }
 
+    public List<DTOService>? ServicesList { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
-        if (ServicesList is object && ServicesList.Count() > 0 && CurrentViewModel.IsFirstLoad)
+        if (Resource.Id != CurrentViewModel.IdOldResource)
         {
+            ServicesList = Resource.Services;
+            CurrentViewModel.IdOldResource = Resource.Id.Value;
             CurrentViewModel.ServicesListCheckable = ServicesList.Select(x => new DTOServiceSelectable(x)).ToList();
-            CurrentViewModel.IsFirstLoad = false;
         }
     }
 
