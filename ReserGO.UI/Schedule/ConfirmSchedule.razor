@@ -5,48 +5,55 @@
 {
     <div class="d-flex flex-column justify-content-between w-100 h-100">
 
-        <div class="d-flex flex-column justify-content-around w-100 p-4" style="height:70%" >
-            <div class="d-flex @(IsSmallView ? "descriptionConfirmModalSmall flex-column" : "descriptionConfirmModal flex-row")">
-                <div class="d-flex h-100 align-items-center" >
-                    <span>Richiedente: </span>
-                </div>
-                <div class="d-flex h-100 align-items-center">
-                    <i style="color:#474747">@Booking.User.FirstName @Booking.User.LastName</i>
-                </div>
-            </div>
+        <div class="d-flex flex-row align-items-center w-100 titleSummary" style="height:18%;" ><span>Riepilogo prenotazione</span> </div>
+        <div class="d-flex flex-column justify-content-center align-items-center w-100"  style="height:75%">
+            <div class="d-flex flex-row justify-content-around align-items-center shadow cardSummary " style="width:70%; height:95%;">
 
-            <div class="d-flex flex-row @(IsSmallView ? "descriptionConfirmModalSmall flex-column" : "descriptionConfirmModal flex-row")">
-                <div class="d-flex h-100 align-items-center">
-                    <span>Data:</span>
+                <div class="d-flex flex-column p-2" style="width:48%; height:95%" >
+
+                    <div class="d-flex w-100 cardTitleSummry">Dettagli</div>
+                    <div class="d-flex p-1 dividerTitleSummary" style="width:50%"></div>
+                    <div class="d-flex flex-column w-100 h-100 justify-content-around cardSummaryDescription" >
+                        <span>NOME: @Booking.User.FirstName</span>
+                        <span>COGNOME: @Booking.User.LastName</span>
+                        <span>DATA: @GetDate()</span>
+                        <span>ORA: @GetTime()</span>
+                        <span>PRENOTAZIONE: @Booking.Resource.ResourceName</span>
+                        <span>PREZZO: @Booking.Resource.GetTotalPrice()€</span>
+                    </div>
+                
+                </div>
+                
+                
+                <div class="scheduleDivider"></div>
+
+
+                <div class="d-flex flex-column p-2" style="width:48%; height:95%">
+                    <div class="d-flex w-100 cardTitleSummry">Servizi</div>
+                    <div class="d-flex p-1 dividerTitleSummary" style="width:50%"></div>
+                    <div class="d-flex w-100 h-100 align-items-end">
+
+                        <div class="d-flex flex-column justfy-content-center w-100 cardSummaryService" >
+                            <div class="d-flex @(IsSmallView ? "p-2":"p-3")" style="@(IsSmallView ? "height:12vh ":"height:9vh")">
+                                <div class="d-flex p-2 shadow align-items-center justify-content-between checkboxCard w-100 h-100">
+                                    @if (IsSmallView)
+                                    {
+                                        <span style="opacity:0.8;" >Servizio</span>
+                                        <span style="opacity:0.8;">400€</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="opacity:0.8;">Servizio</span>
+                                        <span style="opacity:0.8;">400€</span>
+                                    }
+                                </div>
+                            </div>
+                     
+                        </div>
+                    </div>
                 </div>
 
-                <div class="d-flex h-100 align-items-center">
-                    <i style="color:#474747">@GetDate()</i>
-                </div>
             </div>
-
-            <div class="d-flex flex-row @(IsSmallView ? "descriptionConfirmModalSmall flex-column" : "descriptionConfirmModal flex-row")">
-                <div class="d-flex h-100 align-items-center">
-                    <span> Ora:</span>
-                </div>
-                <div class="d-flex h-100 align-items-center">
-                    <i style="color:#474747">@GetTime()</i>
-                </div>
-            </div>
-            <div class="d-flex flex-row @(IsSmallView ? "descriptionConfirmModalSmall flex-column" : "descriptionConfirmModal flex-row")">
-                <div class="d-flex h-100 align-items-center">
-                    <span>Servizio prenotatato: </span>
-                </div>
-                <div class="d-flex h-100 align-items-center">
-                    <i style="color:#474747">@Booking.Resource.ResourceName</i>
-                </div>
-            </div>
-            @if (Booking.Resource.HavePrice())
-            {
-                <div class="@(IsSmallView ? "descriptionConfirmModalSmall pt-3" : "descriptionConfirmModal")">
-                    <span>Prezzo: <i style="color:#474747">@($"{@Booking.Resource.GetTotalPrice()}€")</i></span>
-                </div>
-            }
             @if (Booking.Resource.RequestToConfirm)
             {
                 <div class="d-flex justify-content-center pt-4 w-100 @(IsSmallView ? "infoMailSmall" : "infoMail") ">
@@ -55,7 +62,7 @@
             }
         </div>
 
-        <div class="d-flex justify-content-around align-items-center p-4" style="height:30%">
+        <div class="d-flex justify-content-around align-items-center p-2" style="height:20%">
             <div class="d-flex p-1" style=" @(IsSmallView ? "width:100%" : "width:25%") ">
                 <MudButton @onclick="@(() => Submit(false))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Annulla</MudButton>
             </div>
