@@ -36,8 +36,7 @@ namespace ReserGO.Miscellaneous.Extensions
         public static void UpdateUser(this DTOModalScheduleStepper stepper, DTOUserLight user)
         {
             stepper.User = user;
-            if (!stepper.SmallView)
-                stepper.NextIndex();
+            stepper.NextIndex();
         }
 
 
@@ -62,7 +61,7 @@ namespace ReserGO.Miscellaneous.Extensions
             switch (stepper.ActualState)
             {
                 case StateOfStepper.SERVICES:
-                    return stepper.Services.Count() == 0;
+                    return stepper.Services == null || stepper.Services.Count() == 0;
                 case StateOfStepper.DATE:
                     return !stepper.Date.HasValue;
                 case StateOfStepper.SLOT:
@@ -86,6 +85,19 @@ namespace ReserGO.Miscellaneous.Extensions
                 stepper.ActualState--;
             }
             stepper.Index = stepper.State.SingleOrDefault(x => x.Value == stepper.ActualState).Key;
+        }
+
+        public static bool ViewButtonsSmartphone(this DTOModalScheduleStepper stepper)
+        {
+            switch(stepper.ActualState)
+            {
+                case StateOfStepper.SERVICES: return true;
+                case StateOfStepper.DATE: return true;
+                case StateOfStepper.SLOT: return true;
+                case StateOfStepper.USER: return false;
+                case StateOfStepper.CONFIRM: return false;
+                    default: return false;
+            }
         }
 
         private static void SetState(this DTOModalScheduleStepper stepper)

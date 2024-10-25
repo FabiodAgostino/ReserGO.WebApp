@@ -158,6 +158,10 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                     bookingToInsert.ResourceId= SelectedItem.Id.Value;
                     bookingToInsert.Resource.AvailabilityAdv = null;
                     bookingToInsert.Resource.ResourcesAvailability = null;
+                    bookingToInsert.Services = ScheduleStepper.Services ?? new();
+                    bookingToInsert.StartDateTime = Booking.StartDateTime.Date.Add(ScheduleStepper.Slot.StartTime);
+                    bookingToInsert.EndDateTime = Booking.StartDateTime.Date.Add(ScheduleStepper.Slot.EndTime);
+                    bookingToInsert.User = ScheduleStepper.User;
 
                     var result = await _bookService.InsertBooking(bookingToInsert);
                     if(result.Success)

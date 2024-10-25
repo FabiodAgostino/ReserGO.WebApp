@@ -46,6 +46,7 @@ namespace ReserGO.Miscellaneous.Model
             IsLoggedIn = isLoggedIn;
             SmallView = smallView;
             State = SetState();
+            ActualState = State.FirstOrDefault().Value;
 
         }
 
