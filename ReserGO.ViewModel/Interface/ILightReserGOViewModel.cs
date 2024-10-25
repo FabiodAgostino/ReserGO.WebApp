@@ -1,4 +1,5 @@
-﻿using ReserGO.Utils.DTO.Utils;
+﻿using Microsoft.AspNetCore.Components;
+using ReserGO.Utils.DTO.Utils;
 using ReserGO.Utils.MVM.Interface;
 
 namespace ReserGO.ViewModel.Interface
@@ -9,5 +10,6 @@ namespace ReserGO.ViewModel.Interface
         ConfigurationServer ConfigurationServer { get; set; }
         Task RegisterOnScreenResize(int width = 1200);
         bool IsSmallView { get; set; }
-    }
+        public EventCallback<bool> TriggerMethodOnSmall { get; set; }
+}
 }

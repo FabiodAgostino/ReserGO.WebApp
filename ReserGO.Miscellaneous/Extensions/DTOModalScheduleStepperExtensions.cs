@@ -46,7 +46,6 @@ namespace ReserGO.Miscellaneous.Extensions
             if (stepper.Index < stepper.State.Count())
             {
                 stepper.Index++;
-                stepper.ActualState = stepper.State.SingleOrDefault(x => x.Key == stepper.Index).Value;
             }
         }
 
@@ -55,7 +54,6 @@ namespace ReserGO.Miscellaneous.Extensions
             if (stepper.Index > 0)
             {
                 stepper.Index--;
-                stepper.ActualState = stepper.State.SingleOrDefault(x => x.Key == stepper.Index).Value;
             }
         }
 
@@ -83,31 +81,11 @@ namespace ReserGO.Miscellaneous.Extensions
 
             stepper.SmallView = smallView;
             SetState(stepper);
-            if(stepper.Index > 0)
+            while(!stepper.State.Any(x => x.Value == stepper.ActualState))
             {
-                int newIdx = -1;
-                foreach (StateOfStepper state in System.Enum.GetValues(typeof(StateOfStepper)))
-                {
-                    if(state==stepper.ActualState)
-                    {
-                        if (stepper.Disabled(state))
-                        {
-                            newIdx--;
-                            break;
-                        }
-                        else
-                        {
-                            newIdx++;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        newIdx++;
-                    }
-                }
-                stepper.Index = newIdx;
+                stepper.ActualState--;
             }
+            stepper.Index = stepper.State.SingleOrDefault(x => x.Value == stepper.ActualState).Key;
         }
 
         private static void SetState(this DTOModalScheduleStepper stepper)

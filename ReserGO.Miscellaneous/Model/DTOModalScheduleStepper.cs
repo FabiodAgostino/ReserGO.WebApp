@@ -11,7 +11,17 @@ namespace ReserGO.Miscellaneous.Model
         public DTOTimeSlot Slot { get; set; } = new();
         public DTOUserLight User { get; set; } = new();
         public bool IsLoggedIn { get; set; } = true;
-        public int Index { get; set; }
+
+        private int _index { get; set; }
+        public int Index
+        {
+            get => _index;
+            set
+            {
+                _index = value;
+                ActualState = State.SingleOrDefault(x => x.Key == value).Value;
+            }
+        }
         public bool SmallView { get; set; }
         public Dictionary<int, StateOfStepper> State { get; set; }
         public StateOfStepper ActualState { get; set; }
