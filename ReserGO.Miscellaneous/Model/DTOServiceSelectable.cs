@@ -11,5 +11,11 @@ namespace ReserGO.Miscellaneous.Model
             Service = service;
         }
 
+        public DTOServiceSelectable(DTOService service, bool selected)
+        {
+            Service = service;
+            IsSelected = selected;
+        }
+
     }
 }

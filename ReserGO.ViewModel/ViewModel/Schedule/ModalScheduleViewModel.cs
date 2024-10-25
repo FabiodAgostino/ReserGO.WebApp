@@ -31,20 +31,20 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
         public Func<DateTime, bool> DayDisabled { get; set; }
         public List<DTOTimeSlot> TimeSlots { get; set; } = new();
         public DTOBooking Booking { get; set; } = new();
-        public int SelectedIndex { get; set; } = 0;
         public bool SlotLoading { get; set; }
+        public DTOModalScheduleStepper ScheduleStepper{ get; set; }
+
 
         public async void OpenModal(ObjectMessage<GenericModal<DTOResource>> message)
         {
             IsFirstLoad = true;
-            SelectedIndex = 0;
             Booking = new();
             IsOpen = true;
             SelectedItem = message.Value.Data;
             Booking.Resource = (DTOResource)SelectedItem.Clone();
             Booking.Services = new();
             TimeSlots = new();
-
+            ScheduleStepper = new(SelectedItem, !UserIs(RoleConst.GUEST), IsSmallView);
             if (!UserIs(RoleConst.GUEST))
             {
                 Booking.User = User.GetFromDTOSession();
@@ -176,5 +176,6 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
         {
             IsOpen = false;
         }
+
     }
 }

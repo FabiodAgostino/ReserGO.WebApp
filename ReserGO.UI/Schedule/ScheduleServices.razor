@@ -20,7 +20,7 @@
                         <span>@((MarkupString)$"{service.Service.ServiceName} <br/> {service.Service.Price?.ToString() ?? "N/A"} €")</span>
                     }
                     else
-                    {                        
+                    {
                         <span>@($"{service.Service.ServiceName} | {service.Service.Price?.ToString() ?? "N/A"} €")</span>
                     }
                     <!-- Usa un checkbox con binding per ogni servizio -->
@@ -31,10 +31,10 @@
     </div>
 </div>
 
-<div class="d-flex flex-row align-self-end justify-content-end priceServiceSelection" style="padding:0px; font-size:large; color:#555555;" >
+<div class="d-flex flex-row align-self-end justify-content-end priceServiceSelection" style="padding:0px; font-size:large; color:#555555;">
     @if (IsSmallView)
     {
-        <span style="font-size:medium;color:grey;" >Durata: @GetMinutes() h</span>
+        <span style="font-size:medium;color:grey;">Durata: @GetMinutes() h</span>
     }
     else
     {
@@ -42,7 +42,7 @@
     }
 </div>
 <!-- Totale aggiornato dinamicamente -->
-<div class="d-flex flex-row align-self-end justify-content-end priceServiceSelection"  style="padding-top:0px;">
+<div class="d-flex flex-row align-self-end justify-content-end priceServiceSelection" style="padding-top:0px;">
     @if (IsSmallView)
     {
         <span style="font-size:large;">Tot: @GetTotalPrice() €</span>
@@ -75,15 +75,24 @@
     [Parameter]
     public DTOResource Resource { get; set; }
 
+    [Parameter]
+    public List<DTOService> LastServices { get; set; }
+
     public List<DTOService>? ServicesList { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
-        if (Resource.Id != CurrentViewModel.IdOldResource)
+        ServicesList = Resource.Services.Select(x=> (DTOService)x.Clone()).ToList();
+        CurrentViewModel.ServicesListCheckable = ServicesList.Select(x => new DTOServiceSelectable(x)).ToList();
+
+        if (LastServices != null && LastServices.Any())
         {
-            ServicesList = Resource.Services;
-            CurrentViewModel.IdOldResource = Resource.Id.Value;
-            CurrentViewModel.ServicesListCheckable = ServicesList.Select(x => new DTOServiceSelectable(x)).ToList();
+            var ids = LastServices.Select(x => x.Id);
+            CurrentViewModel.ServicesListCheckable.ForEach(s =>
+            {
+                if (ids.Contains(s.Service.Id))
+                    s.IsSelected = true;
+            });
         }
     }
 
@@ -123,6 +132,6 @@
     public async Task Next()
     {
         if (CallBack.HasDelegate && !IsSmallView)
-            await CallBack.InvokeAsync(CurrentViewModel.List);
+            await CallBack.InvokeAsync(CurrentViewModel.ServicesListCheckable.Where(x=> x.IsSelected).Select(x=> x.Service).ToList());
     }
 }

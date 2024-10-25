@@ -64,8 +64,16 @@
     [Parameter]
     public bool IsSmallView { get; set; }
     private string TimeForCard = "";
+    [Parameter]
+    public DTOTimeSlot SavedTimeSlot { get; set; }
+
     private DTOTimeSlot selectedTimeSlot;
 
+    protected override async Task OnParametersSetAsync()
+    {
+        if (SavedTimeSlot != null && TimeSlots!=null) 
+            selectedTimeSlot = TimeSlots.SingleOrDefault(x => x.StartTime == SavedTimeSlot.StartTime && x.EndTime == SavedTimeSlot.EndTime);
+    }
 
     public async Task OnClickSlot(DTOTimeSlot slot)
     {

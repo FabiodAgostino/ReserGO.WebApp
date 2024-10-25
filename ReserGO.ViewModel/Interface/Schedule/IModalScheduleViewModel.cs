@@ -14,7 +14,7 @@ namespace ReserGO.ViewModel.Interface.Schedule
         List<DTOTimeSlot> TimeSlots { get; set; }
         DTOBooking Booking { get; set; }
         Task InsertBooking(bool submit);
-        public int SelectedIndex { get; set; }
         public bool SlotLoading { get; set; }
+        DTOModalScheduleStepper ScheduleStepper { get; set; }
     }
 }

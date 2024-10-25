@@ -1,7 +1,8 @@
 ﻿@using ReserGO.DTO
 @using MudBlazor
 @using ReserGO.DTO.Extensions;
-@if (Booking is object)
+@using ReserGO.Miscellaneous.Model;
+@if (Stepper is object)
 {
     <div class="d-flex flex-column justify-content-between w-100 h-100">
 
@@ -14,12 +15,12 @@
                     <div class="d-flex w-100 cardTitleSummry">Dettagli</div>
                     <div class="d-flex p-1 dividerTitleSummary" style="width:50%"></div>
                     <div class="d-flex flex-column w-100 h-100 justify-content-around cardSummaryDescription" >
-                        <span>NOME: @Booking.User.FirstName</span>
-                        <span>COGNOME: @Booking.User.LastName</span>
+                        <span>NOME: @Stepper.User.FirstName</span>
+                        <span>COGNOME: @Stepper.User.LastName</span>
                         <span>DATA: @GetDate()</span>
                         <span>ORA: @GetTime()</span>
-                        <span>PRENOTAZIONE: @Booking.Resource.ResourceName</span>
-                        <span>PREZZO: @Booking.Resource.GetTotalPrice()€</span>
+                        <span>PRENOTAZIONE: @Stepper.ResourceName</span>
+                        <span>PREZZO: @Stepper.TotalPrice €</span>
                     </div>
                 
                 </div>
@@ -54,10 +55,10 @@
                 </div>
 
             </div>
-            @if (Booking.Resource.RequestToConfirm)
+            @if (Stepper.RequestToConfirm)
             {
                 <div class="d-flex justify-content-center pt-4 w-100 @(IsSmallView ? "infoMailSmall" : "infoMail") ">
-                    <span><b>* Ti verrà inviata una mail nel momento della conferma della prenotazione *</b></span>
+                    <span><b>*Ti verrà inviata una mail nel momento della conferma della prenotazione</b></span>
                 </div>
             }
         </div>
@@ -75,7 +76,7 @@
 }
 @code {
     [Parameter]
-    public DTOBooking Booking { get; set; }
+    public DTOModalScheduleStepper Stepper { get; set; }
     [Parameter]
     public EventCallback<bool> OnClick { get; set; }
     [Parameter]
@@ -90,10 +91,10 @@
 
     public string GetDate()
     {
-        return $"{Booking.StartDateTime:yyyy-MM-dd}";
+        return $"{Stepper.Date:yyyy-MM-dd}";
     }
     public string GetTime()
     {
-        return $"{Booking.StartDateTime.Hour:D2}:{Booking.StartDateTime.Minute:D2} - {Booking.EndDateTime.Hour:D2}:{Booking.EndDateTime.Minute:D2}";
+        return $"{Stepper.Date.Value.Hour:D2}:{Stepper.Date.Value.Minute:D2} - {Stepper.Date.Value.Hour:D2}:{Stepper.Date.Value.Minute:D2}";
     }
 }
