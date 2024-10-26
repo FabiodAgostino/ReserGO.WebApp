@@ -76,7 +76,7 @@
 					</MudTabs>
 					<div class="d-flex justify-content-around" style="background-color:white">
 
-						@if (true)
+						@if (CurrentViewModel.ScheduleStepper.ViewButtonsSmartphone())
 						{
 							<div class="d-flex p-2 w-50 h-100">
 								<MudButton class="registerButton btn-primary" style="width:100%;height:7vh;" type="submit" OnClick="@( () => CurrentViewModel.ScheduleStepper.PreviewsIndex() )" Disabled="CurrentViewModel.ScheduleStepper.Index==0">

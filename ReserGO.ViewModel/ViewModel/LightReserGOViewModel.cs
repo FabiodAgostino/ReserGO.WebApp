@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
@@ -23,6 +24,8 @@ namespace ReserGO.ViewModel.ViewModel
         public virtual async Task Refresh()
         {
         }
+        public EventCallback<bool> TriggerMethodOnSmall { get; set; }
+
         public ConfigurationServer ConfigurationServer { get; set; }
 
         public void InitConfigurationServer()
@@ -45,9 +48,10 @@ namespace ReserGO.ViewModel.ViewModel
         }
 
         [JSInvokable]
-        public void OnScreenResize(bool isSmall)
+        public async Task OnScreenResize(bool isSmall)
         {
             IsSmallView = isSmall;
+            await TriggerMethodOnSmall.InvokeAsync(isSmall);
             OnPropertyChanged();
         }
     }

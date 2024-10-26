@@ -1,4 +1,5 @@
-﻿using Refit;
+﻿using Microsoft.AspNetCore.Components;
+using Refit;
 using ReserGO.DTO;
 using ReserGO.DTO.Extensions;
 using ReserGO.DTO.ListAvailability;
@@ -33,7 +34,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
         public DTOBooking Booking { get; set; } = new();
         public bool SlotLoading { get; set; }
         public DTOModalScheduleStepper ScheduleStepper{ get; set; }
-
+        public bool thisView { get; set; }
 
         public async void OpenModal(ObjectMessage<GenericModal<DTOResource>> message)
         {
@@ -45,6 +46,14 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             Booking.Services = new();
             TimeSlots = new();
             ScheduleStepper = new(SelectedItem, !UserIs(RoleConst.GUEST), IsSmallView);
+            TriggerMethodOnSmall= new EventCallback<bool>(null, (bool IsSmall) => { 
+                if(thisView!=IsSmall)
+                {
+                    ScheduleStepper.ResetIndex(IsSmall);
+                    thisView = IsSmall;
+                }
+            });
+
             if (!UserIs(RoleConst.GUEST))
             {
                 Booking.User = User.GetFromDTOSession();
@@ -149,6 +158,10 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                     bookingToInsert.ResourceId= SelectedItem.Id.Value;
                     bookingToInsert.Resource.AvailabilityAdv = null;
                     bookingToInsert.Resource.ResourcesAvailability = null;
+                    bookingToInsert.Services = ScheduleStepper.Services ?? new();
+                    bookingToInsert.StartDateTime = Booking.StartDateTime.Date.Add(ScheduleStepper.Slot.StartTime);
+                    bookingToInsert.EndDateTime = Booking.StartDateTime.Date.Add(ScheduleStepper.Slot.EndTime);
+                    bookingToInsert.User = ScheduleStepper.User;
 
                     var result = await _bookService.InsertBooking(bookingToInsert);
                     if(result.Success)

@@ -36,8 +36,7 @@ namespace ReserGO.Miscellaneous.Extensions
         public static void UpdateUser(this DTOModalScheduleStepper stepper, DTOUserLight user)
         {
             stepper.User = user;
-            if (!stepper.SmallView)
-                stepper.NextIndex();
+            stepper.NextIndex();
         }
 
 
@@ -46,7 +45,6 @@ namespace ReserGO.Miscellaneous.Extensions
             if (stepper.Index < stepper.State.Count())
             {
                 stepper.Index++;
-                stepper.ActualState = stepper.State.SingleOrDefault(x => x.Key == stepper.Index).Value;
             }
         }
 
@@ -55,7 +53,6 @@ namespace ReserGO.Miscellaneous.Extensions
             if (stepper.Index > 0)
             {
                 stepper.Index--;
-                stepper.ActualState = stepper.State.SingleOrDefault(x => x.Key == stepper.Index).Value;
             }
         }
 
@@ -64,7 +61,7 @@ namespace ReserGO.Miscellaneous.Extensions
             switch (stepper.ActualState)
             {
                 case StateOfStepper.SERVICES:
-                    return stepper.Services.Count() == 0;
+                    return stepper.Services == null || stepper.Services.Count() == 0;
                 case StateOfStepper.DATE:
                     return !stepper.Date.HasValue;
                 case StateOfStepper.SLOT:
@@ -83,30 +80,23 @@ namespace ReserGO.Miscellaneous.Extensions
 
             stepper.SmallView = smallView;
             SetState(stepper);
-            if(stepper.Index > 0)
+            while(!stepper.State.Any(x => x.Value == stepper.ActualState))
             {
-                int newIdx = -1;
-                foreach (StateOfStepper state in System.Enum.GetValues(typeof(StateOfStepper)))
-                {
-                    if(state==stepper.ActualState)
-                    {
-                        if (stepper.Disabled(state))
-                        {
-                            newIdx--;
-                            break;
-                        }
-                        else
-                        {
-                            newIdx++;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        newIdx++;
-                    }
-                }
-                stepper.Index = newIdx;
+                stepper.ActualState--;
+            }
+            stepper.Index = stepper.State.SingleOrDefault(x => x.Value == stepper.ActualState).Key;
+        }
+
+        public static bool ViewButtonsSmartphone(this DTOModalScheduleStepper stepper)
+        {
+            switch(stepper.ActualState)
+            {
+                case StateOfStepper.SERVICES: return true;
+                case StateOfStepper.DATE: return true;
+                case StateOfStepper.SLOT: return true;
+                case StateOfStepper.USER: return false;
+                case StateOfStepper.CONFIRM: return false;
+                    default: return false;
             }
         }
 
