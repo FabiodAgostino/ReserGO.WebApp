@@ -10,20 +10,20 @@
             <span>Riepilogo prenotazione</span>
         </div>
 
-        <div class="d-flex flex-column align-items-center w-100 @(IsSmallView ? "":"justify-content-center")" style="@(IsSmallView ? "overflow:auto":"height:75%;")">
+        <div class="d-flex flex-column align-items-center w-100 @(IsSmallView ? "":"justify-content-center")" style="@(IsSmallView ? "overflow:auto":"max-height:65%;")">
             <div class="d-flex justify-content-around align-items-center shadow cardSummary @(IsSmallView ? "flex-column":"flex-row") " style="@(IsSmallView ? "width:95%;":"width:70%;height:95%;")">
 
                 <div class="d-flex flex-column @(IsSmallView ? "p-3":"p-2")" style="@(IsSmallView ? "width:100%;height:100%;":"width:48%; height:95%;")">
 
                     <div class="d-flex w-100 cardTitleSummry" style="@(IsSmallView ? "font-size:large;":"")">Dettagli</div>
                     <div class="d-flex p-1 dividerTitleSummary" style="width:50%"></div>
-                    <div class="d-flex flex-column w-100 h-100 justify-content-around cardSummaryDescription" style="@(IsSmallView ? "font-size:larger":"")" >
+                    <div class="d-flex flex-column w-100 h-100 justify-content-around cardSummaryDescription" style="@(IsSmallView ? "font-size:larger;":"overflow:auto;") ">
                         <span>NOME: @Stepper.User.FirstName</span>
                         <span>COGNOME: @Stepper.User.LastName</span>
                         <span>DATA: @GetDate()</span>
                         <span>ORA: @GetTime()</span>
                         <span>PRENOTAZIONE: @Stepper.ResourceName</span>
-                        <span>PREZZO: @Stepper.TotalPrice €</span>
+                        <span>TOTALE: @Stepper.TotalPrice €</span>
                     </div>
                 
                 </div>
