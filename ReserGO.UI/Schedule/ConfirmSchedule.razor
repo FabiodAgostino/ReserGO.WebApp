@@ -4,17 +4,20 @@
 @using ReserGO.Miscellaneous.Model;
 @if (Stepper is object)
 {
-    <div class="d-flex flex-column justify-content-between w-100 h-100">
+    <div class="d-flex flex-column justify-content-between w-100 @(IsSmallView ? "p-2":"") " style="@(IsSmallView ? "":"height:100%;")">
 
-        <div class="d-flex flex-row align-items-center w-100 titleSummary" style="height:18%;" ><span>Riepilogo prenotazione</span> </div>
-        <div class="d-flex flex-column justify-content-center align-items-center w-100"  style="height:75%;">
-            <div class="d-flex flex-row justify-content-around align-items-center shadow cardSummary " style="width:70%; height:95%;">
+        <div class="d-flex flex-row align-items-center w-100 titleSummary" style="@(IsSmallView ? "font-size:large; padding:1vh;":"height:18%;")">
+            <span>Riepilogo prenotazione</span>
+        </div>
 
-                <div class="d-flex flex-column p-2" style="width:48%; height:95%" >
+        <div class="d-flex flex-column align-items-center w-100 @(IsSmallView ? "":"justify-content-center")" style="@(IsSmallView ? "overflow:auto":"height:75%;")">
+            <div class="d-flex justify-content-around align-items-center shadow cardSummary @(IsSmallView ? "flex-column":"flex-row") " style="@(IsSmallView ? "width:95%;":"width:70%;height:95%;")">
 
-                    <div class="d-flex w-100 cardTitleSummry">Dettagli</div>
+                <div class="d-flex flex-column @(IsSmallView ? "p-3":"p-2")" style="@(IsSmallView ? "width:100%;height:100%;":"width:48%; height:95%;")">
+
+                    <div class="d-flex w-100 cardTitleSummry" style="@(IsSmallView ? "font-size:large;":"")">Dettagli</div>
                     <div class="d-flex p-1 dividerTitleSummary" style="width:50%"></div>
-                    <div class="d-flex flex-column w-100 h-100 justify-content-around cardSummaryDescription" >
+                    <div class="d-flex flex-column w-100 h-100 justify-content-around cardSummaryDescription" style="@(IsSmallView ? "font-size:larger":"")" >
                         <span>NOME: @Stepper.User.FirstName</span>
                         <span>COGNOME: @Stepper.User.LastName</span>
                         <span>DATA: @GetDate()</span>
@@ -25,16 +28,17 @@
                 
                 </div>
                 
-                
-                <div class="scheduleDivider"></div>
+                @if(!IsSmallView)
+                {
+                    <div class="scheduleDivider"></div>
+                }
 
 
-                <div class="d-flex flex-column p-2" style="width:48%; height:95%">
-                    <div class="d-flex w-100 cardTitleSummry">Servizi</div>
+                <div class="d-flex flex-column p-2" style="@(IsSmallView ? "width:100%;":"width:48%;height:95%;")">
+                    <div class="d-flex w-100 cardTitleSummry" style="@(IsSmallView ? "font-size:larger;" :"")">Servizi</div>
                     <div class="d-flex p-1 dividerTitleSummary" style="width:50%"></div>
-                    <div class="d-flex w-100 h-100 align-items-end">
-
-                        <div class="d-flex flex-column justfy-content-center w-100 cardSummaryService" >
+                    <div class="d-flex w-100  @(IsSmallView ? "":"align-items-end h-100")">
+                        <div class="d-flex flex-column justfy-content-center w-100 cardSummaryService" style="@(IsSmallView ? "font-size:larger;max-height:none;" :"overflow:auto;")">
                             <div class="d-flex @(IsSmallView ? "p-2":"p-3")" style="@(IsSmallView ? "height:12vh ":"height:9vh")">
                                 <div class="d-flex p-2 shadow align-items-center justify-content-between checkboxCard w-100 h-100">
                                     @if (IsSmallView)
@@ -49,20 +53,21 @@
                                     }
                                 </div>
                             </div>
-                     
                         </div>
                     </div>
                 </div>
 
             </div>
-            @if (Stepper.RequestToConfirm)
+            @if (!Stepper.RequestToConfirm)
             {
-                <div class="d-flex justify-content-center pt-4 w-100 @(IsSmallView ? "infoMailSmall" : "infoMail") ">
+                <div class="d-flex justify-content-center pt-4 w-100 @(IsSmallView ? "infoMailSmall" : "infoMail")">
                     <span><b>*Ti verrà inviata una mail nel momento della conferma della prenotazione</b></span>
                 </div>
             }
         </div>
 
+        @if(!IsSmallView)
+        {
         <div class="d-flex justify-content-around align-items-center p-2" style="height:20%">
             <div class="d-flex p-1" style=" @(IsSmallView ? "width:100%" : "width:25%") ">
                 <MudButton @onclick="@(() => Submit(false))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Annulla</MudButton>
@@ -71,6 +76,7 @@
                 <MudButton @onclick="@(() => Submit(true))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Salva</MudButton>
             </div>
         </div>
+        }
     </div>
    
 }

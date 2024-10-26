@@ -71,7 +71,7 @@
 							</MudTabPanel>
 						}
 						<MudTabPanel Text="Conferma" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.CONFIRM))">
-							<ConfirmSchedule Stepper="@CurrentViewModel.ScheduleStepper" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))" />
+							<ConfirmSchedule Stepper="@CurrentViewModel.ScheduleStepper" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))" IsSmallView="true" />
 						</MudTabPanel>
 					</MudTabs>
 					<div class="d-flex justify-content-around" style="background-color:white">
@@ -250,6 +250,7 @@
 
 		.mud-tabs {
 			align-items: center !important;
+			height:72vh !important;
 			box-shadow: none !important;
 		}
 
@@ -261,6 +262,7 @@
 			background-color: white !important;
 			width: 100% !important;
 			height: 100% !important;
+			overflow:auto;
 		}
 	</style>
 }
