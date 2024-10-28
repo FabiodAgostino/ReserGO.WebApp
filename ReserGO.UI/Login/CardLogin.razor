@@ -25,8 +25,8 @@
                             <span class="textInputCardLogin" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"")">Email:</span>
                             <div class="inputSpace">
                                 <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email" Label="E-mail" class="inputText"
-                                Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Required="true" 
-                                RequiredError="Inserire Email corretta" Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })" OnKeyDown="HandleKeyDown"/>
+                                Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Required="false" 
+                                RequiredError="Inserire Email corretta" OnKeyDown="HandleKeyDown"/>
 
                                 @if (CurrentViewModel.LoginError != null && CurrentViewModel.LoginError.ToLower().Contains("email"))
                                 {
@@ -41,7 +41,7 @@
                             <div class="inputSpace">
                                 <MudTextField @bind-Value="CurrentViewModel.SelectedItem.Password"
                                               InputType="InputType.Password"
-                                              Required="true"
+                                              Required="false"
                                               Immediate="true"
                                               Label="inserisci password"
                                               class="inputText"
