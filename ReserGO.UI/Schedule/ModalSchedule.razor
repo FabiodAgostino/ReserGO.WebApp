@@ -43,7 +43,7 @@
 								<div class="d-flex flex-column w-100 justify-content-around columnCalendar" style="height:65vh;">
 									<BaseComponent TViewModel="IScheduleServicesViewModel" TModel="DTOService">
 										<Content>
-											<ScheduleServices  CallBack="@((List<DTOService> services) => CurrentViewModel.ScheduleStepper.UpdateServices(services))" Resource="@CurrentViewModel.SelectedItem" IsSmallView="CurrentViewModel.IsSmallView" LastServices="CurrentViewModel.ScheduleStepper.Services"/>
+											<ScheduleServices CallBack="@(async ((List<DTOService> services, bool next) value) => {CurrentViewModel.ScheduleStepper.UpdateServices(value.services, value.next); await GetSlot();})" Resource="@CurrentViewModel.SelectedItem" IsSmallView="CurrentViewModel.IsSmallView" LastServices="CurrentViewModel.ScheduleStepper.Services"/>
 										</Content>
 									</BaseComponent>
 								</div>
@@ -51,7 +51,7 @@
 						}
 						<MudTabPanel Text="Giorno" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.DATE))">
 							<div class="d-flex p-2 justify-content-center w-100 h-100">
-								<Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => {CurrentViewModel.ScheduleStepper.UpdateDate(date);await CurrentViewModel.GetSlot(date);})" IsSmallView="true" />
+								<Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => {CurrentViewModel.ScheduleStepper.UpdateDate(date);await GetSlot();})" IsSmallView="true" />
 							</div>
 						</MudTabPanel>
 						<MudTabPanel Text="Orario" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.SLOT))">
@@ -112,7 +112,7 @@
 							<div class="d-flex flex-column w-100 justify-content-around columnCalendar">
 								<BaseComponent TViewModel="IScheduleServicesViewModel" TModel="DTOService">
 									<Content>
-										<ScheduleServices CallBack="@((List<DTOService> services) => CurrentViewModel.ScheduleStepper.UpdateServices(services))" Resource="@CurrentViewModel.SelectedItem" IsSmallView="CurrentViewModel.IsSmallView" LastServices="CurrentViewModel.ScheduleStepper.Services"/>
+										<ScheduleServices CallBack="@(async ((List<DTOService> services, bool next) value) => {CurrentViewModel.ScheduleStepper.UpdateServices(value.services, value.next); await GetSlot();})" Resource="@CurrentViewModel.SelectedItem" IsSmallView="CurrentViewModel.IsSmallView" LastServices="CurrentViewModel.ScheduleStepper.Services"/>
 									</Content>
 								</BaseComponent>
 							</div>
@@ -120,7 +120,7 @@
 					}
 					<MudTabPanel Text="Giorno e ora" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.DATESLOT))">
 						<div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
-							<Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => {CurrentViewModel.ScheduleStepper.UpdateDate(date);await CurrentViewModel.GetSlot(date);} )" />
+							<Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => {CurrentViewModel.ScheduleStepper.UpdateDate(date); await GetSlot();} )" />
 						</div>
 
 						<div class="d-flex flex-column justify-content-center h-100">
@@ -179,6 +179,14 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await CurrentViewModel.RegisterOnScreenResize(800);
+	}
+
+	private async Task GetSlot()
+	{
+		if (CurrentViewModel.ScheduleStepper.Date.HasValue)
+		{
+			await CurrentViewModel.GetSlot(CurrentViewModel.ScheduleStepper.Date.Value);
+		}
 	}
 
 	public async Task OnDateChanged(DateTime? date)

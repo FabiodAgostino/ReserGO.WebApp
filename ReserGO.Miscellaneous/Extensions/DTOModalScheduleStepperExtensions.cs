@@ -14,11 +14,11 @@ namespace ReserGO.Miscellaneous.Extensions
             return stepper.Index < idxStep;
         }
 
-        public static void UpdateServices(this DTOModalScheduleStepper stepper, List<DTOService> services)
+        public static void UpdateServices(this DTOModalScheduleStepper stepper, List<DTOService> services, bool next = false)
         {
             stepper.Services = services;
             stepper.TotalPrice = services.Sum(s => s.Price.Value);
-            if (!stepper.SmallView)
+            if (!stepper.SmallView && next)
                 stepper.NextIndex();
         }
         public static void UpdateDate(this DTOModalScheduleStepper stepper, DateTime date)

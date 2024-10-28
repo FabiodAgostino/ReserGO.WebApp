@@ -67,7 +67,7 @@
 @code {
 
     [Parameter]
-    public EventCallback<List<DTOService>?> CallBack { get; set; }
+    public EventCallback<(List<DTOService>? Services, bool Next)> CallBack { get; set; }
 
     [Parameter]
     public bool IsSmallView { get; set; }
@@ -107,10 +107,11 @@
         if (value)
             CurrentViewModel.List.Add(service.Service);
         else
-            CurrentViewModel.List.Remove(service.Service);
+            CurrentViewModel.List = CurrentViewModel.List.Where(x => x.ServiceName != service.Service.ServiceName).ToList();
 
-        if (CallBack.HasDelegate && IsSmallView)
-            await CallBack.InvokeAsync(CurrentViewModel.List);
+        var list = CurrentViewModel.ServicesListCheckable.Where(x => x.IsSelected).Select(x => x.Service).ToList();
+        if (CallBack.HasDelegate)
+            await CallBack.InvokeAsync((list, false));
 
     }
 
@@ -131,7 +132,8 @@
 
     public async Task Next()
     {
+        var list = CurrentViewModel.ServicesListCheckable.Where(x => x.IsSelected).Select(x => x.Service).ToList();
         if (CallBack.HasDelegate && !IsSmallView)
-            await CallBack.InvokeAsync(CurrentViewModel.ServicesListCheckable.Where(x=> x.IsSelected).Select(x=> x.Service).ToList());
+            await CallBack.InvokeAsync((list, true));
     }
 }
