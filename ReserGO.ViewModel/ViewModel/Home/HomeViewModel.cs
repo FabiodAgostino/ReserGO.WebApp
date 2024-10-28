@@ -28,7 +28,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
         private RenderFragment _content;
         private bool _showFilter;
         private bool thisView {  get; set; }
-        public bool Open { get; set; }
+        public bool Open { get; set; } = true;
 
         public RenderFragment Content
         {

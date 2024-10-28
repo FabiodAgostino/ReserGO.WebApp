@@ -9,7 +9,7 @@
     <span class="titleServiceSelection" style="@(IsSmallView ? "font-size:larger; text-align:center;":"")">Seleziona i servizi che intendi prenotare</span>
 </div>
 
-<div class="d-flex w-100 h-100" style="@(IsSmallView ? "padding-block:1vh;max-height:73%;":"padding-block:2vh")">
+<div class="d-flex w-100 h-100" style="@(IsSmallView ? "padding-block:1vh;max-height:73%;":"padding-block:2vh;") overflow:auto;">
     <div class="d-flex w-100 descriptionServiceSelection @(IsSmallView ? "flex-column":"flex-wrap")" style="@(IsSmallView ? "font-size:medium; height:100%;":"height:100%;")">
         @foreach (var service in CurrentViewModel.ServicesListCheckable)
         {
