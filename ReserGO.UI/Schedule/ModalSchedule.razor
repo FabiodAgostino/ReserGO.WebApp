@@ -71,24 +71,31 @@
 							</MudTabPanel>
 						}
 						<MudTabPanel Text="Conferma" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.CONFIRM))">
-							<ConfirmSchedule Stepper="@CurrentViewModel.ScheduleStepper" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))" IsSmallView="true" />
+							<ConfirmSchedule Stepper="@CurrentViewModel.ScheduleStepper" IsSmallView="true"  />
 						</MudTabPanel>
 					</MudTabs>
 					<div class="d-flex justify-content-around" style="background-color:white">
 
-						@if (CurrentViewModel.ScheduleStepper.ViewButtonsSmartphone())
-						{
+						
 							<div class="d-flex p-2 w-50 h-100">
 								<MudButton class="registerButton btn-primary" style="width:100%;height:7vh;" type="submit" OnClick="@( () => CurrentViewModel.ScheduleStepper.PreviewsIndex() )" Disabled="CurrentViewModel.ScheduleStepper.Index==0">
 									<MudIcon Icon="@Icons.Material.Filled.ArrowBackIos" Style="font-size: x-large; color:white;" />
 								</MudButton>
 							</div>
 							<div class="d-flex p-2 w-50 h-100">
+							@if (CurrentViewModel.ScheduleStepper.IsLastButtonSmartphone())
+							{
+								<MudButton class="registerButton btn-primary" style="width:100%;height:7vh;font-size:4vw;" type="submit" OnClick="@(async () => await CurrentViewModel.InsertBooking(true))" >
+									Conferma
+								</MudButton>
+							}
+							else
+							{
 								<MudButton class="registerButton btn-primary" style="width:100%;height:7vh;" Disabled="CurrentViewModel.ScheduleStepper.DisabledNextButtonSmartphone()" type="submit" OnClick="@( () => CurrentViewModel.ScheduleStepper.NextIndex() )">
 									<MudIcon Icon="@Icons.Material.Filled.ArrowForwardIos" Style="font-size: x-large; color:white;" />
 								</MudButton>
+							}
 							</div>
-						}
 
 					</div>
 				</div>
@@ -250,7 +257,7 @@
 
 		.mud-tabs {
 			align-items: center !important;
-			height:72vh !important;
+			height:73vh !important;
 			box-shadow: none !important;
 		}
 

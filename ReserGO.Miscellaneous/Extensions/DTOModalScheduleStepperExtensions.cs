@@ -69,7 +69,7 @@ namespace ReserGO.Miscellaneous.Extensions
                 case StateOfStepper.USER:
                     return stepper.User == null;
                 case StateOfStepper.CONFIRM:
-                    return true;
+                    return false;
                 default:
                     return false;
             }
@@ -87,18 +87,8 @@ namespace ReserGO.Miscellaneous.Extensions
             stepper.Index = stepper.State.SingleOrDefault(x => x.Value == stepper.ActualState).Key;
         }
 
-        public static bool ViewButtonsSmartphone(this DTOModalScheduleStepper stepper)
-        {
-            switch(stepper.ActualState)
-            {
-                case StateOfStepper.SERVICES: return true;
-                case StateOfStepper.DATE: return true;
-                case StateOfStepper.SLOT: return true;
-                case StateOfStepper.USER: return false;
-                case StateOfStepper.CONFIRM: return false;
-                    default: return false;
-            }
-        }
+        public static bool IsLastButtonSmartphone(this DTOModalScheduleStepper stepper)
+            => stepper.ActualState == StateOfStepper.CONFIRM;
 
         private static void SetState(this DTOModalScheduleStepper stepper)
         {

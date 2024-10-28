@@ -4,7 +4,7 @@
 @using ReserGO.Miscellaneous.Model;
 @if (Stepper is object)
 {
-    <div class="d-flex flex-column justify-content-between w-100 @(IsSmallView ? "p-2":"") " style="@(IsSmallView ? "":"height:100%;")">
+    <div class="d-flex flex-column justify-content-around w-100 @(IsSmallView ? "p-2":"") " style="@(IsSmallView ? "":"height:100%;")">
 
         <div class="d-flex flex-row align-items-center w-100 titleSummary" style="@(IsSmallView ? "font-size:large; padding:1vh;":"height:18%;")">
             <span>Riepilogo prenotazione</span>
@@ -68,14 +68,14 @@
 
         @if(!IsSmallView)
         {
-        <div class="d-flex justify-content-around align-items-center p-2" style="height:20%">
-            <div class="d-flex p-1" style=" @(IsSmallView ? "width:100%" : "width:25%") ">
-                <MudButton @onclick="@(() => Submit(false))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Annulla</MudButton>
+            <div class="d-flex justify-content-around align-items-center p-2" style="height:20%">
+                <div class="d-flex p-1" style="width:25%;">
+                    <MudButton @onclick="@(() => Submit(false))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Annulla</MudButton>
+                </div>
+                <div class="d-flex p-1" style="width:25%;">
+                    <MudButton @onclick="@(() => Submit(true))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Salva</MudButton>
+                </div>
             </div>
-            <div class="d-flex p-1" style="@(IsSmallView ? "width:100%" : "width:25%")">
-                <MudButton @onclick="@(() => Submit(true))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Salva</MudButton>
-            </div>
-        </div>
         }
     </div>
    
