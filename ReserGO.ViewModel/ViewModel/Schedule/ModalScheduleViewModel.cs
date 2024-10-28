@@ -125,7 +125,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             {
                 slotOccupati = DTOResourceExtension.MergeTimeSlots(slotOccupati);
             }
-            var duration = Booking.Services
+            var duration = ScheduleStepper.Services
              .Sum(s => s.Duration);
             duration = duration == 0 ? SelectedItem.DurationBooking.HasValue ? SelectedItem.DurationBooking.Value: 25 : duration;
 
@@ -162,6 +162,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                     bookingToInsert.StartDateTime = Booking.StartDateTime.Date.Add(ScheduleStepper.Slot.StartTime);
                     bookingToInsert.EndDateTime = Booking.StartDateTime.Date.Add(ScheduleStepper.Slot.EndTime);
                     bookingToInsert.User = ScheduleStepper.User;
+                    bookingToInsert.TotalPrice = bookingToInsert.Services != null && bookingToInsert.Services.Count() > 0 ? bookingToInsert.Services.Sum(s => s.Price.Value) : null;
 
                     var result = await _bookService.InsertBooking(bookingToInsert);
                     if(result.Success)
