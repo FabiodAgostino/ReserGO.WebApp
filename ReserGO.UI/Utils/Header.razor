@@ -10,18 +10,22 @@
 @inject IDialogService DialogService
 @inherits BaseComponentChild<IHeaderViewModel, object>
 @inject NavigationManager NaviMngr;
-<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:@(!_userIsGuest && !CurrentViewModel.IsSmallView ? "transparent" : BackgroundColor)">
+<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:@(!_userIsGuest ? "transparent" : BackgroundColor)">
 
     @if (CurrentViewModel.IsSmallView)
     {
-        <MudIcon Icon="@Icon" Class="smallIconCss" Style="@IconColor()" @onclick="GoBack"></MudIcon>
+        <MudIcon 
+            Icon="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? Icon : IconSmall)"
+            Class="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? "smallIconCssGuest":"smallIconCss")"
+            Style="@IconColor()" @onclick="ShowMenu" >
+        </MudIcon>
         <div class="d-flex justify-content-center" style="width:100%;">
             <span class="titleLogin" style="@TitleColor()">@Title</span>
         </div>
         if (!_userIsGuest)
         {
             <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
-                     AriaLabel="Open user menu" Class="iconUserButton" >
+                     AriaLabel="Open user menu" Class="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? "iconUserButton" : "iconUserButtonLogin")">
                 <MudMenuItem>Profilo</MudMenuItem>
                 <MudMenuItem>Privacy</MudMenuItem>
                 <MudMenuItem @onclick="@(async () => await CurrentViewModel.Logout())">Logout</MudMenuItem>
@@ -30,7 +34,7 @@
         else
         {
             <div @onclick="OpenDialogAsync">
-                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="smallIconCss" Style="color:white;"></MudIcon>
+                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="smallIconCssGuest"></MudIcon>
             </div>
         }
         
@@ -75,7 +79,9 @@
 </div>
 
 @code {
+
     private string Icon = Icons.Material.Filled.HealthAndSafety;
+    private string IconSmall = Icons.Material.Filled.Menu;
 
     [Parameter]
     public string Title { get; set; }
@@ -99,6 +105,9 @@
 
     [Parameter]
     public EventCallback GoToHome { get; set; }
+
+    [Parameter]
+    public EventCallback OpenMenu { get; set; }
 
 
     protected override async Task OnParametersSetAsync()
@@ -133,6 +142,11 @@
             await GoToHome.InvokeAsync();
     }
 
+    private async Task ShowMenu(){
+        if (OpenMenu.HasDelegate)
+            await OpenMenu.InvokeAsync();
+    }
+
 }
 
 <style>
@@ -148,6 +162,21 @@
 
     svg.mud-icon-root.mud-svg-icon.mud-icon-size-medium{
         font-size:2rem;
+    }
+
+
+    .iconCss {
+        color: #FFFFFF;
+        font-size: 4rem;
+    }
+    .smallIconCssGuest {
+            color: #FFFFFF;
+            font-size: 2rem;
+        }
+
+    .smallIconCss {
+        color: #0066FF;
+        font-size: 2rem;
     }
 
 </style>

@@ -21,11 +21,14 @@ namespace ReserGO.ViewModel.ViewModel.Home
             _sessionStorage = sessionStorage;
             Aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
 
+
         }
         public IEnumerable<DTOSettingMenu> ItemsMenu { get; set; }
         public string PageTitle { get; set; }
         private RenderFragment _content;
         private bool _showFilter;
+        private bool thisView {  get; set; }
+        public bool Open { get; set; }
 
         public RenderFragment Content
         {
@@ -57,6 +60,14 @@ namespace ReserGO.ViewModel.ViewModel.Home
 
         public async Task OnInitialize()
         {
+            TriggerMethodOnSmall = new EventCallback<bool>(null, (bool IsSmall) => {
+                if (thisView != IsSmall)
+                {
+                    Open = false;
+                    thisView = IsSmall;
+                }
+            });
+
             var savedSettingsMenu = await _sessionStorage.GetItemAsync<IEnumerable<DTOSettingMenu>>(SettingsMenuKey);
             if (savedSettingsMenu == null)
             {

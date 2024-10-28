@@ -15,5 +15,6 @@ namespace ReserGO.ViewModel.Interface.Home
         void ChangeComponent(string component=null);
         bool DrawerVisibility { get; set; }
         Task OnInitialize();
+        bool Open { get; set; }
     }
 }

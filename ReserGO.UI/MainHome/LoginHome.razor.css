@@ -24,6 +24,12 @@
     padding: 1vw;
 }
 
+.informationHomeContiner {
+    width: 100%;
+    height: 40%;
+    padding: 1vw;
+}
+
 .detailsHomeLoginContiner {
     width: 100%;
     height: 60%;

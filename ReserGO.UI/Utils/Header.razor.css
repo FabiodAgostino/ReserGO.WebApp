@@ -4,15 +4,6 @@
     background-color: #0066FF;
 }
 
-::deep .iconCss {
-    color: #FFFFFF;
-    font-size: 4rem;
-}
-
-::deep .smallIconCss {
-    color: #FFFFFF;
-    font-size: 2rem;
-}
 
 .titleLogin {
     font-size: xx-large;

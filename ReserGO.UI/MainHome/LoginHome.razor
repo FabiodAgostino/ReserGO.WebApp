@@ -11,21 +11,28 @@
         
         <div class="d-flex @(IsSmallView ? "flex-column w-100 h-100":"flex-row topSideLogin")">
 
-            <div class="d-flex align-items-center w-100 h-100 @(IsSmallView ? "flex-column p-3":"justify-content-around")">
+            <div class="d-flex align-items-center w-100 h-100 @(IsSmallView ? "flex-column":"justify-content-around")">
 
-                <div class="d-flex p-2 @(IsSmallView ? "h-100 w-100":"")">
-                    <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon"  Callback="@(() => ClickChangeComponent("Prenotazione"))" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
+                <div class="d-flex p-2 @(IsSmallView ? "w-100":"")" style="@(IsSmallView ? "height:25%;":"")">
+                    <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon" IsSmallView="@IsSmallView"  Callback="@(() => ClickChangeComponent("Prenotazione"))" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
                 </div>
 
-                <div class="d-flex p-2 @(IsSmallView ? "h-100 w-100":"")">
-                    <CardReserGo Title="Comunicazioni" Description="Il giorno xx lo studio rimarrà chiuso" Icon="@InformationIcon" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
+                <div class="d-flex p-2 @(IsSmallView ? "w-100":"")" style="@(IsSmallView ? "height:25%;":"")">
+                    <CardReserGo Title="Comunicazioni" Description="Il giorno xx lo studio rimarrà chiuso" Icon="@InformationIcon" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
                 </div>
                 
                 @if (IsSmallView)
                 {
-                    <div class="d-flex p-2 @(IsSmallView ? "h-100 w-100":"")">
-                        <CardReserGo Title="Comunicazioni" Description="Il giorno xx lo studio rimarrà chiuso" Icon="@InformationIcon" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
-                    </div>
+                    <div class="d-felx flex-column h-50 w-100">
+
+                        <div class="d-flex justify-content-center p-2 h-50 informationHomeContiner">
+                            <CardDetails Title="Orari studio" Description="@HourDesc" IsSmallView="true" />
+                        </div>
+                        <div class="d-flex justify-content-center p-2 h-50 informationHomeContiner">
+                            <CardDetails Title="Contatti e Indirizzo" Description="@AddresDesc" IsSmallView="true" />
+                        </div>
+
+                </div>
                 }
             </div>
 
@@ -40,7 +47,7 @@
                     <CalendarHome />
 
                     <div class="d-flex align-items-center p-2">
-                        <CardReserGo Title="Storico prenotazioni"  Description="Storico delle tue prenotazioni" Icon="@Icons.Material.Filled.ContentPasteSearch" Callback="@(() => ClickChangeComponent("Storico"))"/>
+                        <CardReserGo Title="Storico prenotazioni" IsSmallView="@IsSmallView"  Description="Storico delle tue prenotazioni" Icon="@Icons.Material.Filled.ContentPasteSearch" Callback="@(() => ClickChangeComponent("Storico"))"/>
                     </div>
                 
                 </div>

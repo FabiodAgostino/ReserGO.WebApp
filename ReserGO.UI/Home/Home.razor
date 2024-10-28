@@ -20,40 +20,50 @@
 
     <BaseComponent TViewModel="IHeaderViewModel" TModel="object">
         <Content>
-            <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="#FFFFFF" GoToHome="ChangeComponentHome"></Header>
+            <Header Title="Studio Rossi" RightTitle="Accedi o Registrati" RightTitleEnabled="true" BackgroundColor="#0066FF" ColorFont="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? "#FFFFFF":"#0066FF")" GoToHome="ChangeComponentHome" OpenMenu="ToggleDrawer"></Header>
         </Content>
     </BaseComponent>
-    
-    
+
     @if (CurrentViewModel.User.Roles != null && !CurrentViewModel.UserIs(RoleConst.GUEST))
     {
         @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
         {
-        <MudPaper Height="100%" Style="padding:0px">
-            <MudDrawerContainer>
-                    <MudDrawer @bind-Open="@_open" Fixed="false" Elevation="8" MiniWidth="100" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Class="mainContent">
-                    <MudNavMenu Class="mudDrawer">
-                        @foreach (var item in CurrentViewModel.ItemsMenu)
-                        {
-                            <MudNavLink OnClick="() => ChangeComponent(item)">
+            <MudPaper Height="100%" Style="padding:0px; height:100%;">
+                <MudDrawerContainer Class="h-100">
+                    <MudDrawer @bind-Open="@CurrentViewModel.Open" Overlay="false" Elevation="@(CurrentViewModel.IsSmallView ? 1 : 8)" Variant="@(CurrentViewModel.IsSmallView ? DrawerVariant.Temporary : DrawerVariant.Mini)" Class="mainContent">
+                        <MudNavMenu Class="mudDrawer">
+                            @if (CurrentViewModel.IsSmallView)
+                            {
+                                <MudNavLink OnClick="ToggleDrawer">
                                     <div class="d-flex align-items-center textNavMenu">
-                                        
-                                        <MudIcon Icon="@item.Icon" Style="font-size: x-large; color:white;"  />
-                                        
-                                        @if (_open)
+                                        <MudIcon Icon="@ItemMenuSmall" Style="font-size: x-large; color:white;" />
+                                    </div>
+                                </MudNavLink>
+                            }
+
+                            @foreach (var item in CurrentViewModel.ItemsMenu)
+                            {
+                                <MudNavLink OnClick="() => ChangeComponent(item)">
+                                    <div class="d-flex align-items-center textNavMenu">
+
+                                        <MudIcon Icon="@item.Icon" Style="font-size: x-large; color:white;" />
+
+                                        @if (CurrentViewModel.Open)
                                         {
                                             <span style="padding-inline: 10px;">@item.Text</span>
-                                        }    
+                                        }
                                     </div>
-                            </MudNavLink>
-                        }
-                    </MudNavMenu>
-                </MudDrawer>
-                <MudMainContent Class="row content mudblazor-main-content mainContent">
-                    @CurrentViewModel.Content
-                </MudMainContent>
-            </MudDrawerContainer>
-        </MudPaper>
+                                </MudNavLink>
+                            }
+                        </MudNavMenu>
+                    </MudDrawer>
+                    <MudMainContent Class="row content mudblazor-main-content mainContent" Style="height:100%;">
+                        <div class="d-flex w-100 h-100" @onclick="CloseToggle">
+                            @CurrentViewModel.Content
+                        </div>
+                    </MudMainContent>   
+                </MudDrawerContainer>
+            </MudPaper>
         }
     }
     else
@@ -68,32 +78,43 @@
         }
     }
 </div>
- <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
-        <Content>
-            <CardLogin />
-        </Content>
- </BaseComponent>
+<BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
+    <Content>
+        <CardLogin />
+    </Content>
+</BaseComponent>
 @code {
-    private bool _open = true;
+
+    private string ItemMenuSmall = Icons.Material.Filled.ArrowBack;
+
 
     private void ToggleDrawer()
     {
-        _open = !_open;
+        CurrentViewModel.Open = !CurrentViewModel.Open;
+    }
+
+    private void CloseToggle()
+    {
+        if (CurrentViewModel.IsSmallView && CurrentViewModel.Open)
+            CurrentViewModel.Open = false;
     }
     protected override async Task OnInitializedAsync()
     {
         await CurrentViewModel.OnInitialize();
     }
 
+
     public void ChangeComponent(DTOSettingMenu menu)
     {
+        if (CurrentViewModel.IsSmallView)
+            CurrentViewModel.Open = false;
         CurrentViewModel.SelectedItem = menu;
         CurrentViewModel.ChangeComponent();
     }
 
     public void ChangeComponentHome()
     {
-        CurrentViewModel.SelectedItem = CurrentViewModel.ItemsMenu.SingleOrDefault(x=> x.Text.ToLower()=="home");
+        CurrentViewModel.SelectedItem = CurrentViewModel.ItemsMenu.SingleOrDefault(x => x.Text.ToLower() == "home");
         CurrentViewModel.ChangeComponent();
     }
 }
@@ -128,10 +149,6 @@
         height: 91%;
     }
 
-    .mud-drawer-close-mini-md-left.mud-drawer-left-clipped-never {
-        padding-left: 11vw;
-    }
-
     .iconDrawer {
         color: white;
     }
@@ -140,22 +157,21 @@
         padding-top: 5px;
     }
 
-    .mud-main-content
-    {
-        padding:0 !important;
+    .mud-main-content {
+        padding: 0 !important;
     }
 
     .mud-nav-link.mud-ripple {
         padding-left: 0;
-        padding-block:20px !important;
-    }
-    .mainContent
-    {
-        height:100% !impostant;
+        padding-block: 20px !important;
     }
 
-    .mud-drawer.mud-drawer-mini{
-        height:92% !important;
+    .mainContent {
+        height: 100% !impostant;
+    }
+
+    .mud-drawer.mud-drawer-mini {
+        height: 92% !important;
         transition: width 225ms cubic-bezier(0, 0, 0.2, 1);
     }
 
@@ -164,16 +180,20 @@
             border-radius: 15px 15px 0px 0px;
         }
 
-    .mud-drawer-open-mini-md-left.mud-drawer-left-clipped-never{
-        height:100% !important;
+    .mud-drawer-open-mini-md-left.mud-drawer-left-clipped-never {
+        height: 100% !important;
+    }
+
+    .mud-drawer-close-mini-md-left .mud-main-content {
+        margin-left: 0px !important
     }
 
     .mud-drawer-open-mini-md-left .mud-main-content {
-        margin-left: var(--mud-drawer-width-left);
         height: 100%;
     }
 
     .mud-paper.mud-elevation-1 {
         background: linear-gradient(to bottom, #EEEEEE 50%, #FFFFFF 50%);
     }
+
 </style>
