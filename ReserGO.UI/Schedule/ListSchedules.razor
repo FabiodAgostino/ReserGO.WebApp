@@ -29,6 +29,34 @@
         }
         else
         {
+            @if (true && Resources != null && Resources.Any())
+            {
+
+                <div class="d-flex flex-column" >
+
+                    @foreach (var resource in Resources)
+                    {
+                        <div class="d-flex flex-row">
+                            <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" />
+                        </div>
+                    }
+                    @if (!IsLoading && Resources == null)
+                    {
+                        <div>No data...</div>
+                    }
+                    @if (IsLoading)
+                    {
+                        <div style="position:fixed;">
+                            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="mudProgressSchedules" />
+                        </div>
+                    }
+                </div>
+            }
+
+            
+            else{
+
+
             <MudGrid Spacing="@Spacing" Justify="Justify.Center" Style="align-items:center;">
                 @if (Resources != null && Resources.Any())
                 {
@@ -52,6 +80,7 @@
                     </div>
                 }
             </MudGrid>
+            }
         }
 
     </div>

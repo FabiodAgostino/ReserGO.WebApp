@@ -10,7 +10,7 @@
 @inject IDialogService DialogService
 @inherits BaseComponentChild<IHeaderViewModel, object>
 @inject NavigationManager NaviMngr;
-<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:@(!_userIsGuest ? "transparent" : BackgroundColor)">
+<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:@(!_userIsGuest ? "#EEEEEE" : BackgroundColor)">
 
     @if (CurrentViewModel.IsSmallView)
     {

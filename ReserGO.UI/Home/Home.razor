@@ -15,7 +15,7 @@
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<IHomeViewModel, object>
 
-<div class="d-flex flex-column loginContainter" style="@(CurrentViewModel.User.Roles != null && !CurrentViewModel.UserIs(RoleConst.GUEST) ? "background: linear-gradient(to bottom, #EEEEEE 50%, #FFFFFF 50%);": "")">
+<div class="d-flex flex-column loginContainter">
 
 
     <BaseComponent TViewModel="IHeaderViewModel" TModel="object">

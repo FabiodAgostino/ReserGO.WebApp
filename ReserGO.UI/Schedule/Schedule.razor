@@ -12,8 +12,8 @@
 @inherits BaseComponentChild<IScheduleViewModel,DTOResource>
 @inject IDialogService DialogService
 
-<div class="d-flex flex-column p-0 h-100 w-100 homeGuestScheduleContainer">
-	<div class="d-flex flex-row justify-content-between p-0 h-100 homeGuestScheduleBody">
+<div class="d-flex flex-column p-0 h-100 w-100 justify-content-center align-items-center homeGuestScheduleContainer">
+	<div class="d-flex flex-row shadow  p-0 homeGuestScheduleBody">
 		@if (!CurrentViewModel.IsSmallView)
 		{
 			<div class="d-flex leftSideSchedule justify-content-center align-items-center">
@@ -31,7 +31,7 @@
 					}
 					else
 					{
-						<CardReserGo Title=" " Description="Seleziona Risorsa" CardStyle="opacity:0.5;" BodyStyle="@CardItemEmptyStyle" Icon="@InformationIcon" />
+						<CardReserGo Title=" " Description="Seleziona Risorsa" BodyStyle="@CardItemEmptyStyle" Icon="@InformationIcon" />
 					}
 				}
 			</div>
