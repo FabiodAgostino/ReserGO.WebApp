@@ -46,7 +46,7 @@
                                 <MudNavLink OnClick="() => ChangeComponent(item)">
                                     <div class="d-flex align-items-center textNavMenu">
 
-                                        <MudIcon Icon="@item.Icon" Style="font-size: x-large; color:white;" />
+                                        <MudIcon Icon="@item.Icon" Style="font-size: x-large; color:#006;" />
 
                                         @if (CurrentViewModel.Open)
                                         {
@@ -126,7 +126,7 @@
     }
 
     .textNavMenu {
-        color: white;
+        color: #006;
         font-size: large;
         padding-left: 10px;
     }
@@ -136,11 +136,10 @@
     }
 
     .mudDrawer {
-        background-color: #0066FF;
     }
 
     .mud-drawer-content {
-        background-color: #0066FF;
+        background: linear-gradient(45deg, #006, transparent);
     }
 
     .mud-drawer.mud-drawer-pos-left.mud-drawer--open.mud-drawer--initial.mud-drawer-md.mud-drawer-clipped-never.mud-elevation-1.mud-drawer-mini {

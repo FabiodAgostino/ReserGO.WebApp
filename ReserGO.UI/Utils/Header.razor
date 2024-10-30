@@ -10,73 +10,73 @@
 @inject IDialogService DialogService
 @inherits BaseComponentChild<IHeaderViewModel, object>
 @inject NavigationManager NaviMngr;
-<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:@(!_userIsGuest ? "#EEEEEE" : BackgroundColor)">
-
-    @if (CurrentViewModel.IsSmallView)
-    {
-        <MudIcon 
-            Icon="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? Icon : IconSmall)"
-            Class="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? "smallIconCssGuest":"smallIconCss")"
-            Style="@IconColor()" @onclick="ShowMenu" >
-        </MudIcon>
-        <div class="d-flex justify-content-center" style="width:100%;">
-            <span class="titleLogin" style="@TitleColor()">@Title</span>
-        </div>
-        if (!_userIsGuest)
+<div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:#0066FF;">
+   
+        @if (CurrentViewModel.IsSmallView)
         {
-            <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
-                     AriaLabel="Open user menu" Class="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? "iconUserButton" : "iconUserButtonLogin")">
-                <MudMenuItem>Profilo</MudMenuItem>
-                <MudMenuItem>Privacy</MudMenuItem>
-                <MudMenuItem @onclick="@(async () => await CurrentViewModel.Logout())">Logout</MudMenuItem>
-            </MudMenu>
+            <MudIcon 
+                Icon="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? Icon : IconSmall)"
+                Class="@(CurrentViewModel.UserIs(RoleConst.GUEST) ? "smallIconCssGuest":"smallIconCss")"
+                 Style="color:white;" @onclick="ShowMenu">
+            </MudIcon>
+            <div class="d-flex justify-content-center" style="width:100%;">
+                <span class="titleLogin" style="color:white;">@Title</span>
+            </div>
+            if (!_userIsGuest)
+            {
+                <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
+                         AriaLabel="Open user menu" Class="iconUserButton">
+                    <MudMenuItem>Profilo</MudMenuItem>
+                    <MudMenuItem>Privacy</MudMenuItem>
+                    <MudMenuItem @onclick="@(async () => await CurrentViewModel.Logout())">Logout</MudMenuItem>
+                </MudMenu>
+            }
+            else
+            {
+                <div @onclick="OpenDialogAsync">
+                    <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="smallIconCssGuest"></MudIcon>
+                </div>
+            }
+        
         }
         else
         {
-            <div @onclick="OpenDialogAsync">
-                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="smallIconCssGuest"></MudIcon>
-            </div>
-        }
+
+
+            if (!_userIsGuest)
+            {
+                <div class="d-flex flex-row align-items-center;" style="cursor:pointer;" @onclick="GoBack">
+                <MudIcon Icon="@Icon" Class="iconCss" Style="color:white;margin-top: 0.5vh;"></MudIcon>
+                    <span class="titleLogin" style="color:white">@Title</span>
+                </div>
+
+                <div class="px-2">
+                        <div class="d-flex flex-row align-items-center" >
+                    <span class="rightTextHeader" style="color:white;">@CurrentViewModel.User.FirstName @CurrentViewModel.User.LastName</span>
+                            <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
+                                     AriaLabel="Open user menu" Class="iconUserButton">
+                                <MudMenuItem>Profilo</MudMenuItem>
+                                <MudMenuItem>Privacy</MudMenuItem>
+                                <MudMenuItem @onclick="@(async () => await CurrentViewModel.Logout())">Logout</MudMenuItem>
+                            </MudMenu>
+                        </div>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex flex-row align-items-center;" style=" cursor:pointer;" @onclick="GoBack">
+                <MudIcon Icon="@Icon" Class="iconCss" Style="color:white;margin-top: 0.5vh;"></MudIcon>
+                    <span class="titleLogin" style="color:white;">@Title</span>
+                </div>
+
+                <div class="px-2">
+                    <span class="rightTextHeader" @onclick="OpenDialogAsync">@RightTitle</span>
+                </div>
+            }
         
-    }
-    else
-    {
-
-
-        if (!_userIsGuest)
-        {
-            <div class="d-flex flex-row align-items-center;" style="cursor:pointer;" @onclick="GoBack">
-                <MudIcon Icon="@Icon" Class="iconCss" Style="color:#0066FF;"></MudIcon>
-                <span class="titleLogin" style="color:#0066FF;">@Title</span>
-            </div>
-
-            <div class="px-2">
-                    <div class="d-flex flex-row align-items-center" >
-                        <span class="rightTextHeader" style="color:#0066FF;">@CurrentViewModel.User.FirstName @CurrentViewModel.User.LastName</span>
-                        <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
-                                 AriaLabel="Open user menu" Class="iconUserButtonLogin">
-                            <MudMenuItem>Profilo</MudMenuItem>
-                            <MudMenuItem>Privacy</MudMenuItem>
-                            <MudMenuItem @onclick="@(async () => await CurrentViewModel.Logout())">Logout</MudMenuItem>
-                        </MudMenu>
-                    </div>
-            </div>
         }
-        else
-        {
-            <div class="d-flex flex-row align-items-center;" style=" cursor:pointer;" @onclick="GoBack">
-                <MudIcon Icon="@Icon" Class="iconCss" Style="@IconColor()"></MudIcon>
-                <span class="titleLogin" style="@TitleColor()">@Title</span>
-            </div>
 
-            <div class="px-2">
-                <span class="rightTextHeader" @onclick="OpenDialogAsync">@RightTitle</span>
-            </div>
-        }
-        
-    }
-
-</div>
+    </div>
 
 @code {
 
@@ -115,15 +115,6 @@
         _userIsGuest = CurrentViewModel.User.Roles is null || CurrentViewModel.UserIs(RoleConst.GUEST);
     }
 
-    private string IconColor()
-    {
-        return "color:" + ColorFont+"; cursor:pointer;";
-    }
-
-    private string TitleColor(){
-        return "color:" + ColorFont;
-    }
-
     protected override async Task OnInitializedAsync()
     {
         await CurrentViewModel.RegisterOnScreenResize(800);
@@ -156,9 +147,7 @@
         color:white!important;
     }
 
-    .iconUserButtonLogin > button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon {
-        color: #0066FF !important;
-    }
+    
 
     svg.mud-icon-root.mud-svg-icon.mud-icon-size-medium{
         font-size:2rem;
@@ -175,7 +164,7 @@
         }
 
     .smallIconCss {
-        color: #0066FF;
+        color: white;
         font-size: 2rem;
     }
 

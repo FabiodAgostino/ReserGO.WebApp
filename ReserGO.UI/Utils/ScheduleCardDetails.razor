@@ -6,7 +6,7 @@
 @using ReserGO.DTO.Extensions;
 <div class="d-flex flex-column shadow cardScheduleDetails" @onclick="@(()=> Click())" style="@CardStyle">
     
-    <div class="d-flex justify-content-center align-items-center cardScheduleDetailsHeader">
+    <div class="d-flex justify-content-center align-items-center cardScheduleDetailsHeader" style="background-color:#0066FF;" >
         @if (Icon.Length > 1)
         {
             <MudIcon Icon="@Icon" Class="iconCardscheduleDetailsCss" />
