@@ -27,35 +27,53 @@
     private TimeSpan? _endTime;
 
     [Parameter] public EventCallback<DTOTimeSlot> OnRangeChanged { get; set; }
-
     [Parameter] public Dictionary<int, DTOTimeSlot> DictionaryTimeSlot { get; set; }
 
     private bool IsInvalid => _endTime.HasValue && _startTime.HasValue && _endTime <= _startTime;
+
+    private bool IsTimeRangeValid(TimeSpan? start, TimeSpan? end)
+    {
+        if (!start.HasValue || !end.HasValue)
+            return false;
+
+        foreach (var slot in DictionaryTimeSlot.Values)
+        {
+            // Controlla se il nuovo range è interno o sovrapposto a uno esistente
+            if ((start < slot.EndTime && end > slot.StartTime) ||
+                (start >= slot.StartTime && start < slot.EndTime) ||
+                (end > slot.StartTime && end <= slot.EndTime))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     private TimeSpan? StartTime
     {
         get => _startTime;
         set
         {
+            if (value == _startTime) return;
             _startTime = value;
 
-            // Se l'orario di inizio è stato impostato, controlla conflitti
-            if (_startTime.HasValue)
+            // Verifica la validità dell'intervallo di tempo
+            if (_startTime.HasValue && _endTime.HasValue)
             {
-                if (DictionaryTimeSlot.Any(x => (_startTime < x.Value.EndTime && _endTime > x.Value.StartTime) || _startTime.Value.Hours == x.Value.StartTime.Hours ))
+                if (!IsTimeRangeValid(_startTime, _endTime))
                 {
-                    StartTime = null;
-                    EndTime = null;
+                    _startTime = null;
+                    _endTime = null;
+                    return;
                 }
             }
 
-            // Se il valore di fine è null o non valido, impostalo a +30 minuti
-            if (!_endTime.HasValue || IsInvalid)
-            {
-                _endTime = _startTime?.Add(TimeSpan.FromMinutes(30));
-            }
+            // // Imposta orario di fine a +30 minuti se non ancora impostato o non valido
+            // if (!_endTime.HasValue || IsInvalid)
+            // {
+            //     _endTime = _startTime?.Add(TimeSpan.FromMinutes(30));
+            // }
 
-            NotifyRangeChanged();
         }
     }
 
@@ -64,29 +82,33 @@
         get => _endTime;
         set
         {
-            
-            // Controlla se l'orario di fine è minore o uguale all'orario di inizio
+            if (value == _endTime) return;
+
             if (_startTime.HasValue && value <= _startTime)
             {
-                // Imposta l'orario di fine a +30 minuti dall'orario di inizio
                 _endTime = _startTime?.Add(TimeSpan.FromMinutes(30));
             }
             else
             {
                 _endTime = value;
             }
-           
+
+            // Verifica la validità dell'intervallo di tempo
+            if (_startTime.HasValue && _endTime.HasValue && !IsTimeRangeValid(_startTime, _endTime))
+            {
+                _startTime = null;
+                _endTime = null;
+            }
+
             NotifyRangeChanged();
         }
     }
 
     private void NotifyRangeChanged()
     {
-        // Invoca l'evento di callback solo se entrambi i tempi sono validi
         if (_startTime.HasValue && _endTime.HasValue && !IsInvalid)
         {
             OnRangeChanged.InvokeAsync(new DTOTimeSlot(_startTime.Value, _endTime.Value));
         }
     }
-
 }

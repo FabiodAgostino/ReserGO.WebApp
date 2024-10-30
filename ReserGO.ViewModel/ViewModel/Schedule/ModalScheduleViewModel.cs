@@ -154,6 +154,8 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             {
                 try
                 {
+                    IsLoading = true;
+                    Loading("Salvataggio della prenotazione in corso");
                     var bookingToInsert = (DTOBooking)Booking.Clone();
                     bookingToInsert.ResourceId= SelectedItem.Id.Value;
                     bookingToInsert.Resource.AvailabilityAdv = null;
@@ -177,6 +179,11 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                 catch (Exception ex)
                 {
                     Notification(ex.Message, NotificationColor.Error);
+                }
+                finally
+                {
+                    isLoading = false;
+                    Loading();
                 }
             }
             else

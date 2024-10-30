@@ -5,7 +5,7 @@ namespace ReserGO.Miscellaneous.Model
 {
     public class DTOModalScheduleStepper
     {
-        public List<DTOService> Services { get; set; }
+        public List<DTOService> Services { get; set; } = new();
         public bool EnableServices { get; set; } = true;
         public DateTime? Date { get; set; }
         public DTOTimeSlot Slot { get; set; } = new();

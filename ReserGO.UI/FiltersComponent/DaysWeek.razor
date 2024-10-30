@@ -37,8 +37,10 @@
 
 @code {
 	[Parameter]
-	public EventCallback<List<DTODayOfWeekWizard>> Callback { get; set; }
-	// Lista dei giorni della settimana
+	public EventCallback<(List<DTODayOfWeekWizard> days, bool next)> Callback { get; set; }
+	[Parameter]
+	public List<DTODayOfWeekWizard> DaysSelected { get; set; }
+
 	private List<DTODayOfWeekWizard> DaysOfWeek = new()
 	{
 		new DTODayOfWeekWizard { FullName = "Lunedì" },
@@ -51,19 +53,36 @@
 	};
 
 	// Metodo per gestire la selezione dei giorni
-	private void ToggleDaySelection(DTODayOfWeekWizard day)
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if(DaysSelected!=null && DaysSelected.Count()>0)
+		{
+			var d = DaysSelected.Where(x => x.IsSelected).Select(x => x.FullName).ToList();
+			DaysOfWeek.ForEach(day =>
+			{
+				if (d.Contains(day.FullName))
+					day.IsSelected = true;
+			});
+		}
+	}
+
+	private async Task ToggleDaySelection(DTODayOfWeekWizard day)
 	{
 		day.IsSelected = !day.IsSelected;
 		if (day.IsSelected)
 			CurrentViewModel.List.Add(day);
 		else
 			CurrentViewModel.List = CurrentViewModel.List.Where(d => d.FullName != day.FullName).ToList();
+
+		if (Callback.HasDelegate)
+			await Callback.InvokeAsync((CurrentViewModel.List,false));
 	}
 
 	public async Task GoNext()
 	{
 		if (Callback.HasDelegate)
-			await Callback.InvokeAsync(CurrentViewModel.List);
+			await Callback.InvokeAsync((CurrentViewModel.List,true));
 	}
 }
 <style>

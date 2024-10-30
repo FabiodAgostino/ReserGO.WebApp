@@ -1,0 +1,148 @@
+﻿@using Microsoft.JSInterop
+@using MudBlazor
+@using ReserGO.DTO.ListAvailability
+@inject IJSRuntime JS
+<div class="d-flex m-4 w-100 justify-content-center">
+    <div class="d-flex flex-column w-75 justify-content-center">
+        <div id="slider" class="w-100"></div>
+        <div class="d-flex flex-row justify-content-around m-3">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddStep" Disabled="DisableAdd()" StartIcon="@Icons.Material.Filled.MoreTime">Aggiungi range orario</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="Save" Style="width:10vw">Salva</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="RemoveStep" Disabled="HandleValues.Count <= 2" StartIcon="@Icons.Material.Filled.TimerOff">Rimuovi range orario</MudButton>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<float> HandleValues = new List<float> { 540, 1080 }; // Intervallo dalle 9:00 alle 18:00
+    [Parameter]
+    public EventCallback<(List<DTOTimeSlot> slots, bool next)> Callback { get; set; }
+    [Parameter]
+    public List<DTOTimeSlot> SelectedTimeSlot { get; set; }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (SelectedTimeSlot != null && SelectedTimeSlot.Count() > 0)
+            {
+                HandleValues = ConvertTimeSlotsToFloats(SelectedTimeSlot);
+            }
+            await JS.InvokeVoidAsync("initializeSlider", DotNetObjectReference.Create(this), HandleValues);
+        }
+    }
+
+    [JSInvokable]
+    public async Task UpdateHandleValues(List<string> values)
+    {
+        HandleValues = values.Select(v => ConvertTimeStringToFloat(v)).ToList();
+
+        if (Callback.HasDelegate)
+            await Callback.InvokeAsync((ConvertDoublesToTimeSlot(),false));
+
+        StateHasChanged();
+    }
+
+    private async Task AddStep()
+    {
+        HandleValues = HandleValues.Select(x => x * 60).ToList();
+        // Aggiunge un intervallo extra
+        if (HandleValues.Count % 2 == 0) // Aggiunge solo in coppia (inizio e fine)
+        {
+            var lastValue = HandleValues.OrderByDescending(x=> x).FirstOrDefault();
+            if ((lastValue + 120) < 1440)
+            {
+                HandleValues.Add(lastValue + 60);
+                HandleValues.Add(lastValue + 120);
+                await JS.InvokeVoidAsync("reinitializeSlider", DotNetObjectReference.Create(this), HandleValues);
+            }
+        }
+    }
+
+    private async Task Save()
+    {
+        if (Callback.HasDelegate)
+            await Callback.InvokeAsync((ConvertDoublesToTimeSlot(), true));
+    }
+
+    private bool DisableAdd()
+    {
+        var lastValue = HandleValues.OrderByDescending(x => x).FirstOrDefault();
+        lastValue = lastValue < 60 ? lastValue * 60 : lastValue;
+        if ((lastValue + 120) >= 1440)
+            return true;
+        return false;
+    }
+    private async Task RemoveStep()
+    {
+
+        if (HandleValues.Count > 2) // Controlla che ci siano almeno due elementi da rimuovere
+        {
+            HandleValues = HandleValues.Select(x => x * 60).ToList();
+
+            HandleValues.RemoveRange(HandleValues.Count - 2, 2);
+
+            await JS.InvokeVoidAsync("reinitializeSlider", DotNetObjectReference.Create(this), HandleValues);
+        }
+    }
+
+    private List<DTOTimeSlot> ConvertDoublesToTimeSlot()
+    {
+        var timeSlots = new List<DTOTimeSlot>();
+
+        for (int i = 0; i < HandleValues.Count; i += 2)
+        {
+            if (i + 1 < HandleValues.Count)
+            {
+                // Converti i double in minuti a TimeSpan
+                var startTime = TimeSpan.FromHours(HandleValues[i]);
+                var endTime = TimeSpan.FromHours(HandleValues[i + 1]);
+
+                // Crea un nuovo DTOTimeSlot con i valori di inizio e fine
+                var timeSlot = new DTOTimeSlot
+                    {
+                        StartTime = startTime,
+                        EndTime = endTime
+                    };
+
+                timeSlots.Add(timeSlot);
+            }
+        }
+
+        return timeSlots;
+    }
+
+    private float ConvertTimeStringToFloat(string timeString)
+    {
+        var timeSpan = TimeSpan.Parse(timeString);
+        return (float)(timeSpan.Hours + timeSpan.Minutes / 60.0);
+    }
+
+    public List<float> ConvertTimeSlotsToFloats(List<DTOTimeSlot> timeSlots)
+    {
+        var floatList = new List<float>();
+
+        foreach (var slot in timeSlots)
+        {
+            // Calcola le ore in formato float (ore + minuti / 60)
+            float startHour = (float)slot.StartTime.TotalHours*60; // Converte StartTime in ore
+            float endHour = (float)slot.EndTime.TotalHours*60;     // Converte EndTime in ore
+
+            floatList.Add(startHour);
+            floatList.Add(endHour);
+        }
+
+        return floatList;
+    }
+
+}
+
+
+
+<style>
+    .noUi-connect {
+        background: #0066FF;
+    }
+
+</style>

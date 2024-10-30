@@ -1,12 +1,17 @@
-﻿@using MudBlazor
+﻿@using ReserGO.UI.FiltersComponent
+@using MudBlazor
 @using ReserGO.DTO.ListAvailability
 @using ReserGO.Miscellaneous.Model
 @using ReserGO.Utils.UI
 @using ReserGO.DTO
 @using ReserGO.Utils.DTO.Utils
+@using ReserGO.UI.Utils
 @using ReserGO.UI.FiltersComponent
 @using ReserGO.ViewModel.Interface.FiltersComponent
 @using ReserGO.ViewModel.Interface.Resource.InsertResource
+@using ReserGO.Miscellaneous.Extensions;
+@using static ReserGO.Miscellaneous.Model.DTOResourceStepper
+@using ReserGO.ViewModel.Interface.FiltersComponent
 @inherits BaseComponentChild<IInsertResourceViewModel, DTOResource>
 
 <div class="insertResourceContainer">
@@ -15,7 +20,11 @@
         <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.ResourceName = value)" Label="Nome" />
         <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.Description = value)" Label="Descrizione" />
         <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma"></MudCheckBox>
-
+        <BaseComponent TViewModel="IServicesComboViewModel" TModel="DTOService">
+            <Content>
+                <ServicesCombo /> 
+            </Content>
+        </BaseComponent>
     </div>
     <div>
         @if (!_enableHoursRule)
@@ -32,51 +41,29 @@
         {
             <div class="d-flex justify-content-center">
                 <div class="w-75">
-                    <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.SelectedIndex" Style="height:100%">
+                    <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.Stepper.Index" Style="height:100%">
                         <MudTabPanel Text="Giorni disponibilità">
                             <div>Seleziona i giorni in cui la risorsa sarà disponibile</div>
                             <BaseComponent TViewModel="IDayOfWeekViewModel" TModel="DTODayOfWeekWizard">
                                 <Content>
-                                    <DaysWeek Callback="@((List<DTODayOfWeekWizard> days) => {_listDays=days; CurrentViewModel.SelectedIndex++;})" />
+                                    <DaysWeek Callback="@(((List<DTODayOfWeekWizard> days, bool next) Value) => CurrentViewModel.Stepper.UpdateDays(Value.days, Value.next))" DaysSelected="CurrentViewModel.Stepper.DaysSelected" />
                                 </Content>
                             </BaseComponent>
                         </MudTabPanel>
-                        <MudTabPanel Text="Orari ricorrenti" Disabled="CurrentViewModel.SelectedIndex<1">
-                            <div class="d-flex w-25 justify-content-around flex-column">
-                                @for (int i = 0; i < _numRecurringRules; i++)
+                        <MudTabPanel Text="Orari ricorrenti" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.RECURRING_RULES)">
+                            <div class="d-flex justify-content-center mt-5 pb-5">
+                                @{
+                                    MarkupString result = (MarkupString)string.Join(", ", CurrentViewModel.Stepper.RecurringRules.Select(dic => $"dalle <b><u>{dic.StartTime}</u></b> alle <b><u>{dic.EndTime}</u></b>"));
+                                }
+                                @if (CurrentViewModel.Stepper.RecurringRules.Count() > 0)
                                 {
-                                    var currentIndex = i;
-                                    @*  _recurringRules.TryGetValue(currentIndex, out (TimeSpan? start, TimeSpan? end)? exist);
-                            var startTime = exist!= null ? exist.Value.start : TimeSpan.Zero;
-                            var endTime = exist != null ? exist.Value.end : TimeSpan.FromMinutes(30); *@
-                                    <div class="d-flex">
-                                        <TimePicker OnRangeChanged="@((DTOTimeSlot picker) => OnTimeChanged(picker, currentIndex))" DictionaryTimeSlot="_recurringRules" />
-                                        @*    <TimePicker Label="Ora inizio"
-                                MinValue="@(new TimeSpan(8, 0, 0))"
-                                Error="@false"
-                                Callback="@((TimeSpan? time) => OnTimeChanged(time, currentIndex))" />
-                                <TimePicker Label="Ora fine"
-                                MinValue="@(new TimeSpan(8, 0, 0))"
-                                Error="@false"
-                                Callback="@((TimeSpan? time) => OnTimeChanged(time, currentIndex, true))" /> *@
-                                    </div>
+                                    <span>La risorsa sarà disponibile @result</span>
                                 }
                             </div>
-                            <div>
-                                <MudIconButton Icon="@Icons.Material.Filled.ControlPoint" Color="Color.Primary" @onclick="() => {_numRecurringRules++;StateHasChanged();}" />
-                                <MudIconButton Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Error" @onclick="RemoveLastRule" Disabled="_numRecurringRules==1" />
+                            <DaysSliderComponent Callback="@(((List<DTOTimeSlot> slots, bool next)values) => CurrentViewModel.Stepper.UpdateRecurringRules(values.slots,values.next))" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
 
-                            </div>
-                            <div><b>Aggiungi/rimuovi range orari</b></div>
-
-                            <div>
-                                @foreach (var dic in _recurringRules)
-                                {
-                                    <span>@($" Dalle {dic.Value.StartTime} alle {dic.Value.EndTime} -")</span>
-                                }
-                            </div>
                         </MudTabPanel>
-                        <MudTabPanel Text="Conferma" Disabled="CurrentViewModel.SelectedIndex<2">
+                        <MudTabPanel Text="Conferma" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.CONFIRM)">
                         </MudTabPanel>
 
                     </MudTabs>
@@ -85,7 +72,6 @@
         }
     </div>
 </div>
-
 @code {
 
     private bool _enablePrice = false;

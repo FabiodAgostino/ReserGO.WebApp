@@ -1,0 +1,25 @@
+﻿@using MudBlazor
+@using System.Collections.Generic
+@using System.Threading
+@using System.Threading.Tasks
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.FiltersComponent
+@using ReserGO.ViewModel.ViewModel.FiltersComponent
+@using ReserGO.DTO
+@inherits BaseComponentChild<IServicesComboViewModel, DTOService>
+
+<MudSelect T="DTOService" Label="Servizi" HelperText="@(CurrentViewModel.IsLoading ? "Loading..." : "Scegli i servizi da associare alla risorsa")" MultiSelection="true" @bind-SelectedValues="CurrentViewModel.ServicesChecked" Disabled="CurrentViewModel.IsLoading" >
+    @foreach (var service in CurrentViewModel.List)
+    {
+        <MudSelectItem T="DTOService" Value="@service">@service.ServiceName</MudSelectItem>
+    }
+
+
+</MudSelect>
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await CurrentViewModel.GetServices();
+    }
+}

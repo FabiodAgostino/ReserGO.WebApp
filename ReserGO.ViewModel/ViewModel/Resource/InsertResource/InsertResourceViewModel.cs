@@ -1,5 +1,6 @@
 ﻿using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
+using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
 using ReserGO.ViewModel.Interface.Resource.InsertResource;
@@ -13,9 +14,10 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
         public InsertResourceViewModel(IBaseServicesReserGO<InsertResourceViewModel> baseServices, IResourceService service) : base(baseServices)
         {
             SelectedItem = new();
+            Stepper = new();
             _service = service;
         }
-        public int SelectedIndex { get; set; }
+        public DTOResourceStepper Stepper { get; set; }
         public async Task InsertResource()
         {
             try
