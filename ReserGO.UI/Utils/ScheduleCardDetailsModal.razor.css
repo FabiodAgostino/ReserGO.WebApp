@@ -23,7 +23,6 @@
     padding-inline:10px;
     color: #FFFFFF;
     font-size: x-large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     font-weight: var(--mud-typography-button-weight);
     line-height: var(--mud-typography-button-lineheight);
     letter-spacing: var(--mud-typography-button-letterspacing);
@@ -71,7 +70,6 @@
 
 .descriptionDetailsSmall {
     font-size: large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     color: #747474;
 }
 

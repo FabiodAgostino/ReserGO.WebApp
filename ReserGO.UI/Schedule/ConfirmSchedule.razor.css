@@ -1,12 +1,10 @@
 ﻿.descriptionConfirmModal {
     font-size: xx-large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     color: #0066FF;
 }
 
 .descriptionConfirmModalSmall {
     font-size: x-large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     color: #0066FF;
 }
 
@@ -38,13 +36,11 @@
 
 .infoMail {
     font-size: 1vw;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     color: #0066FF;
     text-align:center;
 }
 .infoMailSmall {
     font-size: medium;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     color: #0066FF;
     text-align: center;
 }
@@ -64,7 +60,6 @@
 
 .titleSummary {
     font-size: xx-large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     color: #0066FF;
     padding-inline: 2vw;
     padding-top: 2vh;
@@ -72,7 +67,6 @@
 
 .cardTitleSummry {
     font-size: x-large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     color:#555555;
 }
 
@@ -88,7 +82,6 @@
     padding-inline: 1vw;
     padding-block: 2vh;
     font-size: large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     color: #555555;
     max-width: 100%;
     overflow-wrap: break-word;
@@ -97,7 +90,6 @@
 .cardSummaryService {
     color: #0066FF;
     max-height: 30vh;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     height:95%;
 }
 .checkboxCard {

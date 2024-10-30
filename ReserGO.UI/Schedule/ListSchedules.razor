@@ -2,7 +2,7 @@
 @using ReserGO.UI.Utils
 @using ReserGO.DTO;
 
-<div class="d-flex flex-column h-100 w-100 listScheduleContainer  @(IsSmallView ? "flex-column w-100":"align-items-center justify-content-center")">
+<div class="d-flex flex-column w-100 listScheduleContainer  @(IsSmallView ? "flex-column w-100 h-100":"align-items-center justify-content-center")">
     <div class="d-flex gridContainer @(IsSmallView ? "flex-column w-100 p-3":"justify-content-center")">
 
         @if (IsSmallView)
@@ -12,7 +12,7 @@
                 @foreach (var resource in Resources)
                 {
                     <div class="d-flex flex-row" style="padding-block:0.5vh;">
-                        <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" IsSmallView="IsSmallView" Title="@resource.ResourceName" Description="@resource.Description" />
+                        <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" IsSmallView="IsSmallView" Title="@resource.ResourceName" Description="@resource.Description"  IsActive="@(activeCardId == resource.Id.Value)"/>
                     </div>
                 }
             }
@@ -29,7 +29,7 @@
         }
         else
         {
-            @if (true && Resources != null && Resources.Any())
+             @if (true && Resources != null && Resources.Any())
             {
 
                 <div class="d-flex flex-column" >
@@ -37,7 +37,7 @@
                     @foreach (var resource in Resources)
                     {
                         <div class="d-flex flex-row">
-                            <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" />
+                            <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" IsActive="@(activeCardId == resource.Id.Value)"/>
                         </div>
                     }
                     @if (!IsLoading && Resources == null)
@@ -64,7 +64,7 @@
                     {
                         <MudItem>
                             <div class="d-flex flex-row">
-                                <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" />
+                                <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" IsActive="@(activeCardId == resource.Id.Value)" />
                             </div>
                         </MudItem>
                     }
@@ -102,8 +102,10 @@
     public bool IsSmallView { get; set; } = true;
 
     public int Spacing { get; set; } = 1;
+
     private string InformationIcon = "";
 
+    private int? activeCardId = 0;
 
     protected override void OnInitialized()
     {
@@ -113,11 +115,14 @@
 
     private async Task Click(int idResource)
     {
+        activeCardId = idResource;
+        StateHasChanged();
         if (Callback.HasDelegate)
         {
             await Callback.InvokeAsync(idResource);
         }
     }
+
 }
 
 <style>

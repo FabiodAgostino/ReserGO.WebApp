@@ -8,10 +8,6 @@ main {
     flex: 1;
 }
 
-.sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-}
-
 .top-row {
     background-color: #f7f7f7;
     border-bottom: 1px solid #d6d5d5;
@@ -100,6 +96,12 @@ main {
 .pageContainer {
     width: 100vw;
     height: 100vh;
+    font-family: "Nunito", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    background-image: url('data:image/svg+xml,<svg id="visual" viewBox="0 0 960 540" width="960" height="540" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><rect x="0" y="0" width="960" height="540" fill="%23FFFFFF"></rect><path d="M0 423L22.8 409.7C45.7 396.3 91.3 369.7 137 355.7C182.7 341.7 228.3 340.3 274 349.7C319.7 359 365.3 379 411.2 396C457 413 503 427 548.8 417.5C594.7 408 640.3 375 686 375.7C731.7 376.3 777.3 410.7 823 421.3C868.7 432 914.3 419 937.2 412.5L960 406L960 541L937.2 541C914.3 541 868.7 541 823 541C777.3 541 731.7 541 686 541C640.3 541 594.7 541 548.8 541C503 541 457 541 411.2 541C365.3 541 319.7 541 274 541C228.3 541 182.7 541 137 541C91.3 541 45.7 541 22.8 541L0 541Z" fill="%230066FF" stroke-linecap="round" stroke-linejoin="miter"></path></svg>');
+    background-size: cover;
 }
 
 
@@ -122,5 +124,3 @@ main {
         padding: 0%;
     }
 }
-
-

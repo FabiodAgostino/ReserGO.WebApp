@@ -1,17 +1,14 @@
 ﻿.titleServiceSelection {
     font-size: xx-large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     color: #0066FF;
 }
 
 .descriptionServiceSelection {
     font-size: large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
 }
 
 .priceServiceSelection {
     font-size: x-large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     color: #0066FF;
     padding-block:2vh;
 }

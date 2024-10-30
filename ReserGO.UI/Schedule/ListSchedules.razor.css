@@ -1,7 +1,13 @@
 ﻿.listScheduleContainer {
+    height:95%;
+    background-color: white;
+    border-radius: 30px;
 }
 
 .gridContainer {
     overflow: auto;
     height: 90vh;
+    width: 100%;
+    scrollbar-width: none !important;
 }
+

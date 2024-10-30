@@ -3,14 +3,7 @@
     padding-block: 0.5vh;
 }
 
-.cardSchedule {
-    width: 35vw;
-    height: 20vh;
-    background-color: white;
-    border-radius: 15px;
-    cursor:pointer;
-    border:1px solid lightgrey;
-}
+
 
 .headerScheduleCard {
     padding-inline: 0.5vw;
@@ -26,5 +19,26 @@
 .textScheduleTitle {
     color: #404040;
     font-size: 1.5vw;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
 }
+
+.cardSchedule {
+    width: 35vw;
+    height: 20vh;
+    background-color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    border: 1px solid lightgrey;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .cardSchedule:hover {
+        box-shadow: 1px 0px 20px 0px #0066FF;
+        z-index: 1;
+        transform: scale(1.05);
+    }
+
+    .cardSchedule.active {
+        transform: scale(1.05);
+        box-shadow: 1px 0px 20px 0px #0066FF;
+        z-index: 1;
+    }

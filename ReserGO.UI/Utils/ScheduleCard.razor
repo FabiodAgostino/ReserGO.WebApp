@@ -2,18 +2,18 @@
 
 <div class="d-flex cardScheduleContainer @(IsSmallView ? "w-100" :"")">
 
-    <div class="d-flex flex-column cardSchedule @(IsSmallView ? "w-100" :"")" @onclick="@Click">
+    <div class="d-flex flex-column cardSchedule @(IsActive ? "active" : "") @(IsSmallView ? "w-100" :"")" @onclick="@Click">
         <div class="d-flex w-100 align-items-center headerScheduleCard" style="@(IsSmallView ? "padding-inline:5px" :"")">
-            
-            @if(Icon.Length > 1)
+
+            @if (Icon.Length > 1)
             {
                 <MudIcon Icon="@Icon" Class="@(IsSmallView ? "iconCardScheduleSmall" :"iconCardSchedule")" />
             }
             @if (Title.Length > 1)
             {
-                <span class="textScheduleTitle" style="@(IsSmallView ? "font-size: x-large; padding-inline:2vw;" :"padding-inline:1vw;")" title="@Title" >@TruncateText(Title, 18) </span>
+                <span class="textScheduleTitle" style="@(IsSmallView ? "font-size: x-large; padding-inline:2vw;" :"padding-inline:1vw;")" title="@Title">@TruncateText(Title, 18) </span>
             }
-  
+
         </div>
 
         <div class="d-flex w-100 bodyScheduleCard p-3">
@@ -22,8 +22,10 @@
     </div>
 
 </div>
-
 @code {
+
+    [Parameter]
+    public bool IsActive { get; set; } = false;
 
     [Parameter]
     public EventCallback Callback { get; set; }

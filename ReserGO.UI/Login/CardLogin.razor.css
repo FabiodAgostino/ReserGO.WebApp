@@ -54,14 +54,12 @@
 }
 
 .titleCardLogin {
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     font-size: 2.5vw;
     color: #FFFFFF;
     padding-inline: 3vw;
 }
 
 .textInputCardLogin {
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     font-size: 1.5vw;
     color: #FFFFFF;
     padding-block: 0.5vw;
@@ -113,14 +111,12 @@
     }
 
 .titleCardRegister {
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     font-size: 2vw;
     color: #FFFFFF;
     padding-inline: 3vw;
 }
 
 .titleCardRegisterSmall {
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     font-size: x-large;
     color: #FFFFFF;
     padding-inline: 3vw;
@@ -128,14 +124,12 @@
 }
 
 .descRegister {
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     font-size: 1.2vw;
     color: #FFFFFF;
     padding-inline: 3vw;
 }
 
 .descGuest {
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     font-size: 1.5vw;
     color: #FFFFFF;
     padding-inline: 3vw;

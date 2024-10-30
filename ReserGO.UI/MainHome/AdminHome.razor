@@ -25,10 +25,10 @@
             <CalendarHome />
 
                 <div class="d-flex align-items-center p-2">
-                    <CardReserGo Title="Inserisci risorsa" Description="Inserisci una nuova risorsa" Icon="@ReservationIcon" CardStyle="width:19vw;height:44vh" />
+                    <CardReserGo Title="Inserisci risorsa" Description="Inserisci una nuova risorsa" Icon="@ReservationIcon" CardStyle="width:19vw;height:44vh" Vertical="@(IsSmallView ? false : true )" />
                 </div>
                 <div class="d-flex align-items-center p-2" onclick="@OpenModalComunications">
-                    <CardReserGo Title="Inserisci comunicazione" Description="Il giorno xx lo studio resterà chiuso" Icon="@InformationIcon" CardStyle="width:19vw;height:44vh" />
+                    <CardReserGo Title="Inserisci comunicazione" Description="Il giorno xx lo studio resterà chiuso" Icon="@InformationIcon" CardStyle="width:19vw;height:44vh" Vertical="@(IsSmallView ? false : true )" />
                 </div>
 
         </div>

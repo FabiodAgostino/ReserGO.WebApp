@@ -25,13 +25,11 @@
     border-radius: 0px 0px 30px 30px;
     color: #404040;
     font-size: large;
-    font-family: sans-serif;
 }
 
 .textDetails {
     color: #0066FF;
     font-size: x-large;
-    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
     line-height: var(--mud-typography-button-lineheight);
     letter-spacing: var(--mud-typography-button-letterspacing);
 }
