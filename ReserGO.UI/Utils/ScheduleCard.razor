@@ -1,6 +1,6 @@
 ﻿@using MudBlazor
 
-<div class="d-flex cardScheduleContainer @(IsSmallView ? "w-100" :"")">
+<div class="d-flex cardScheduleContainer @(IsSmallView ? "w-100" :"")" style="@(IsSmallView ? "" :"width:80%")">
 
     <div class="d-flex flex-column cardSchedule @(IsActive ? "active" : "") @(IsSmallView ? "w-100" :"")" @onclick="@Click">
         <div class="d-flex w-100 align-items-center headerScheduleCard" style="@(IsSmallView ? "padding-inline:5px" :"")">

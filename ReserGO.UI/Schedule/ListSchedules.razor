@@ -36,7 +36,7 @@
 
                     @foreach (var resource in Resources)
                     {
-                        <div class="d-flex flex-row">
+                        <div class="d-flex flex-row justify-content-center">
                             <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" IsActive="@(activeCardId == resource.Id.Value)"/>
                         </div>
                     }

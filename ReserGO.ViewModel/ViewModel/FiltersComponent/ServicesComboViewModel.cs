@@ -17,7 +17,7 @@ namespace ReserGO.ViewModel.ViewModel.FiltersComponent
             List = new();
         }
 
-        public IEnumerable<DTOService> ServicesChecked { get; set; }
+        public IEnumerable<string> ServicesChecked { get; set; }
 
         public async Task GetServices()
         {

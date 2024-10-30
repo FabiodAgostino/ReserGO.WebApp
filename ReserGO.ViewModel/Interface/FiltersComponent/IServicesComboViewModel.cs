@@ -4,7 +4,7 @@ namespace ReserGO.ViewModel.Interface.FiltersComponent
 {
     public interface IServicesComboViewModel : ICompleteReserGOViewModel<DTOService>
     {
-        public IEnumerable<DTOService> ServicesChecked { get; set; }
+        public IEnumerable<string> ServicesChecked { get; set; }
         Task GetServices();
     }
 }

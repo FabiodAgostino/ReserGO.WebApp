@@ -17,16 +17,18 @@
         <ToolBarContent>
             <MudText Typo="Typo.h6">Storico prenotazioni</MudText>
             <MudSpacer />
-            <div class="inputSpace m-2" style="width:15%">
-                <MudSelect T="string" Label="Stato" ValueChanged="@((string value) => OnCheckBoxChange(value))" Variant="Variant.Outlined" Value="statusSelected">
+            <div class="d-flex flex-row">
+            <div class="inputSpace m-2">
+                <MudSelect T="string" Label="Stato" ValueChanged="@((string value) => OnCheckBoxChange(value))" Variant="Variant.Outlined" Value="statusSelected" Class="selectStato">
                     @foreach (var stato in status)
                     {
                         <MudSelectItem Value="stato">@stato</MudSelectItem>
                     }
                 </MudSelect>
             </div>
-            <div class="inputSpace m-2 w-25">
+            <div class="inputSpace m-2 w-75">
                 <BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca" HelperText="Ricerca per nome, cognome, email e poi premi invio"></BaseTextField>
+            </div>
             </div>
         </ToolBarContent>
         <HeaderContent>
@@ -323,7 +325,10 @@
         height: 78vh;
     }
 
-
+    .selectStato
+    {
+        width:7vw;
+    }
     .inputSpace {
         height: 45px;
     }

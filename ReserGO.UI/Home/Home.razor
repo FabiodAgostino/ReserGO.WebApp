@@ -15,7 +15,7 @@
 @inject NavigationManager NaviMngr;
 @inherits BaseComponentChild<IHomeViewModel, object>
 
-<div class="d-flex flex-column loginContainter">
+<div class="d-flex flex-column loginContainter" >
 
 
     <BaseComponent TViewModel="IHeaderViewModel" TModel="object">
@@ -28,7 +28,7 @@
     {
         @if (CurrentViewModel.ItemsMenu is object && CurrentViewModel.ItemsMenu.Count() > 0)
         {
-            <MudPaper Height="100%" Style="padding:0px; height:100%;">
+            <MudPaper Height="100%" Style="padding:0px; height:100%; background-color: transparent !important;">
                 <MudDrawerContainer Class="h-100">
                     <MudDrawer @bind-Open="@CurrentViewModel.Open" Overlay="false" Elevation="@(CurrentViewModel.IsSmallView ? 1 : 8)" Variant="@(CurrentViewModel.IsSmallView ? DrawerVariant.Temporary : DrawerVariant.Mini)" Class="mainContent">
                         <MudNavMenu Class="mudDrawer">
@@ -58,7 +58,7 @@
                         </MudNavMenu>
                     </MudDrawer>
                     <MudMainContent Class="row content mudblazor-main-content mainContent" Style="height:100%;">
-                        <div class="d-flex w-100 h-100" @onclick="CloseToggle">
+                        <div class="d-flex w-100 h-100" @onclick="CloseToggle" >
                             @CurrentViewModel.Content
                         </div>
                     </MudMainContent>   
