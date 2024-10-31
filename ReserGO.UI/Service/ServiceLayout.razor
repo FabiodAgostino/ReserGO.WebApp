@@ -8,7 +8,7 @@
 @inherits BaseComponentChild<IServiceViewModel, DTOService>
 @if (CurrentViewModel.UserIs(RoleConst.ADMIN))
 {
-    <div class="d-flex flex-column p-2 w-100 h-100 historicalContainer">
+    <div class="d-flex flex-column w-100 justify-content-center align-items-center historicalContainer">
         <ServiceTable Services="CurrentViewModel.Services" PagingOptions="@CurrentViewModel.Pagination" Action="@(async (GridAction<DTOService, DTOServiceFilter> action) => await CurrentViewModel.ExecuteAction(action))" IsLoading="@CurrentViewModel.IsLoading" />
     </div>
 }

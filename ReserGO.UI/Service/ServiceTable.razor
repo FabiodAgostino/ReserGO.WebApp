@@ -11,18 +11,20 @@
 @if (Services is object)
 {
 	<MudTable Items="@Services.CurrentPageData" Loading="IsLoading"
-			  Hover="true" Style="width:100%" Breakpoint="Breakpoint.Sm"
+			  Hover="true" Class="w-100 shadow tableClass" Breakpoint="Breakpoint.Sm"
 			  LoadingProgressColor="Color.Primary" RowsPerPage="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10"
 			  TotalItems="PagingOptions.TotalCount.Value">
 		<ToolBarContent>
-			<MudText Typo="Typo.h6">Servizi</MudText>
-			<MudSpacer />
-			<div class="d-flex flex-row">
-				<div class="inputSpace m-3 pt-3 d-flex justify-content-end align-items-center">
-					<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.INSERT))">Nuovo servizio</MudButton>
-				</div>
-				<div class="inputSpace m-2 w-75">
-					<BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca" HelperText="Ricerca per nome servizio e poi premi invio"></BaseTextField>
+			<div class="d-flex w-100 h-100 align-items-center toolbarCss" style="background-color:#0066FF;" >
+				<MudText Typo="Typo.h6">Servizi</MudText>
+				<MudSpacer />
+				<div class="d-flex flex-row w-50">
+					<div class="inputSpace m-2">
+						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Class="btn-new" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.INSERT))">Nuovo servizio</MudButton>
+					</div>
+					<div class="inputSpace m-2 w-100">
+						<BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca per nome del servizio"></BaseTextField>
+					</div>
 				</div>
 			</div>
 		</ToolBarContent>
@@ -193,6 +195,22 @@
 }
 
 <style>
+	.tableClass {
+		border: 1px solid lightgray !important;
+		border-radius: 25px !important;
+	}
+
+	.toolbarCss {
+		background: linear-gradient(45deg, #006, transparent);
+		border-radius: 25px 25px 0px 0px;
+		color: white;
+		padding-inline: 2vw;
+	}
+
+	.btn-new{
+
+	}
+
 	.mud-table-root .mud-table-head {
 		display: table-header-group;
 		background-color: #0066FF;
@@ -206,11 +224,7 @@
 
 	.paginatorPageSize {
 		width: 15%;
-	}
-
-	.mud-table-container {
-		max-height: 78vh;
-		height: 78vh;
+		padding-inline: 2vw;
 	}
 
 
@@ -218,8 +232,21 @@
 		height: 50px;
 	}
 
-	.mud-table-toolbar {
-		margin-bottom: 17px;
+	.mud-table-container {
+		max-height: 75vh;
+		height: 75vh;
+	}
+
+
+	.mud-toolbar-gutters {
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+	}
+
+
+	.mud-input-control-input-container {
+		background-color: white !important;
+		border-radius: 15px !important;
 	}
 
 	@@media (max-width: 960px) {

@@ -6,7 +6,7 @@
 @using ReserGO.Utils.DTO.Utils
 @inherits BaseComponentChild<IHistoricalViewModel, DTOBooking>
 
-<div class="d-flex flex-column w-100 justify-content-center align-items-center h-100 historicalContainer">
+<div class="d-flex flex-column w-100 justify-content-center align-items-center historicalContainer">
     <HistoricalTable Bookings="CurrentViewModel.Bookings" PagingOptions="@CurrentViewModel.Pagination" Action="@(async (GridAction<DTOBooking, DTOBookingFilter> action) => await CurrentViewModel.ExecuteAction(action))" IsLoading="@CurrentViewModel.IsLoading" IsAdmin="@CurrentViewModel.UserIs(RoleConst.ADMIN)"/>
 </div>
 
