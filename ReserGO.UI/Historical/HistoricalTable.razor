@@ -10,115 +10,118 @@
 
 @if (Bookings is object)
 {
-    <MudTable Items="@Bookings.CurrentPageData" Loading="IsLoading"
-              Hover="true" Style="width:100%" Breakpoint="Breakpoint.Sm"
-              LoadingProgressColor="Color.Primary" RowsPerPage="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10"
-              TotalItems="PagingOptions.TotalCount.Value">
-        <ToolBarContent>
-            <MudText Typo="Typo.h6">Storico prenotazioni</MudText>
-            <MudSpacer />
-            <div class="d-flex flex-row">
-            <div class="inputSpace m-2">
-                <MudSelect T="string" Label="Stato" ValueChanged="@((string value) => OnCheckBoxChange(value))" Variant="Variant.Outlined" Value="statusSelected" Class="selectStato">
-                    @foreach (var stato in status)
-                    {
-                        <MudSelectItem Value="stato">@stato</MudSelectItem>
-                    }
-                </MudSelect>
-            </div>
-            <div class="inputSpace m-2 w-75">
-                <BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca" HelperText="Ricerca per nome, cognome, email e poi premi invio"></BaseTextField>
-            </div>
-            </div>
-        </ToolBarContent>
-        <HeaderContent>
-            <MudTh>Nome</MudTh>
-            <MudTh>Cognome</MudTh>
-            <MudTh>Email</MudTh>
-            <MudTh>Telefono</MudTh>
-            <MudTh>Email</MudTh>
-            <MudTh>Data</MudTh>
-            <MudTh>Stato</MudTh>
-            <MudTh>Risorsa</MudTh>
-            <MudTh>Servizi</MudTh>
-            @if (IsAdmin)
-            {
-                <MudTh></MudTh>
-                <MudTh></MudTh>
-            }
-        </HeaderContent>
-
-        <RowTemplate Context="element">
-            <MudTd>@element.User.FirstName</MudTd>
-            <MudTd>@element.User.LastName</MudTd>
-            <MudTd>@element.User.Email</MudTd>
-            <MudTd>@element.User.PhoneNumber</MudTd>
-            <MudTd>@element.User.Email</MudTd>
-            <MudTd>@element.StartDateTime</MudTd>
-            <MudTd>
-                @{
-                    var statusText = GetStatus(element.Status.Value);
-                    <div title="@statusText">
-                        @if (statusText == "Confermata")
-                        {
-                            <MudIcon Icon="@Icons.Material.Filled.Beenhere" Color="Color.Success"></MudIcon>
-                        }
-                        @if (statusText == "Da confermare")
-                        {
-                            <MudIcon Icon="@Icons.Material.Filled.Pending" Color="Color.Secondary"></MudIcon>
-                        }
-                        @if (statusText == "Rifiutata")
-                        {
-                            <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error"></MudIcon>
-                        }
+        <MudTable Items="@Bookings.CurrentPageData" Loading="IsLoading"
+                  Hover="true" Class="w-100 shadow tableClass" Breakpoint="Breakpoint.Sm"
+                  LoadingProgressColor="Color.Primary" RowsPerPage="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10"
+                  TotalItems="PagingOptions.TotalCount.Value">
+            <ToolBarContent>
+                <div class="d-flex w-100 h-100 align-items-center toolbarCss" style="background-color:#0066FF;" >
+                    <MudText Typo="Typo.h6">Storico prenotazioni</MudText>
+                    <MudSpacer />
+                    <div class="d-flex flex-row w-50">
+                        <div class="inputSpace m-2">
+                            <MudSelect T="string" Label="Stato" ValueChanged="@((string value) => OnCheckBoxChange(value))" Variant="Variant.Outlined" Value="statusSelected" Class="selectStato">
+                                @foreach (var stato in status)
+                                {
+                                    <MudSelectItem Value="stato">@stato</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </div>
+                        <div class="inputSpace m-2 w-100">
+                            <BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca per nome, cognome, email..."></BaseTextField>
+                        </div>
                     </div>
-                }
-            </MudTd>
-            <MudTd>@element.Resource.ResourceName</MudTd>
-            <MudTd>
-                @if (element.Services is object && element.Services.Count() > 0)
-                {
-                    var servizi = string.Join(", ", @element.Services.Select(x => x.ServiceName));
-                    @if (servizi.Length > 50)
-                    {
-                        <MudButton StartIcon="@Icons.Material.Filled.ShoppingBasket" Size="Size.Small" Color="Color.Secondary" Variant="Variant.Filled" @onclick="(() => ShowServices(element.Services))">Mostra servizi</MudButton>
-                    }
-                    else
-                    {
-                        <span>@servizi</span>
-                    }
-                }
-            </MudTd>
-            @if (IsAdmin)
-            {
-                <MudTd>
-                    @if (element.Status.Value == (int)BookingStatus.Pending)
-                    {
-                        <MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
-                    }
-                </MudTd>
-                <MudTd>
-                    <div title="Elimina">
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))"></MudIconButton>
-                    </div>
-                </MudTd>
-            }
-        </RowTemplate>
-        <PagerContent>
-            <div class="d-flex flex-row justify-content-between">
-                <MudPagination SelectedChanged="OnPageChangedHandler" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
-                <div class="paginatorPageSize">
-                    <MudSelect T="int" Label="Elementi per pagina" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
-                        @foreach (var size in pageSizes)
-                        {
-                            <MudSelectItem Value="size">@size</MudSelectItem>
-                        }
-                    </MudSelect>
-
                 </div>
-            </div>
-        </PagerContent>
-    </MudTable>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Nome</MudTh>
+                <MudTh>Cognome</MudTh>
+                <MudTh>Email</MudTh>
+                <MudTh>Telefono</MudTh>
+                <MudTh>Email</MudTh>
+                <MudTh>Data</MudTh>
+                <MudTh>Stato</MudTh>
+                <MudTh>Risorsa</MudTh>
+                <MudTh>Servizi</MudTh>
+                @if (IsAdmin)
+                {
+                    <MudTh></MudTh>
+                    <MudTh></MudTh>
+                }
+            </HeaderContent>
+
+            <RowTemplate Context="element">
+                    <MudTd>@element.User.FirstName</MudTd>
+                    <MudTd>@element.User.LastName</MudTd>
+                    <MudTd>@element.User.Email</MudTd>
+                    <MudTd>@element.User.PhoneNumber</MudTd>
+                    <MudTd>@element.User.Email</MudTd>
+                    <MudTd>@element.StartDateTime</MudTd>
+                    <MudTd>
+                        @{
+                            var statusText = GetStatus(element.Status.Value);
+                            <div title="@statusText">
+                                @if (statusText == "Confermata")
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Beenhere" Color="Color.Success"></MudIcon>
+                                }
+                                @if (statusText == "Da confermare")
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Pending" Color="Color.Secondary"></MudIcon>
+                                }
+                                @if (statusText == "Rifiutata")
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error"></MudIcon>
+                                }
+                            </div>
+                        }
+                    </MudTd>
+                    <MudTd>@element.Resource.ResourceName</MudTd>
+                    <MudTd>
+                        @if (element.Services is object && element.Services.Count() > 0)
+                        {
+                            var servizi = string.Join(", ", @element.Services.Select(x => x.ServiceName));
+                            @if (servizi.Length > 50)
+                            {
+                                <MudButton StartIcon="@Icons.Material.Filled.ShoppingBasket" Size="Size.Small" Color="Color.Secondary" Variant="Variant.Filled" @onclick="(() => ShowServices(element.Services))">Mostra servizi</MudButton>
+                            }
+                            else
+                            {
+                                <span>@servizi</span>
+                            }
+                        }
+                    </MudTd>
+                    @if (IsAdmin)
+                    {
+                        <MudTd>
+                            @if (element.Status.Value == (int)BookingStatus.Pending)
+                            {
+                                <MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
+                            }
+                        </MudTd>
+                        <MudTd>
+                            <div title="Elimina">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))"></MudIconButton>
+                            </div>
+                        </MudTd>
+                    }
+            </RowTemplate>
+            <PagerContent>
+                <div class="d-flex flex-row justify-content-between">
+                    <MudPagination SelectedChanged="OnPageChangedHandler" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
+                    <div class="paginatorPageSize">
+                        <MudSelect T="int" Label="Elementi per pagina" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
+                            @foreach (var size in pageSizes)
+                            {
+                                <MudSelectItem Value="size">@size</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                    </div>
+                </div>
+            </PagerContent>
+        </MudTable>
+
 }
 
 
@@ -305,6 +308,20 @@
 }
 
 <style>
+
+    .tableClass{
+        border: 1px solid lightgray !important;
+        border-radius: 25px !important;
+        height:90%;
+    }
+
+    .toolbarCss{
+        background: linear-gradient(45deg, #006, transparent);
+        border-radius:25px 25px 0px 0px;
+        color:white;
+        padding-inline:2vw;
+    }
+
     .mud-table-root .mud-table-head {
         display: table-header-group;
         background-color: #0066FF;
@@ -318,11 +335,7 @@
 
     .paginatorPageSize {
         width: 15%;
-    }
-
-    .mud-table-container {
-        max-height: 78vh;
-        height: 78vh;
+        padding-inline:2vw;
     }
 
     .selectStato
@@ -333,8 +346,14 @@
         height: 45px;
     }
 
-    .mud-table-toolbar {
-        margin-bottom: 17px;
+    .mud-toolbar-gutters {
+        padding-left: 0px !important; 
+        padding-right: 0px !important;
+    }
+
+    .mud-input-control-input-container{
+        background-color: white !important;
+        border-radius: 15px !important;
     }
 
     @@media (max-width: 960px) {
