@@ -74,7 +74,10 @@ namespace ReserGO.ViewModel.ViewModel.Register
                 Loading();
                 var result=await _authService.Register(SelectedItem);
                 if(result.Success)
+                {
                     Notification("Registrazione effettuata con successo, conferma la mail.", NotificationColor.Success);
+                    IsOpen = false;
+                }
                 else
                 {
                     Notification(result.Message, NotificationColor.Error);
@@ -87,6 +90,7 @@ namespace ReserGO.ViewModel.ViewModel.Register
             {
                 IsLoading= false;
                 Loading();
+                OnPropertyChanged();
             }
         }
     }
