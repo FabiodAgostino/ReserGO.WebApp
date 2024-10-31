@@ -22,7 +22,7 @@
 
             @if (CurrentViewModel.IsSmallView)
             {
-                <div class="inputSpace" style="height:65px;" >
+                <div class="inputSpace" style="height:65px;">
                     <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FirstName = value)" Label="Nome" Value="@CurrentViewModel.SelectedItem.FirstName" />
                 </div>
                 <div class="inputSpace" style="height:65px;">
@@ -35,13 +35,19 @@
                     <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
                         <Content>
                             <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email"
-                                            Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                            Required="true" RequiredError="Inserire Email corretta"
-                                            Immediate="true"
-                                            Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
+                                          Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                          Required="true" RequiredError="Inserire Email corretta"
+                                          Immediate="true"
+                                          Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
                             </MudTextField>
                         </Content>
                     </BaseComponent>
+                </div>
+                <div class="inputSpace">
+                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.Privacy" Required="true" ErrorText=""><a href="#">Accetto le condizioni d'uso, l'informativa sulla privacy e le note legali</a> </MudCheckBox>
+                </div>
+                <div class="inputSpace">
+                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.TrattamentoDati" Required="true" ErrorText=""><a href="#">Acconsento al trattamento dei dati personali</a></MudCheckBox>
                 </div>
             }
             else
@@ -80,7 +86,16 @@
                             </div>
                         </td>
                     </tr>
+
                 </table>
+
+                <div class="inputSpace">
+                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.Privacy" Required="true" RequiredError=""><a href="#">Accetto le condizioni d'uso, l'informativa sulla privacy e le note legali</a> </MudCheckBox>
+                </div>
+
+                <div class="inputSpace">
+                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.TrattamentoDati" Required="true" RequiredError=""><a href="#">Acconsento al trattamento dei dati personali</a></MudCheckBox>
+                </div>
             }
         </MudForm>
 
@@ -91,7 +106,7 @@
             <MudButton class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw; height:8vh;" type="submit" OnClick="Click">Conferma</MudButton>
         </div>
     }
-    
+
 </div>
 
 @code {
@@ -104,7 +119,8 @@
 
     private bool _success;
     MudForm form;
-
+    private bool _privacy { get; set; }
+    private bool _trattamentoDati { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!String.IsNullOrEmpty(CurrentViewModel.SelectedItem.FirstName))
@@ -123,7 +139,8 @@
         }
     }
 
-    private async Task Previous(){
+    private async Task Previous()
+    {
         if (PreviousClick.HasDelegate)
         {
             await PreviousClick.InvokeAsync();

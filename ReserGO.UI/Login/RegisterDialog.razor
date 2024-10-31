@@ -130,6 +130,16 @@
                                 <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.ConfirmPassword" Required="true" InputType="InputType.Password" Immediate="true" Validation="@(new Func<string, string>(PasswordMatch))" RequiredError="La password non corrisponde" Label="Conferma password" Variant="Variant.Outlined" Margin="Margin.Dense" />
                             </div>
                         </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <MudCheckBox @bind-Value="_privacy" Required="true" RequiredError=""><a href="#">Accetto le condizioni d'uso, l'informativa sulla privacy e le note legali</a> </MudCheckBox>
+                            </div>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <div class="inputSpace">
+                                <MudCheckBox @bind-Value="_trattamentoDati" Required="true" RequiredError=""><a href="#">Acconsento al trattamento dei dati personali</a></MudCheckBox>
+                            </div>
+                        </MudItem>
                     </MudGrid>
                 </MudForm>
 
@@ -187,6 +197,8 @@
     MudTextField<string> pwField1;
     MudForm form;
     private bool _success;
+    private bool _privacy { get; set; }
+    private bool _trattamentoDati { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
