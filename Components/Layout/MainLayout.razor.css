@@ -116,10 +116,6 @@ main {
 }
 
 @media (min-width: 800px) {
-    ::deep .mud-dialog {
-        width: unset !important;
-        height: unset !important;
-    }
 
     ::deep .mud-dialog-container.mud-dialog-center {
         padding: 0%;

@@ -2,7 +2,7 @@
 @using ReserGO.DTO
 @using ReserGO.Utils.DTO.Utils;
 @using ReserGO.Miscellaneous.Model;
-<MudDialog Options="@Options">
+<MudDialog Options="@Options" Class="dialogServiceModal">
     <TitleContent>
         <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
             <b>Dettaglio servizi</b>
@@ -10,23 +10,29 @@
         </div>
     </TitleContent>
     <DialogContent>
-        <div class="d-flex flex-column justify-content-center p-5" style="text-align:center">
+        <div class="d-flex flex-column p-4 modalBody">
             <ul>
             @foreach(var service in Services)
             {
-                <li>@service.ServiceName</li>
+                <li style="padding-block:2vh;" >@service.ServiceName</li>
             }
             </ul>
         </div>
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">Chiudi</MudButton>
+        <div class="d-flex w-100 p-2 justify-content-center " style="height:10%;" >
+            <MudButton Class="btn-css" Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">Chiudi</MudButton>
+        </div>
     </DialogActions>
 </MudDialog>
 
 @code {
     [Parameter]
     public List<DTOService> Services { get; set; }
+
+    [Parameter]
+    public bool IsSmallView { get; set; }
+
     public DialogOptions Options = new DialogOptions
         {
             CloseOnEscapeKey = true,
@@ -48,6 +54,7 @@
         background: #0066FF;
         color: white;
         padding: 15px;
+        font-size:x-large;
     }
 
     .mud-dialog .mud-dialog-title {
@@ -57,4 +64,22 @@
     .mud-dialog .mud-dialog-actions {
         justify-content: space-around !important;
     }
+
+    .dialogServiceModal{
+        border-radius:30px !important;
+        width: 25vw !important;
+    }
+
+    .btn-css{
+        width:40% !important;
+    }
+
+    .modalBody{
+        text-align: center;
+        max-height: 50vh;
+        overflow: auto;
+        scrollbar-color: #0066FF transparent;
+        font-size:large;
+    }
+
 </style>

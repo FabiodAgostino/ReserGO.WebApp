@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="d-flex justify-content-center p-2 h-50 informationHomeContiner">
-                            <CardReserGo Title="Inserisci comunicazione" Description="Il giorno xx lo studio resterà chiuso" Icon="@InformationIcon" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
+                            <CardReserGo Title="Inserisci comunicazione" Description="Il giorno xx lo studio resterà chiuso" Icon="@ComunicationIcon" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
                         </div>
                     </div>
                 }
@@ -51,7 +51,7 @@
                         <CardReserGo Title="Inserisci risorsa" Description="Inserisci una nuova risorsa" Icon="@ReservationIcon" CardStyle="width:19vw;height:44vh" IsSmallView="@IsSmallView" Vertical="@(IsSmallView ? false : true )" />
                     </div>
                     <div class="d-flex align-items-center p-2" onclick="@OpenModalComunications">
-                        <CardReserGo Title="Inserisci comunicazione" Description="Il giorno xx lo studio resterà chiuso" Icon="@InformationIcon" CardStyle="width:19vw;height:44vh" IsSmallView="@IsSmallView" Vertical="@(IsSmallView ? false : true )" />
+                        <CardReserGo Title="Inserisci comunicazione" Description="Il giorno xx lo studio resterà chiuso" Icon="@ComunicationIcon" CardStyle="width:19vw;height:44vh" IsSmallView="@IsSmallView" Vertical="@(IsSmallView ? false : true )" />
                     </div>
 
                 </div>
@@ -72,6 +72,7 @@
     public bool IsSmallView { get; set; }
     private string ReservationIcon = "";
     private string InformationIcon = "";
+    private string ComunicationIcon = "";
     private string HourDesc = "";
     private string AddresDesc = "";
     private bool ShowModal = false;
@@ -80,7 +81,7 @@
     protected override void OnInitialized()
     {
         ReservationIcon = Icons.Material.Filled.AddCircleOutline;
-        InformationIcon = Icons.Material.Filled.Info;
+        ComunicationIcon = Icons.Material.Filled.InterpreterMode;
 
         AddresDesc = "Via Roma, 123, 00100 Roma, Italia.     Dr.Rossi: 06 / xxxxxxx    Segreteria: 06 / xxxxxxx";
         HourDesc = "Lunedì: 09:00 - 13:00 / 16:00 - 18:30 Martedì: 09:00 - 13:00 / 16:00 - 18:30 Mercoledì:09:00 - 13:00 / 16:00 - 18:30 Giovedì:09:00 - 13:00 / 16:00 - 18:30 Venerdì:09:00 - 13:00 / 16:00 - 18:30 Sabato/Domenica:studio chiuso";
