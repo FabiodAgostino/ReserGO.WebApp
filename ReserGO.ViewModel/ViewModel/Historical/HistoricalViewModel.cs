@@ -31,7 +31,7 @@ namespace ReserGO.ViewModel.ViewModel.Historical
             {
                 IsLoading = true;
                 if (IsFirstLoad)
-                    Loading("Caricamento prenotazioni in corso");
+                    Loading("Caricamento prenotazioni in corso...");
                 var result = await _service.GetBookings(Pagination);
                 if (result.Success)
                 {
@@ -59,7 +59,7 @@ namespace ReserGO.ViewModel.ViewModel.Historical
                 if (IsFirstLoad)
                     Loading();
 
-               IsFirstLoad = false;
+                IsFirstLoad = false;
                OnPropertyChanged();
             }
         }

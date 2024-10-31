@@ -67,6 +67,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
                     thisView = IsSmall;
                 }
             });
+            await ReadNotification();
 
             var savedSettingsMenu = await _sessionStorage.GetItemAsync<IEnumerable<DTOSettingMenu>>(SettingsMenuKey);
             if (savedSettingsMenu == null)

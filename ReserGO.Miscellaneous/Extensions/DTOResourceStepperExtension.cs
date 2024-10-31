@@ -28,6 +28,12 @@ namespace ReserGO.Miscellaneous.Extensions
                 NextIndex(stepper);
         }
 
+        public static void Confirm(this DTOResourceStepper stepper)
+        {
+            stepper.ActualState = ResourceStepperState.FINISH;
+        }
+
+
         public static void NextIndex(this DTOResourceStepper stepper)
         {
             if (stepper.Index < stepper.State.Count())

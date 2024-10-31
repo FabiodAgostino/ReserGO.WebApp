@@ -27,7 +27,19 @@ namespace ReserGO.ViewModel.ViewModel
                 return _baseServices.Session.User;
             }
         }
-     
+
+        public virtual async Task ReadNotification()
+        {
+            await _baseServices.Notification.ReadNotification();
+        }
+
+        public virtual async Task PushNotification(string text, NotificationColor color = NotificationColor.Info, string position = null, bool block=false)
+        {
+            if (color == NotificationColor.Warning || color == NotificationColor.Error)
+                _baseServices.Log.LogError(text);
+
+            await _baseServices.Notification.PushToList(text, color, position, block);
+        }
 
         public virtual void Notification(string text, NotificationColor color =NotificationColor.Info, string position = null)
         {
