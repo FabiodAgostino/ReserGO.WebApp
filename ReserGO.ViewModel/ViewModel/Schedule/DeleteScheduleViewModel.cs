@@ -31,13 +31,12 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             try
             {
                 IsLoading = true;
-                Loading("Eliminazione della prenotazione in corso");
+                Loading("Eliminazione della prenotazione in corso...");
                 var res = await service.DeleteBookingEmail(deleteBooking);
                 if (res.Success)
-                    notification.NotifyMessage("Eliminazione avvenuta con successo", NotificationColor.Success);
+                    await notification.PushToList("Eliminazione avvenuta con successo", NotificationColor.Success,null, true);
                 else
-                    notification.NotifyMessage(res.Message, NotificationColor.Error);   
-                await Task.Delay(750);
+                    await notification.PushToList(res.Message, NotificationColor.Error, null, true);   
                 _navigationManager.NavigateTo("/", forceLoad: true);
             }
             catch (Exception ex)

@@ -12,7 +12,7 @@
 {
     protected override async Task OnInitializedAsync()
     {
-        await CurrentViewModel.Login();
+        await CurrentViewModel.FirstLogin();
         if (String.IsNullOrEmpty(CurrentViewModel.LoginError))
             NaviMngr.NavigateTo("/", true);
     }

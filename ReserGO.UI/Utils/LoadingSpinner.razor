@@ -5,15 +5,23 @@
 @inherits BaseComponentChild<ILoadingSpinnerViewModel, object>
 @if (CurrentViewModel is object && CurrentViewModel.LoadingSpinner is object && CurrentViewModel.LoadingSpinner.IsLoading)
 {
-    <div class="overlay">
-        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="mudProgressCircular" />
-        @if (!String.IsNullOrEmpty(CurrentViewModel.LoadingSpinner.Text))
-        {
-            <div class="textSpinner">
-                <b>@CurrentViewModel.LoadingSpinner.Text</b>
+    @if (!String.IsNullOrEmpty(CurrentViewModel.LoadingSpinner.Text))
+    {
+        <div class="overlayText" style="backdrop-filter: blur(40px);">
+        <div class="wrapper">
+            <div class="bgtext">
+                @CurrentViewModel.LoadingSpinner.Text
             </div>
-        }
-    </div>
+        </div>
+        </div>
+    }
+    else
+    {
+        <div class="overlay">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="mudProgressCircular" />
+        </div>
+    }
+
 
 }
 @{
@@ -30,6 +38,10 @@
     </style>
 }
 <style>
+    .mudProgressCircular
+    {
+        color:#006;
+    }
     .overlay {
         position: fixed;
         top: 0;
@@ -40,6 +52,18 @@
         justify-content: center;
         align-items: center;
         background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999999; /* Assicurati che sia sopra gli altri elementi */
+    }
+
+    .overlayText {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         z-index: 999999; /* Assicurati che sia sopra gli altri elementi */
     }
 

@@ -42,7 +42,22 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             }
                 
         }
-
+        public async Task FirstLogin()
+        {
+            try
+            {
+                var user = new DTOLoginRequest() { IsGuest = true };
+                var data = await _authService.Login(user);
+            }
+            catch (Exception ex)
+            {
+                Notification(ex.Message, NotificationColor.Error);
+            }
+            finally
+            {
+                OnPropertyChanged();
+            }
+        }
 
         public async Task Login(DTOLoginRequest user = null)
         {
@@ -50,7 +65,7 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             Loading();
             try
             {
-                if(user == null)
+                if (user == null)
                     user = new() { IsGuest = true };
                 else
                 {
@@ -76,7 +91,7 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
                 IsFirstLoad = false;
                 IsLoading = false;
                 Loading();
-                if(Callback.HasDelegate && String.IsNullOrEmpty(LoginError))
+                if (Callback.HasDelegate && String.IsNullOrEmpty(LoginError))
                 {
                     IsOpen = false;
                     await Callback.InvokeAsync();
@@ -85,7 +100,7 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             }
         }
 
-        
+
 
         public async Task OpenModal()
         {

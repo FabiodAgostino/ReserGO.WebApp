@@ -31,7 +31,7 @@
                 <Authorized>
                     @if (Render)
                     {
-                        @Body
+                       @Body
                     }
                 </Authorized>
                 <NotAuthorized>
@@ -40,6 +40,13 @@
                             <Login />
                         </Content>  
                     </BaseComponent>
+                    <div class="containerWrapper">
+                        <div class="wrapper">
+                           <div class="bgtext">
+                               Loading...
+                            </div>
+                        </div>
+                    </div>
                 </NotAuthorized>
             </AuthorizeView>
         }
@@ -61,6 +68,47 @@
 }
 
 <style>
+
+    .containerWrapper
+    {
+        width:100%;
+        height:100%;
+        backdrop-filter: blur(40px);
+    }
+    .wrapper
+    {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .bgtext
+    {
+        font-size:20px;
+        letter-spacing:3px;
+        font-weight:600;
+        font-family: Arial,Helvetica, sans-serif;
+        color:#0066FF;
+        width:100%;
+        text-transform:uppercase;
+        border-right:5px solid;
+        white-space:nowrap;
+        overflow:hidden;
+        animation: typing 1.7s steps(19), cursor .4s step-end infinite alternate;
+    }
+
+    @@keyframes cursor{
+        50% {border-color:transparent;}
+    }
+
+    @@keyframes typing{
+        from{
+            width:0;
+        }
+    }
+
     .mud-form {
         flex-direction: unset !important;
         display: unset !important

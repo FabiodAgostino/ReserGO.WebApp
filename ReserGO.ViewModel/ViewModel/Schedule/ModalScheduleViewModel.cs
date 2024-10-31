@@ -155,7 +155,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                 try
                 {
                     IsLoading = true;
-                    Loading("Salvataggio della prenotazione in corso");
+                    Loading("Salvataggio della prenotazione in corso...");
                     var bookingToInsert = (DTOBooking)Booking.Clone();
                     bookingToInsert.ResourceId= SelectedItem.Id.Value;
                     bookingToInsert.Resource.AvailabilityAdv = null;
@@ -163,8 +163,9 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                     bookingToInsert.Services = ScheduleStepper.Services ?? new();
                     bookingToInsert.StartDateTime = Booking.StartDateTime.Date.Add(ScheduleStepper.Slot.StartTime);
                     bookingToInsert.EndDateTime = Booking.StartDateTime.Date.Add(ScheduleStepper.Slot.EndTime);
-                    bookingToInsert.User = ScheduleStepper.User;
+                    bookingToInsert.User = ScheduleStepper.User.Email == null ? new DTOUserLight() { Email = User.Username, FirstName = User.FirstName, LastName = User.LastName} : ScheduleStepper.User;
                     bookingToInsert.TotalPrice = bookingToInsert.Services != null && bookingToInsert.Services.Count() > 0 ? bookingToInsert.Services.Sum(s => s.Price.Value) : null;
+
 
                     var result = await _bookService.InsertBooking(bookingToInsert);
                     if(result.Success)

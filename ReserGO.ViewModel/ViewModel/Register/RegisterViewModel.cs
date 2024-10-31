@@ -34,14 +34,13 @@ namespace ReserGO.ViewModel.ViewModel.Register
             try
             {
                 IsLoading = true;
-                Loading("Conferma della mail in corso");
+                Loading("Conferma della mail in corso...");
                 var result = await _authService.RegistrationConfirm(username);
                 if(result.Success)
-                    Notification("Conferma della mail effettuata con successo!", NotificationColor.Success);
+                    await PushNotification("Conferma della mail effettuata con successo!", NotificationColor.Success,null,true);
                 else
-                    Notification(result.Message, NotificationColor.Error);
+                    await PushNotification(result.Message, NotificationColor.Error,null,true);
 
-                await Task.Delay(750);
                 _navigationManager.NavigateTo("/", forceLoad: true);
             }
             catch (Exception ex)
