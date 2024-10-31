@@ -138,7 +138,7 @@
     public bool IsAdmin { get; set; }
 
     private DTOBookingFilter Filter = new();
-    private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
+    private List<int> pageSizes = new List<int> { 5, 10 }; // Opzioni di PageSize
     private List<string> status = new List<string> { "Tutte", "Da confermare", "Confermate", "Rifiutate" }; // Opzioni di conferma
     private string statusSelected = "Tutte";
 
