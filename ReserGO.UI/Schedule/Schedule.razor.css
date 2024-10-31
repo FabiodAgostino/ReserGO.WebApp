@@ -45,3 +45,10 @@
     border: 1px solid lightgrey;
     backdrop-filter: blur(99px);
 }
+
+.scheduleMainDivider{
+    height: 90%;
+    width: 1px;
+    border: 1px solid lightgrey;
+    padding-block: 10px;
+}
