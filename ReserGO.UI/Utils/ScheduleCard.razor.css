@@ -42,3 +42,16 @@
         box-shadow: 1px 0px 20px 0px #0066FF;
         z-index: 1;
     }
+
+.cardScheduleSmall {
+    width: 35vw;
+    height: 20vh;
+    background-color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    border: 1px solid lightgrey;
+}
+
+    .cardScheduleSmall.active {
+        box-shadow: 1px 0px 20px 0px #0066FF;
+    }
