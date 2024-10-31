@@ -19,11 +19,11 @@
 				<MudText Typo="Typo.h6">Servizi</MudText>
 				<MudSpacer />
 				<div class="d-flex flex-row w-50">
-					<div class="inputSpace m-2">
+					<div class="d-flex justify-content-end align-items-center w-50 toolItem">
 						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Class="btn-new" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.INSERT))">Nuovo servizio</MudButton>
 					</div>
-					<div class="inputSpace m-2 w-100">
-						<BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca per nome del servizio"></BaseTextField>
+					<div class="toolItem w-100">
+						<BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca per nome del servizio e premi invio..."></BaseTextField>
 					</div>
 				</div>
 			</div>
@@ -207,8 +207,8 @@
 		padding-inline: 2vw;
 	}
 
-	.btn-new{
-
+	.toolItem{
+		padding-inline:2vw;
 	}
 
 	.mud-table-root .mud-table-head {
@@ -225,11 +225,6 @@
 	.paginatorPageSize {
 		width: 15%;
 		padding-inline: 2vw;
-	}
-
-
-	.inputSpace {
-		height: 50px;
 	}
 
 	.mud-table-container {
