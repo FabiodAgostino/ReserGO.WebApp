@@ -31,7 +31,8 @@ namespace ReserGO.ViewModel.ViewModel
         public void InitConfigurationServer()
         {
             var ExtendedInput = MyConfigurationAccessor.GetValue("ConfigServer:ExtendedInput");
-            ConfigurationServer = new() { ExtendedInput = (ExtendedInput)Int32.Parse(ExtendedInput) };
+            var Manutenzione = MyConfigurationAccessor.GetValue("ConfigServer:Manutenzione");
+            ConfigurationServer = new() { ExtendedInput = (ExtendedInput)Int32.Parse(ExtendedInput), Manutenzione = bool.Parse(Manutenzione) };
         }
 
         public virtual void Loading(string text = null)
