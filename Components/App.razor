@@ -1,12 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-@* per eliminare l'attempting to reconnecting *@
-<script>
-    window.addEventListener('beforeunload', function() {
-        Blazor.defaultReconnectionHandler._reconnectionDisplay = {};
-    });
-</script>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,7 +17,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.0.4/wNumb.js"></script>
-    <script src="_framework/blazor.server.js" autostart="false"></script>
 
     
     <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: false)" />
@@ -46,10 +39,5 @@
 
 </html>
 
-<script>
-    Blazor.start().then(() => {
-        Blazor.defaultReconnectionHandler._reconnectCallback = function (d) {
-            document.location.reload();
-        }
-    });
-</script>
+
+

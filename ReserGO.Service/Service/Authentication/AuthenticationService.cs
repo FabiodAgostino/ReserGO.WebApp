@@ -1,4 +1,5 @@
 ﻿
+using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using Microsoft.Extensions.Configuration;
 using ReserGO.DTO;
@@ -13,12 +14,14 @@ namespace ReserGO.Service.Service.Authentication
         private readonly ISessionStorageService _sessionStorage;
         private readonly IJwtAuthenticationStateProvider _authProvider;
         private readonly ILoginService _loginService;
+        private readonly ILocalStorageService _localStorageService;
 
-        public AuthenticationService(IConfiguration Configuration, ISessionStorageService sessionStorage, IJwtAuthenticationStateProvider authProvider, ILoginService loginService)
+        public AuthenticationService(IConfiguration Configuration, ISessionStorageService sessionStorage, IJwtAuthenticationStateProvider authProvider, ILoginService loginService, ILocalStorageService localStorageService)
         {
             _sessionStorage = sessionStorage;
             _authProvider = authProvider;
             _loginService = loginService;
+            _localStorageService = localStorageService;
         }
 
 
@@ -26,38 +29,62 @@ namespace ReserGO.Service.Service.Authentication
         public async Task Logout()
         {
             await _sessionStorage.RemoveItemAsync("authToken");
+            await _localStorageService.RemoveItemAsync("authToken");
             _authProvider.NotifyUserLogout();
         }
         public async Task<ServiceResponse<string>> Login(DTOLoginRequest loginRequest)
         {
-            var token = await _sessionStorage.GetItemAsync<string>("authToken");
-            if (String.IsNullOrEmpty(token) || _authProvider.User.Username=="system")
-            {
-                if (_authProvider.User!=null && _authProvider.User.Username == "system")
-                    await Logout();
-                var response = await _loginService.Login(loginRequest);
+            var isLoggedInUser = await _localStorageService.GetItemAsync<string>("authToken");
 
-                if (response.Success && response.Data!=null)
+            if(String.IsNullOrEmpty(isLoggedInUser))
+            {
+                var token = await _sessionStorage.GetItemAsync<string>("authToken");
+                if (String.IsNullOrEmpty(token) || _authProvider.User.Username == "system")
                 {
-                    await _sessionStorage.SetItemAsync("authToken", response.Data);
-                    _authProvider.NotifyUserAuthentication(response.Data);
-                    await _authProvider.GetAuthenticationStateAsync();
+                    if (_authProvider.User != null && _authProvider.User.Username == "system")
+                        await Logout();
+                    var response = await _loginService.Login(loginRequest);
+
+                    if (response.Success && response.Data != null)
+                    {
+                        await _sessionStorage.SetItemAsync("authToken", response.Data);
+                        if(!loginRequest.IsGuest)
+                            await _localStorageService.SetItemAsync("authToken", response.Data);
+                        _authProvider.NotifyUserAuthentication(response.Data);
+                        await _authProvider.GetAuthenticationStateAsync();
+                    }
+                    return response;
                 }
-                return response;
             }
+            else
+            {
+                await _sessionStorage.SetItemAsync("authToken", isLoggedInUser);
+                _authProvider.NotifyUserAuthentication(isLoggedInUser);
+                await _authProvider.GetAuthenticationStateAsync();
+            }
+            
             return new ServiceResponse<string>();
         }
 
         public async Task<bool> IsLoggedIn()
         {
-            var token = await _sessionStorage.GetItemAsync<string>("authToken");
-            if (String.IsNullOrEmpty(token))
-                return false;
+            bool loggedIn = false;
+            var token = await _localStorageService.GetItemAsync<string>("authToken");
+            if (!String.IsNullOrEmpty(token))
+                loggedIn =true;
+            var sessionToken = await _sessionStorage.GetItemAsync<string>("authToken");
+            if (!String.IsNullOrEmpty(sessionToken) && String.IsNullOrEmpty(token) && !String.IsNullOrEmpty(_authProvider.User.FirstName))
+            {
+                await _sessionStorage.RemoveItemAsync("authToken");
+                await _localStorageService.RemoveItemAsync("authToken");
+                await Login(new DTOLoginRequest() { IsGuest = true }); 
+            }
             await _authProvider.GetAuthenticationStateAsync();
 
             if (_authProvider.User != null && _authProvider.User.Username == "system")
-                return false;
-            return true;
+                loggedIn = false;
+
+            return loggedIn;
         }
 
     }
