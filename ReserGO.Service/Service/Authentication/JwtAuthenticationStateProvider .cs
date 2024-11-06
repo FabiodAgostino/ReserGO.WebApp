@@ -1,4 +1,5 @@
-﻿using Blazored.SessionStorage;
+﻿using Blazored.LocalStorage;
+using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using ReserGO.Service.Interface.Authentication;
@@ -16,20 +17,30 @@ namespace ReserGO.Service.Service.Authentication
         private readonly ISessionStorageService _sessionStorage;
         private readonly HttpClient _httpClient;
         private readonly ILogger<JwtAuthenticationStateProvider> _logger;
+        private readonly ILocalStorageService _localStorageService;
 
         private DTOUserSession _user { get; set; }
         public DTOUserSession User { get => _user; set => _user = value; }
 
 
-        public JwtAuthenticationStateProvider(ISessionStorageService sessionStorage, HttpClient httpClient, ILogger<JwtAuthenticationStateProvider> logger)
+        public JwtAuthenticationStateProvider(ISessionStorageService sessionStorage, HttpClient httpClient, ILogger<JwtAuthenticationStateProvider> logger, ILocalStorageService localStorageService)
         {
             _sessionStorage = sessionStorage;
             _httpClient = httpClient;
             _logger = logger;
+            _localStorageService = localStorageService;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var token = await _sessionStorage.GetItemAsync<string>("authToken");
+            string token = String.Empty;
+            token = await _localStorageService.GetItemAsync<string>("authToken");
+
+            if (String.IsNullOrEmpty(token))
+                token = await _sessionStorage.GetItemAsync<string>("authToken");
+            else
+                await _sessionStorage.SetItemAsync("authToken", token);
+
+
             _logger.LogInformation("Token retrieved from session storage: {Token}", token);
 
             if (string.IsNullOrEmpty(token))
@@ -83,6 +94,7 @@ namespace ReserGO.Service.Service.Authentication
             }
             return Convert.FromBase64String(base64);
         }
+
     }
 
 

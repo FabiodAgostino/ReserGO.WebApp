@@ -1,10 +1,13 @@
 ﻿using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Service.Interface;
+using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Home;
+using ReserGO.Service.Service.Utils;
 using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Home;
 
@@ -14,11 +17,15 @@ namespace ReserGO.ViewModel.ViewModel.Home
     {
         private readonly IHomeService _service;
         private readonly ISessionStorageService _sessionStorage;
+        private readonly NavigationManager navigationManager;
+        private readonly IAuthenticationService _authService;
         private const string SettingsMenuKey = "settingsMenu";
-        public HomeViewModel(IBaseServicesReserGO<HomeViewModel> baseService, IHomeService service, ISessionStorageService sessionStorage) : base(baseService)
+        public HomeViewModel(IBaseServicesReserGO<HomeViewModel> baseService, IHomeService service, ISessionStorageService sessionStorage, NavigationManager navigationManager, IAuthenticationService authService) : base(baseService)
         {
             _service = service;
             _sessionStorage = sessionStorage;
+            this.navigationManager = navigationManager;
+            _authService = authService;
             Aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
 
 
@@ -60,6 +67,9 @@ namespace ReserGO.ViewModel.ViewModel.Home
 
         public async Task OnInitialize()
         {
+            if (ConfigurationServer.Manutenzione)
+                navigationManager.NavigateTo("/Manutenzione");
+
             TriggerMethodOnSmall = new EventCallback<bool>(null, (bool IsSmall) => {
                 if (thisView != IsSmall)
                 {
@@ -68,9 +78,9 @@ namespace ReserGO.ViewModel.ViewModel.Home
                 }
             });
             await ReadNotification();
-
+            var isLogged=await _authService.IsLoggedIn();
             var savedSettingsMenu = await _sessionStorage.GetItemAsync<IEnumerable<DTOSettingMenu>>(SettingsMenuKey);
-            if (savedSettingsMenu == null)
+            if (savedSettingsMenu == null || !isLogged)
             {
                 isLoading = true;
                 Loading();
@@ -86,6 +96,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
                 }
                 catch (Exception ex)
                 {
+                    navigationManager.NavigateTo("/Manutenzione", forceLoad: true);
                     Notification(ex.Message, NotificationColor.Error);
                 }
                 finally

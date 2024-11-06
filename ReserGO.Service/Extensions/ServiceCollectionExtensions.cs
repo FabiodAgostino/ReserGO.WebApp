@@ -21,6 +21,7 @@ namespace ReserGO.Service.Extensions
             services.AddScoped(typeof(IBaseServicesReserGO<>), typeof(BaseServicesReserGO<>));
 
 
+
             return services;
         }
     }
