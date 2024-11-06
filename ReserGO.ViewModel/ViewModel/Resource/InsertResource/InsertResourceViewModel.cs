@@ -3,7 +3,10 @@ using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
+using ReserGO.Utils.DTO.Service;
+using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Resource.InsertResource;
+using static MudBlazor.CategoryTypes;
 
 namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
 {
@@ -18,6 +21,9 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
             _service = service;
         }
         public DTOResourceStepper Stepper { get; set; }
+
+        
+
         public async Task InsertResource()
         {
             try
@@ -33,5 +39,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
                 Notification(ex.Message, NotificationColor.Error);
             }
         }
+
+      
     }
 }

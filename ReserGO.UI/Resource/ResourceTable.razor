@@ -1,0 +1,178 @@
+﻿@using ReserGO.UI.FiltersComponent
+@using MudBlazor
+@using ReserGO.DTO.ListAvailability
+@using ReserGO.Utils.DTO.Service
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.Utils.UI
+@using ReserGO.DTO
+@using ReserGO.Utils.DTO.Utils
+@using ReserGO.UI.Utils
+@using ReserGO.UI.FiltersComponent
+@using ReserGO.ViewModel.Interface.FiltersComponent
+@using ReserGO.ViewModel.Interface.Resource.InsertResource
+@using ReserGO.Miscellaneous.Extensions;
+@using static ReserGO.Miscellaneous.Model.DTOResourceStepper
+@using ReserGO.ViewModel.Interface.FiltersComponent
+@inject IDialogService DialogService
+
+@if (Resources is object)
+{
+	<MudTable Items="@Resources.CurrentPageData" Loading="IsLoading"
+			  Hover="true" Class="w-100 shadow tableClass" Breakpoint="Breakpoint.Sm"
+			  LoadingProgressColor="Color.Primary" RowsPerPage="10"
+			  TotalItems="10">
+		<ToolBarContent>
+			<div class="d-flex w-100 h-100 align-items-center toolbarCss" style="background-color:#0066FF;" >
+				<MudText Typo="Typo.h6">Risorse</MudText>
+				<MudSpacer />
+				<div class="d-flex flex-row w-50">
+					<div class="d-flex justify-content-end align-items-center w-50 toolItem">
+						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Class="btn-new" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.INSERT))">Nuova risorsa</MudButton>
+					</div>
+					<div class="toolItem w-100">
+						<BaseTextField MinLenght="0" Required="false" Label="Ricerca per nome della risorsa e premi invio..."></BaseTextField>
+					</div>
+				</div>
+			</div>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh>Nome Risorsa</MudTh>
+			<MudTh>Descrizione</MudTh>
+			<MudTh>Conferma</MudTh>
+			<MudTh>Servizi</MudTh>
+			<MudTh></MudTh>
+		</HeaderContent>
+
+		<RowTemplate Context="element">
+			<MudTd>@element.ResourceName</MudTd>
+			<MudTd>@element.ResourceName</MudTd>
+			<MudTd>@element.ResourceName</MudTd>
+			<MudTd>@element.ResourceName</MudTd>
+			<MudTd>
+				<div class="d-flex flex-row">
+					<div title="Elimina" class="m-3">
+						<MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.UPDATE, element))" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
+					</div>
+					<div title="Modifica" class="m-3">
+						<MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
+					</div>
+				</div>
+			</MudTd>
+		</RowTemplate>
+	</MudTable>
+}
+
+
+@code {
+
+	[Parameter]
+	public bool IsLoading { get; set; }
+
+    [Parameter]
+	public GenericPagedList<DTOResource> Resources { get; set; }
+	
+	[Parameter]
+	public GenericPagedFilter<DTOResourceFilter> PagingOptions { get; set; }
+
+	[Parameter]
+	public EventCallback<GridAction<DTOResource, DTOResourceFilter>> Action { get; set; }
+
+    private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
+
+    protected override async Task OnParametersSetAsync()
+    {
+        StateHasChanged();
+    }
+
+
+	private async Task InsertUpdateDialog(TypeActionsGRID typeActionGrid, DTOResource resurce = null)
+	{
+		var callback = EventCallback.Factory.Create<DTOResource>(this, ((DTOResource value) => InsertUpdateCallback(value, typeActionGrid)));
+		string text = "<b>Questa azione è irreversibile.</b><br/>Sei sicuro di voler eliminare la risorsa?";
+		var modal = new GenericModal<DTOResource>(callback, text, "", typeActionGrid, resurce);
+
+		var dialogParameters = new DialogParameters
+			{
+				{ "Modal", modal }  // Passa l'oggetto direttamente
+            };
+
+		var options = new DialogOptions
+			{
+				CloseOnEscapeKey = true,
+				Position = DialogPosition.Center
+			};
+
+		// var result = await DialogService.Show<InsertResourceModal>("Modifica risorsa", dialogParameters, options).Result;
+	}
+
+	private async Task InsertUpdateCallback(DTOResource resurce, TypeActionsGRID actiongrid)
+	{
+		if (Action.HasDelegate && resurce != null)
+		{
+			var list = new List<DTOResource>();
+			list.Add(resurce);
+
+			var action = new GridAction<DTOResource, DTOResourceFilter>(list, actiongrid, "");
+			await Action.InvokeAsync(action);
+		}
+	}
+}
+
+
+<style>
+	.tableClass {
+		border: 1px solid lightgray !important;
+		border-radius: 25px !important;
+	}
+
+	.toolbarCss {
+		background: linear-gradient(45deg, #006, transparent);
+		border-radius: 25px 25px 0px 0px;
+		color: white;
+		padding-inline: 2vw;
+	}
+
+	.toolItem {
+		padding-inline: 2vw;
+	}
+
+	.mud-table-root .mud-table-head {
+		display: table-header-group;
+		background-color: #0066FF;
+	}
+
+		.mud-table-root .mud-table-head .mud-table-cell {
+			color: white !important;
+			font-weight: 500;
+			line-height: 1.5rem;
+		}
+
+	.paginatorPageSize {
+		width: 15%;
+		padding-inline: 2vw;
+	}
+
+	.mud-table-container {
+		max-height: 75vh;
+		height: 75vh;
+	}
+
+
+	.mud-toolbar-gutters {
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+	}
+
+
+	.mud-input-control-input-container {
+		background-color: white !important;
+		border-radius: 15px !important;
+	}
+
+	@@media (max-width: 960px) {
+		.mud-sm-table .mud-table-cell {
+			justify-content: unset !important;
+			padding: 0px 16px !important;
+		}
+	}
+</style>

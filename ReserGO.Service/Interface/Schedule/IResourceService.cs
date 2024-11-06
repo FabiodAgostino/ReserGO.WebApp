@@ -8,7 +8,8 @@ namespace ReserGO.Service.Interface.Schedule
     {
         [Get("/GetResourcesByCompany")]
         Task<ServiceResponse<IEnumerable<DTOResource>>> GetResourcesByCompany();
-
+        [Post("/GetResourcesByCompanyFiltered")]
+        Task<ServiceResponse<GenericPagedList<DTOResource>>> GetResourceByCompanyFiltered(GenericPagedFilter<DTOResourceFilter> data);
         [Get("/GetFullResource")]
         Task<ServiceResponse<DTOResource>> GetFullResource(int idResource, DateTime? monthDate);
         [Get("/GetDetailResource")]
