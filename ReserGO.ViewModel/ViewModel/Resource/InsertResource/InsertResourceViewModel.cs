@@ -1,4 +1,5 @@
-﻿using ReserGO.DTO;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface;
@@ -40,6 +41,15 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
             }
         }
 
-      
+        public async Task HandleFileSelected(IBrowserFile file)
+        {
+            if (file != null)
+            {
+                using var memoryStream = new MemoryStream();
+                await file.OpenReadStream().CopyToAsync(memoryStream);
+                SelectedItem.ImageData = memoryStream.ToArray();
+                SelectedItem.ImageContentType = file.ContentType;
+            }
+        }
     }
 }
