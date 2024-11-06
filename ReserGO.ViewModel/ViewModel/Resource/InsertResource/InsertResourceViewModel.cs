@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
+using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
@@ -20,10 +21,10 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
             SelectedItem = new();
             Stepper = new();
             _service = service;
+            Aggregator.Subscribe<ObjectMessage<bool>>(GetType(),(ObjectMessage<bool> open) => IsOpen = true);
         }
         public DTOResourceStepper Stepper { get; set; }
-
-        
+        public bool IsOpen { get; set; }
 
         public async Task InsertResource()
         {

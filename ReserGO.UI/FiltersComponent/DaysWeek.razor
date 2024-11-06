@@ -19,7 +19,8 @@
 			</div>
 		</MudItem>
 	</MudGrid>
-	<div class="d-flex h-50">
+	<div class="d-flex h-50 p-3">
+		<div style="max-height:3vh">
 		@if (CurrentViewModel.List is object && CurrentViewModel.List.Count()>0)
 		{
 			<b>Giorni Selezionati:</b>
@@ -28,6 +29,7 @@
 				<span>@($" {day.FullName},")</span>
 			}
 		}
+		</div>
 	</div>
 	<div class="d-flex justify-content-center">
 		<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="GoNext" Disabled="CurrentViewModel.List.Count()==0">Avanti</MudButton>

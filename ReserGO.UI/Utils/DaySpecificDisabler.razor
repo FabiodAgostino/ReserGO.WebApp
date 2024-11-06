@@ -1,0 +1,39 @@
+﻿@using MudBlazor
+<MudDatePicker DisplayMonths="2" PickerVariant="PickerVariant.Static" DateChanged="OnDateChanged" FixYear="2024" Style="max-width:15vw"
+MaxDate="_maxDate" MinDate="_minDate" AdditionalDateClassesFunc="@((DateTime dt)=>(_disabledDate.Contains(dt) ? "red-text text-accent-4" : ""))">
+    <PickerActions>
+        @if (_disabledDate.Count() > 0)
+        {
+            var days = (MarkupString)string.Join(", ", _disabledDate.Select(d => $"<b>{d.ToString("dd/MM/yyyy")}</b>"));
+            <div class="w-100" style="text-align:left"><span style="color:red">Giorni disabilitati: </span><span>@days</span></div>
+        }
+    </PickerActions>
+</MudDatePicker>
+
+@code {
+    private DateTime _minDate = new DateTime(DateTime.Now.Year, 1, 1); 
+    private DateTime _maxDate = new DateTime(DateTime.Now.Year, 12, 31);
+    private List<DateTime> _disabledDate = new();
+    private void OnDateChanged(DateTime? newDate)
+    {
+        if (newDate.HasValue)
+        {
+            if (!_disabledDate.Contains(newDate.Value))
+                _disabledDate.Add(newDate.Value);
+            else
+                _disabledDate = _disabledDate.Where(x => x != newDate.Value).ToList();
+        }
+    }
+}
+
+
+
+<style>
+   /*  button.mud-picker-slide-transition.mud-picker-calendar-header-transition.mud-button-month {
+        display: none;
+    }
+
+    button.mud-button-root.mud-button.mud-button-text.mud-button-text-inherit.mud-button-text-size-medium.mud-ripple.mud-button-year {
+        display: none;
+    } */
+</style>

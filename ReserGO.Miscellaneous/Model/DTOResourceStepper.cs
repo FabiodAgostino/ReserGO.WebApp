@@ -45,7 +45,6 @@ namespace ReserGO.Miscellaneous.Model
             dict.Add(i++, ResourceStepperState.DAYS);
             dict.Add(i++, ResourceStepperState.RECURRING_RULES);
             dict.Add(i++, ResourceStepperState.CONFIRM);
-            dict.Add(i++, ResourceStepperState.DISABLED_DAYS);
             dict.Add(i, ResourceStepperState.FINISH);
 
 

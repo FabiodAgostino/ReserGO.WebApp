@@ -27,7 +27,7 @@
 				<MudSpacer />
 				<div class="d-flex flex-row w-50">
 					<div class="d-flex justify-content-end align-items-center w-50 toolItem">
-						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Class="btn-new" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.INSERT))">Nuova risorsa</MudButton>
+						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Class="btn-new" Variant="Variant.Filled" @onclick="(async () => await OpenModal(TypeActionsGRID.INSERT))">Nuova risorsa</MudButton>
 					</div>
 					<div class="toolItem w-100">
 						<BaseTextField MinLenght="0" Required="false" Label="Ricerca per nome della risorsa e premi invio..."></BaseTextField>
@@ -51,7 +51,7 @@
 			<MudTd>
 				<div class="d-flex flex-row">
 					<div title="Elimina" class="m-3">
-						<MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.UPDATE, element))" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
+						<MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
 					</div>
 					<div title="Modifica" class="m-3">
 						<MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
@@ -68,54 +68,33 @@
 	[Parameter]
 	public bool IsLoading { get; set; }
 
-    [Parameter]
+	[Parameter]
 	public GenericPagedList<DTOResource> Resources { get; set; }
-	
+
 	[Parameter]
 	public GenericPagedFilter<DTOResourceFilter> PagingOptions { get; set; }
 
 	[Parameter]
 	public EventCallback<GridAction<DTOResource, DTOResourceFilter>> Action { get; set; }
 
-    private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
 
-    protected override async Task OnParametersSetAsync()
-    {
-        StateHasChanged();
-    }
+	private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
 
-
-	private async Task InsertUpdateDialog(TypeActionsGRID typeActionGrid, DTOResource resurce = null)
+	protected override async Task OnParametersSetAsync()
 	{
-		var callback = EventCallback.Factory.Create<DTOResource>(this, ((DTOResource value) => InsertUpdateCallback(value, typeActionGrid)));
-		string text = "<b>Questa azione è irreversibile.</b><br/>Sei sicuro di voler eliminare la risorsa?";
-		var modal = new GenericModal<DTOResource>(callback, text, "", typeActionGrid, resurce);
-
-		var dialogParameters = new DialogParameters
-			{
-				{ "Modal", modal }  // Passa l'oggetto direttamente
-            };
-
-		var options = new DialogOptions
-			{
-				CloseOnEscapeKey = true,
-				Position = DialogPosition.Center
-			};
-
-		// var result = await DialogService.Show<InsertResourceModal>("Modifica risorsa", dialogParameters, options).Result;
+		StateHasChanged();
 	}
 
-	private async Task InsertUpdateCallback(DTOResource resurce, TypeActionsGRID actiongrid)
-	{
-		if (Action.HasDelegate && resurce != null)
-		{
-			var list = new List<DTOResource>();
-			list.Add(resurce);
 
-			var action = new GridAction<DTOResource, DTOResourceFilter>(list, actiongrid, "");
+	private async Task OpenModal(TypeActionsGRID typeAction)
+	{
+		if (Action.HasDelegate)
+		{
+			var action = new GridAction<DTOResource, DTOResourceFilter>(TypeActionsGRID.INSERT);
 			await Action.InvokeAsync(action);
 		}
 	}
+
 }
 
 

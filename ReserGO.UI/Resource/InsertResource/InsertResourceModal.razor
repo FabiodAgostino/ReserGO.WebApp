@@ -12,31 +12,63 @@
 @using ReserGO.Miscellaneous.Extensions;
 @using static ReserGO.Miscellaneous.Model.DTOResourceStepper
 @using ReserGO.ViewModel.Interface.FiltersComponent
-@inherits BaseComponentChild<IInsertResourceViewModel, DTOResource>
-@if (CurrentViewModel.Stepper is object)
-{
+@using Microsoft.AspNetCore.Components.Forms
 
-    <MudDialog Options="@Options">
+@inherits BaseComponentChild<IInsertResourceViewModel, DTOResource>
+
+<MudDialog Class="@(CurrentViewModel.IsSmallView ? "scheduleDialogCssSmall" : "scheduleDialogCss")" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler" Options="@Options">
     <TitleContent>
-        <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
-            <b>@(Modal.TypeActionsGRID == TypeActionsGRID.INSERT ? "Inserisci nuovo servizio" : "Modifica servizio")</b>
-            <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Default" />
-        </div>
+
     </TitleContent>
+
     <DialogContent>
-        <div class="insertResourceContainer w-100">
+        <div class="insertResourceContainer">
             <MudForm @ref="_form" @bind-IsValid="@_success">
                 <div class="d-flex flex-column w-100">
-                    <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.ResourceName = value)" Label="Nome" />
-                    <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.Description = value)" Label="Descrizione" Required="false"/>
-                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma"></MudCheckBox>
-                    <BaseComponent TViewModel="IServicesComboViewModel" TModel="DTOService">
-                        <Content>
-                            <ServicesCombo />
-                        </Content>
-                    </BaseComponent>
+                    <div class="d-flex p-2">
+                        <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.ResourceName = value)" Label="Nome" />
+                        <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.Description = value)" Label="Descrizione" Required="false" />
+                    </div>
+                    <div class="d-flex justify-content-evenly p-2">
+                        <div>
+                            <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma"></MudCheckBox>
+                        </div>
+
+                        <div>
+                            <BaseComponent TViewModel="IServicesComboViewModel" TModel="DTOService">
+                                <Content>
+                                    <ServicesCombo />
+                                </Content>
+                            </BaseComponent>
+                        </div>
+                        <div>
+                            <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Accept=".png, .jpg" MaximumFileCount="1">
+                                <ActivatorContent>
+                                    <MudButton Variant="Variant.Filled"
+                                               Color="Color.Primary"
+                                               StartIcon="@Icons.Material.Filled.Image">
+                                        Carica Immagine
+                                    </MudButton>
+                                </ActivatorContent>
+                            </MudFileUpload>
+
+                        </div>
+                        <div style="width:132px">
+                            @if (selectedFile != null)
+                            {
+
+                                <MudChip T="string" Color="Color.Default">
+                                    <div title="Rimuovi">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Size="Size.Small" @onclick="@(() => DeleteFile())" />
+                                    </div>
+                                    @selectedFile.Name
+                                </MudChip>
+                            }
+                        </div>
+                    </div>
                 </div>
-                <div>
+
+                <div style="height:320px">
                     @if (CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
                     {
                         @if (!_enableHoursRule)
@@ -59,7 +91,7 @@
                     }
                     @if (_enableHoursRule && CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
                     {
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center" style="height:320px; max-height:320px; overflow:scroll;">
                             <div class="w-75">
                                 <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.Stepper.Index" Style="height:100%">
                                     <MudTabPanel Text="Giorni disponibilità">
@@ -104,23 +136,24 @@
                     }
                     @if (!_enableHoursRule || _enableHoursRule && CurrentViewModel.Stepper.ActualState == ResourceStepperState.FINISH)
                     {
-                        <div>
-                            <MudButton Color="Color.Default" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper = new())">Reset</MudButton>
-                            <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper.Confirm())" Disabled="!_success">Salva</MudButton>
+                        <div class="d-flex justify-content-center align-items-end h-75">
+                            <div class="d-flex m-3 w-25">
+                                <MudButton Color="Color.Default" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper = new())" style="width:9vw">Reset</MudButton>
+                            </div>
+                            <div class="d-flex m-3 w-25">
+                                <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper.Confirm())" style="width:9vw" Disabled="!_success">Salva</MudButton>
+                            </div>
                         </div>
                     }
                 </div>
             </MudForm>
         </div>
-    </DialogContent>
-    <DialogActions>
-    </DialogActions>
-</MudDialog>
-}
-@code {
 
-    [Parameter]
-    public GenericModal<DTOResource> Modal { get; set; }
+    </DialogContent>
+
+</MudDialog>
+
+@code {
 
     private bool _enablePrice = false;
     private bool _enableHoursRule = false;
@@ -130,20 +163,20 @@
     private MarkupString _daysMarkup { get; set; }
     private MudForm _form;
     private bool _success { get; set; }
+    private IBrowserFile selectedFile;
 
-
+    private Dictionary<int, DTOTimeSlot> _recurringRules = new();
     public DialogOptions Options = new DialogOptions
         {
             CloseOnEscapeKey = true,
-            MaxWidth = MaxWidth.Large,
+            MaxWidth = MaxWidth.ExtraLarge,
             NoHeader = true,
-
         };
 
-
-
-    private Dictionary<int, DTOTimeSlot> _recurringRules = new();
-
+    private async Task OnBackdropClickHandler(MouseEventArgs e)
+    {
+        CurrentViewModel.IsOpen = false;
+    }
     private void OnTimeChanged(DTOTimeSlot timePicker, int numRecurringRules, bool isEnd = false)
     {
         if (timePicker != null)
@@ -167,9 +200,29 @@
         }
     }
 
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        selectedFile = file;
+        await CurrentViewModel.HandleFileSelected(file);
+    }
+
+    private async Task DeleteFile()
+    {
+        selectedFile = null;
+        CurrentViewModel.SelectedItem.ImageData = null;
+        CurrentViewModel.SelectedItem.ImageContentType = String.Empty;
+    }
+
     private void RemoveLastRule()
     {
         _numRecurringRules--;
         _recurringRules = _recurringRules.Where(x => x.Key != _numRecurringRules).ToDictionary();
     }
 }
+
+<style>
+    .insertResourceContainer {
+        width: 65vw;
+        padding: 3vw;
+    }
+</style>

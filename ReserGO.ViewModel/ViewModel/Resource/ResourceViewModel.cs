@@ -7,6 +7,8 @@ using static MudBlazor.CategoryTypes;
 using System.Resources;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
+using ReserGO.Miscellaneous.Message;
+using ReserGO.ViewModel.ViewModel.Resource.InsertResource;
 
 namespace ReserGO.ViewModel.ViewModel.Resource
 {
@@ -66,8 +68,6 @@ namespace ReserGO.ViewModel.ViewModel.Resource
                 Notification(action.Error, NotificationColor.Error);
                 return;
             }
-            if (action.Items is object || action.PagingOptions is object || action.Filter is object)
-            {
                 switch (action.TypeActions)
                 {
                     case TypeActionsGRID.PAGE_CHANGED:
@@ -83,12 +83,12 @@ namespace ReserGO.ViewModel.ViewModel.Resource
                     case TypeActionsGRID.UPDATE:
                         break;
                     case TypeActionsGRID.INSERT:
+                        Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(InsertResourceViewModel));
                         break;
                     case TypeActionsGRID.SINGLE_DELETE:
                         break;
 
                 }
-            }
         }
     }
 }
