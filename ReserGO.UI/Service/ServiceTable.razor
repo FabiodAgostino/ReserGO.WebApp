@@ -16,13 +16,13 @@
 			  TotalItems="PagingOptions.TotalCount.Value">
 		<ToolBarContent>
 			<div class="d-flex w-100 h-100 align-items-center toolbarCss" style="background-color:#0066FF;" >
-				<MudText Typo="Typo.h6">Servizi</MudText>
+				<MudText Typo="Typo.h6"> <span style="@(IsSmallView ? "padding-inline:2vw;":"")"> Servizi </span> </MudText>
 				<MudSpacer />
-				<div class="d-flex flex-row w-50">
+				<div class="d-flex flex-row @(IsSmallView ? "w-100 justify-content-end":"w-50")">
 					<div class="d-flex justify-content-end align-items-center w-50 toolItem">
-						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Class="btn-new" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.INSERT))">Nuovo servizio</MudButton>
+						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Class="@(IsSmallView ? "btn-new-small":"btn-new")" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.INSERT))">@(IsSmallView ? "Nuovo" : "Nuovo servizio")</MudButton>
 					</div>
-					<div class="toolItem w-100">
+					<div class="toolItem @(IsSmallView ? "w-50":"w-100")">
 						<BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca per nome del servizio e premi invio..."></BaseTextField>
 					</div>
 				</div>
@@ -37,25 +37,57 @@
 		</HeaderContent>
 
 		<RowTemplate Context="element">
-			<MudTd>@element.ServiceName</MudTd>
-			<MudTd>@element.Description</MudTd>
-			<MudTd>@element.Price</MudTd>
-			<MudTd>@element.Duration</MudTd>
 			<MudTd>
-				<div class="d-flex flex-row">
-					<div title="Elimina" class="m-3">
-						<MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))" Size="Size.Small"></MudIconButton>
+				<div style="@(IsSmallView ? "margin-top:2vh;":"")">
+					@if (IsSmallView)
+					{
+						<b style="padding-inline:2vw;" >Nome: </b>
+					}
+					@element.ServiceName
+				</div>
+			</MudTd>
+			<MudTd>
+				<div style="@(IsSmallView ? "margin-top:1vh;":"")">
+					@if (IsSmallView)
+					{
+						<b style="padding-inline:2vw;">Descrizione: </b>
+					}
+					@(element.Description is object && element.Description.Length > 0 ? element.Description : "(Nessuna descrizione)")
+				</div>
+			</MudTd>
+			<MudTd>
+				<div style="@(IsSmallView ? "margin-top:1vh;":"")">
+					@if (IsSmallView)
+					{
+						<b style="padding-inline:2vw;">Prezzo: </b>
+					}
+					@element.Price
+				</div>
+			</MudTd>
+			<MudTd>
+				<div style="@(IsSmallView ? "margin-top:1vh;":"")">
+					@if (IsSmallView)
+					{
+						<b style="padding-inline:2vw;">Durata: </b>
+					}
+					@element.Duration
+				</div>
+			</MudTd>
+			<MudTd>
+				<div class="d-flex flex-row @(IsSmallView ? "w-100":"")">
+					<div title="Elimina" class="m-3 @(IsSmallView ? "w-50":"")">
+						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))" Size="@(IsSmallView ? Size.Large:Size.Small)"></MudIconButton>
 					</div>
-					<div title="Modifica" class="m-3">
-						<MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.UPDATE, element))" Size="Size.Small"></MudIconButton>
+					<div title="Modifica" class="m-3 @(IsSmallView ? "w-50":"")">
+						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.UPDATE, element))" Size="@(IsSmallView ? Size.Large:Size.Small)"></MudIconButton>
 					</div>
 				</div>
 			</MudTd>
 		</RowTemplate>
 		<PagerContent>
-			<div class="d-flex flex-row justify-content-between">
+			<div class="d-flex flex-row align-items-center @(IsSmallView ? "":"justify-content-between")">
 				<MudPagination SelectedChanged="OnPageChangedHandler" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
-				<div class="paginatorPageSize">
+				<div class="paginatorPageSize" style="@(IsSmallView ? "width:35%;":"")">
 					<MudSelect T="int" Label="Elementi per pagina" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
 						@foreach (var size in pageSizes)
 						{
@@ -78,6 +110,8 @@
 	public EventCallback<GridAction<DTOService, DTOServiceFilter>> Action { get; set; }
 	[Parameter]
 	public bool IsLoading { get; set; }
+	[Parameter]
+	public bool IsSmallView { get; set; }
 
 	private DTOServiceFilter Filter = new();
 	private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
@@ -135,7 +169,8 @@
 
 		var dialogParameters = new DialogParameters
 			{
-				{ "Modal", modal }  // Passa l'oggetto direttamente
+				{ "Modal", modal },
+				{ "IsSmallView", IsSmallView } // Passa l'oggetto direttamente
             };
 
 		var options = new DialogOptions
@@ -167,7 +202,8 @@
 
 		var dialogParameters = new DialogParameters
 			{
-				{ "Modal", modal }  // Passa l'oggetto direttamente
+				{ "Modal", modal },
+				{ "IsSmallView", IsSmallView }// Passa l'oggetto direttamente
             };
 
 		var options = new DialogOptions
@@ -242,6 +278,15 @@
 	.mud-input-control-input-container {
 		background-color: white !important;
 		border-radius: 15px !important;
+	}
+	
+	.btn-new-small{
+		height:75%;
+		margin-top: 3px !important;
+	}
+
+	.columnContentSmall{
+
 	}
 
 	@@media (max-width: 960px) {

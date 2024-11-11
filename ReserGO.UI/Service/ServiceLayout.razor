@@ -9,7 +9,7 @@
 @if (CurrentViewModel.UserIs(RoleConst.ADMIN))
 {
     <div class="d-flex flex-column w-100 justify-content-center align-items-center historicalContainer">
-        <ServiceTable Services="CurrentViewModel.Services" PagingOptions="@CurrentViewModel.Pagination" Action="@(async (GridAction<DTOService, DTOServiceFilter> action) => await CurrentViewModel.ExecuteAction(action))" IsLoading="@CurrentViewModel.IsLoading" />
+        <ServiceTable Services="CurrentViewModel.Services" PagingOptions="@CurrentViewModel.Pagination" Action="@(async (GridAction<DTOService, DTOServiceFilter> action) => await CurrentViewModel.ExecuteAction(action))" IsLoading="@CurrentViewModel.IsLoading" IsSmallView="CurrentViewModel.IsSmallView" />
     </div>
 }
 
@@ -17,6 +17,7 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
+        await CurrentViewModel.RegisterOnScreenResize(800);
         await CurrentViewModel.GetServices();
     }
 }

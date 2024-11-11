@@ -3,7 +3,7 @@
 @using ReserGO.Miscellaneous.Model;
 @using ReserGO.UI.FiltersComponent;
 @using ReserGO.DTO
-<MudDialog Options="@Options">
+<MudDialog Options="@Options" Class="@(IsSmallView ? "dialogServiceModalSmall":"dialogServiceModal")">
     <TitleContent>
         <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
             <b>@(Modal.TypeActionsGRID == TypeActionsGRID.INSERT ? "Inserisci nuovo servizio" : "Modifica servizio")</b>
@@ -11,7 +11,7 @@
         </div>
     </TitleContent>
     <DialogContent>
-        <div class="d-flex flex-column justify-content-center p-5" style="text-align:center">
+        <div class="d-flex flex-column justify-content-center p-4 h-100" style="text-align:center">
             <MudForm @ref="form" @bind-IsValid="@_success">
                 <MudGrid>
                     <MudItem xs="12" sm="6">
@@ -40,8 +40,10 @@
         </div>
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close()">Chiudi</MudButton>
-        <MudButton Color="@(Modal.TypeActionsGRID == TypeActionsGRID.INSERT ? Color.Success : Color.Warning)" Variant="Variant.Filled" OnClick="() => Save()">@(Modal.TypeActionsGRID == TypeActionsGRID.INSERT ? "Salva" : "Modifica")</MudButton>
+        <div class="d-flex w-100 h-100 p-3 justify-content-around" >
+            <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close()">Chiudi</MudButton>
+            <MudButton Color="@(Modal.TypeActionsGRID == TypeActionsGRID.INSERT ? Color.Success : Color.Warning)" Variant="Variant.Filled" OnClick="() => Save()">@(Modal.TypeActionsGRID == TypeActionsGRID.INSERT ? "Salva" : "Modifica")</MudButton>
+        </div>
     </DialogActions>
 </MudDialog>
 
@@ -49,6 +51,9 @@
 @code {
     [Parameter]
     public GenericModal<DTOService> Modal { get; set; }
+    [Parameter]
+    public bool IsSmallView { get; set; }
+
     MudForm form;
     private bool _success;
     public DialogOptions Options = new DialogOptions
@@ -89,6 +94,7 @@
         background: #0066FF;
         color: white;
         padding: 15px;
+        font-size:x-large;  
     }
 
     .mud-dialog .mud-dialog-title {
@@ -98,4 +104,16 @@
     .mud-dialog .mud-dialog-actions {
         justify-content: space-around !important;
     }
+
+    .dialogServiceModal {
+        border-radius: 30px !important;
+        width: 30vw !important;
+        height:40vh !important;
+    }
+
+    .dialogServiceModalSmall {
+        border-radius: 30px !important;
+        height: 75vh !important;
+    }
+
 </style>
