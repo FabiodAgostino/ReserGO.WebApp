@@ -133,11 +133,11 @@
 
 	private async Task OpenModal(TypeActionsGRID typeAction)
 	{
-		// if (Action.HasDelegate)
-		// {
-		// 	var action = new GridAction<DTOResource, DTOResourceFilter>(TypeActionsGRID.INSERT);
-		// 	await Action.InvokeAsync(action);
-		// }
+		if (Action.HasDelegate)
+		{
+			var action = new GridAction<DTOResource, DTOResourceFilter>(TypeActionsGRID.INSERT);
+			await Action.InvokeAsync(action);
+		}
 	}
 	private async Task OnPageChangedHandler(int currPageIndex)
 	{
