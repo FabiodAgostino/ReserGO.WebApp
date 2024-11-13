@@ -151,7 +151,7 @@
                                 <MudButton Color="Color.Default" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper = new())" style="width:9vw">Reset</MudButton>
                             </div>
                             <div class="d-flex m-3 w-25">
-                                <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper.Confirm())" style="width:9vw" Disabled="!_success">Salva</MudButton>
+                                <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.InsertResource())" style="width:9vw" Disabled="!_success">Salva</MudButton>
                             </div>
                         </div>
                     }

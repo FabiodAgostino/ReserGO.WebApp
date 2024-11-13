@@ -7,5 +7,8 @@ namespace ReserGO.Service.Interface.Home
     {
         [Get("/GetSettingsMenu")]
         Task<ServiceResponse<IEnumerable<DTOSettingMenu>>> GetSettingsMenu();
+
+        [Get("/GetTranslate")]
+        Task<ServiceResponse<DTOTranslate>> GetTranslate(string culture, string? key);
     }
 }

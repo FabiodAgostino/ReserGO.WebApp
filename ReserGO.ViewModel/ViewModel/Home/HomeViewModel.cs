@@ -7,6 +7,7 @@ using ReserGO.Miscellaneous.Message;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Home;
+using ReserGO.Service.Interface.Service;
 using ReserGO.Service.Service.Utils;
 using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Home;
@@ -19,13 +20,15 @@ namespace ReserGO.ViewModel.ViewModel.Home
         private readonly ISessionStorageService _sessionStorage;
         private readonly NavigationManager navigationManager;
         private readonly IAuthenticationService _authService;
+        private readonly ITranslateService _translationService;
         private const string SettingsMenuKey = "settingsMenu";
-        public HomeViewModel(IBaseServicesReserGO<HomeViewModel> baseService, IHomeService service, ISessionStorageService sessionStorage, NavigationManager navigationManager, IAuthenticationService authService) : base(baseService)
+        public HomeViewModel(IBaseServicesReserGO<HomeViewModel> baseService, IHomeService service, ISessionStorageService sessionStorage, NavigationManager navigationManager, IAuthenticationService authService, ITranslateService trasnlationService) : base(baseService)
         {
             _service = service;
             _sessionStorage = sessionStorage;
             this.navigationManager = navigationManager;
             _authService = authService;
+            _translationService = trasnlationService;
             Aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
 
 
@@ -77,6 +80,8 @@ namespace ReserGO.ViewModel.ViewModel.Home
                     thisView = IsSmall;
                 }
             });
+
+            await _translationService.Initialize("it");
             await ReadNotification();
             var isLogged=await _authService.IsLoggedIn();
             var savedSettingsMenu = await _sessionStorage.GetItemAsync<IEnumerable<DTOSettingMenu>>(SettingsMenuKey);
