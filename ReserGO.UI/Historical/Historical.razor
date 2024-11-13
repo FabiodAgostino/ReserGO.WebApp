@@ -7,12 +7,13 @@
 @inherits BaseComponentChild<IHistoricalViewModel, DTOBooking>
 
 <div class="d-flex flex-column w-100 justify-content-center align-items-center historicalContainer">
-    <HistoricalTable Bookings="CurrentViewModel.Bookings" PagingOptions="@CurrentViewModel.Pagination" Action="@(async (GridAction<DTOBooking, DTOBookingFilter> action) => await CurrentViewModel.ExecuteAction(action))" IsLoading="@CurrentViewModel.IsLoading" IsAdmin="@CurrentViewModel.UserIs(RoleConst.ADMIN)"/>
+    <HistoricalTable Bookings="CurrentViewModel.Bookings" PagingOptions="@CurrentViewModel.Pagination" Action="@(async (GridAction<DTOBooking, DTOBookingFilter> action) => await CurrentViewModel.ExecuteAction(action))" IsLoading="@CurrentViewModel.IsLoading" IsAdmin="@CurrentViewModel.UserIs(RoleConst.ADMIN)" IsSmallView="CurrentViewModel.IsSmallView"/>
 </div>
 
 @code {
     protected override async Task OnInitializedAsync()
     {
+        await CurrentViewModel.RegisterOnScreenResize(800);
         await CurrentViewModel.Refresh();
     }
 }

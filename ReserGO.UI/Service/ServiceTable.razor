@@ -86,8 +86,8 @@
 		</RowTemplate>
 		<PagerContent>
 			<div class="d-flex flex-row align-items-center @(IsSmallView ? "":"justify-content-between")">
-				<MudPagination SelectedChanged="OnPageChangedHandler" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
-				<div class="paginatorPageSize" style="@(IsSmallView ? "width:35%;":"")">
+				<MudPagination SelectedChanged="OnPageChangedHandler" ShowPageButtons="!IsSmallView" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
+				<div class="paginatorPageSize" style="@(IsSmallView ? "width:50%;":"")">
 					<MudSelect T="int" Label="Elementi per pagina" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
 						@foreach (var size in pageSizes)
 						{
