@@ -9,5 +9,6 @@ namespace ReserGO.ViewModel.Interface.Resource.InsertResource
         public DTOResourceStepper Stepper { get; set; }
         Task HandleFileSelected(IBrowserFile file);
         public bool IsOpen { get; set; }
+        public Task InsertResource();
     }
 }

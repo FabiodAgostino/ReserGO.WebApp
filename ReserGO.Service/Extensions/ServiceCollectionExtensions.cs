@@ -2,6 +2,7 @@
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Home;
+using ReserGO.Service.Interface.Service;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Service.Service;
 using ReserGO.Service.Service.Authentication;
@@ -19,6 +20,7 @@ namespace ReserGO.Service.Extensions
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IUserSession, UserSession>();
             services.AddScoped(typeof(IBaseServicesReserGO<>), typeof(BaseServicesReserGO<>));
+            services.AddScoped<ITranslateService, TranslateService>();
 
 
 
