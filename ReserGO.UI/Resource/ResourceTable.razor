@@ -79,16 +79,29 @@
 				</div>
 			</MudTd>
 			<MudTd>
-				<div class="d-flex flex-row">
-					<div title="Elimina" class="m-3">
-						<MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
+				<div class="d-flex flex-row @(IsSmallView ? "w-100":"")">
+					<div title="Elimina" class="m-3 @(IsSmallView ? "w-50":"")">
+						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
 					</div>
-					<div title="Modifica" class="m-3">
-						<MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
+					<div title="Modifica" class="m-3 @(IsSmallView ? "w-50":"")">
+						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
 					</div>
 				</div>
 			</MudTd>
 		</RowTemplate>
+		<PagerContent>
+			<div class="d-flex flex-row align-items-center @(IsSmallView ? "":"justify-content-between")">
+				<MudPagination SelectedChanged="OnPageChangedHandler" ShowPageButtons="!IsSmallView" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
+				<div class="paginatorPageSize" style="@(IsSmallView ? "width:50%;":"")">
+					<MudSelect T="int" Label="Elementi per pagina" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
+						@foreach (var size in pageSizes)
+						{
+							<MudSelectItem Value="size">@size</MudSelectItem>
+						}
+					</MudSelect>
+				</div>
+			</div>
+		</PagerContent>
 	</MudTable>
 }
 
@@ -126,7 +139,25 @@
 		// 	await Action.InvokeAsync(action);
 		// }
 	}
+	private async Task OnPageChangedHandler(int currPageIndex)
+	{
+		if (Action.HasDelegate)
+		{
+			PagingOptions.Page = currPageIndex;
+			var action = new GridAction<DTOResource, DTOResourceFilter>(PagingOptions, TypeActionsGRID.PAGE_CHANGED, "");
+			await Action.InvokeAsync(action);
+		}
+	}
 
+	private async Task OnPageSizeHandler(int pageSize)
+	{
+		PagingOptions.PageSize = pageSize;
+		if (Action.HasDelegate)
+		{
+			var action = new GridAction<DTOResource, DTOResourceFilter>(PagingOptions, TypeActionsGRID.PAGE_SIZE_CHANGED, "");
+			await Action.InvokeAsync(action);
+		}
+	}
 }
 
 

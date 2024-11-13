@@ -76,10 +76,10 @@
 			<MudTd>
 				<div class="d-flex flex-row @(IsSmallView ? "w-100":"")">
 					<div title="Elimina" class="m-3 @(IsSmallView ? "w-50":"")">
-						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))" Size="@(IsSmallView ? Size.Large:Size.Small)"></MudIconButton>
+						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))" Size="Size.Small"></MudIconButton>
 					</div>
 					<div title="Modifica" class="m-3 @(IsSmallView ? "w-50":"")">
-						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.UPDATE, element))" Size="@(IsSmallView ? Size.Large:Size.Small)"></MudIconButton>
+						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" @onclick="(() =>InsertUpdateDialog(TypeActionsGRID.UPDATE, element))" Size="Size.Small"></MudIconButton>
 					</div>
 				</div>
 			</MudTd>
