@@ -81,7 +81,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
                 }
             });
 
-            await _translationService.Initialize("it");
+            await _translationService.Initialize();
             await ReadNotification();
             var isLogged=await _authService.IsLoggedIn();
             var savedSettingsMenu = await _sessionStorage.GetItemAsync<IEnumerable<DTOSettingMenu>>(SettingsMenuKey);

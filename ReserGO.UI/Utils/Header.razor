@@ -1,4 +1,5 @@
 ﻿@using MudBlazor
+@using ReserGO.Service.Interface.Service
 @using ReserGO.UI.Login
 @using ReserGO.DTO
 @using ReserGO.ViewModel.Interface.Authentication;
@@ -8,6 +9,7 @@
 @using ReserGO.Miscellaneous.Enum
 @using ReserGO.Utils.DTO.Utils
 @inject IDialogService DialogService
+@inject ITranslateService TranslateService
 @inherits BaseComponentChild<IHeaderViewModel, object>
 @inject NavigationManager NaviMngr;
 <div class="d-flex flex-row align-items-center justify-content-between px-2 loginHeader" style="background-color:#0066FF;">
@@ -21,16 +23,26 @@
             </MudIcon>
         </div>
 
-            <div class="d-flex justify-content-center" style="width:100%;">
-                <span class="titleLogin" style="color:white;">@Title</span>
-            </div>
+        <div class="d-flex" style="width:100%;">
+            <span class="titleLogin" style="color:white;">@Title</span>
+        </div>
         if (!_userIsGuest)
         {
-            <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
+            <MudMenu AnchorOrigin="@Origin.BottomCenter" TransformOrigin="@Origin.TopCenter" ActivationEvent="@MouseEvent.MouseOver" Icon="@Icons.Material.Filled.AccountCircle"
                      AriaLabel="Open user menu" Class="iconUserButton">
                 <MudMenuItem>Profilo</MudMenuItem>
                 <MudMenuItem>Privacy</MudMenuItem>
                 <MudMenuItem @onclick="@(async () => await CurrentViewModel.Logout())">Logout</MudMenuItem>
+            </MudMenu>
+
+            <MudMenu AriaLabel="Language" Class="iconUserButton" ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="@Origin.BottomCenter" TransformOrigin="@Origin.TopRight">
+                <ActivatorContent>
+                    <MudChip T="string" Class="chipLanguageSmall"><MudIcon Icon="@Icons.Material.Filled.Language" Size="Size.Small"></MudIcon></MudChip>
+                </ActivatorContent>
+                <ChildContent>
+                    <MudMenuItem @onclick="@(async () => await CurrentViewModel.SetLanguage("it"))">Italiano</MudMenuItem>
+                    <MudMenuItem @onclick="@(async () => await CurrentViewModel.SetLanguage("en"))">English</MudMenuItem>
+                </ChildContent>
             </MudMenu>
         }
         else
@@ -38,6 +50,15 @@
             <div @onclick="OpenDialogAsync">
                 <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Class="smallIconCssGuest"></MudIcon>
             </div>
+            <MudMenu AriaLabel="Language" Class="iconUserButton" ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="@Origin.BottomCenter" TransformOrigin="@Origin.TopRight">
+                <ActivatorContent>
+                    <MudChip T="string" Class="chipLanguageSmall"><MudIcon Icon="@Icons.Material.Filled.Language" Size="Size.Small"></MudIcon></MudChip>
+                </ActivatorContent>
+                <ChildContent>
+                    <MudMenuItem @onclick="@(async () => await CurrentViewModel.SetLanguage("it"))">Italiano</MudMenuItem>
+                    <MudMenuItem @onclick="@(async () => await CurrentViewModel.SetLanguage("en"))">English</MudMenuItem>
+                </ChildContent>
+            </MudMenu>
         }
 
     }
@@ -55,11 +76,21 @@
             <div class="px-2">
                 <div class="d-flex flex-row align-items-center">
                     <span class="rightTextHeader" style="color:white;">@CurrentViewModel.User.FirstName @CurrentViewModel.User.LastName</span>
-                    <MudMenu AnchorOrigin="Origin.BottomRight" Icon="@Icons.Material.Filled.AccountCircle"
+                    <MudMenu AnchorOrigin="@Origin.BottomCenter" TransformOrigin="@Origin.TopCenter" ActivationEvent="@MouseEvent.MouseOver" Icon="@Icons.Material.Filled.AccountCircle"
                              AriaLabel="Open user menu" Class="iconUserButton">
                         <MudMenuItem>Profilo</MudMenuItem>
                         <MudMenuItem>Privacy</MudMenuItem>
                         <MudMenuItem @onclick="@(async () => await CurrentViewModel.Logout())">Logout</MudMenuItem>
+                    </MudMenu>
+
+                    <MudMenu AriaLabel="Language" Class="iconUserButton" ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="@Origin.BottomCenter" TransformOrigin="@Origin.TopCenter">
+                        <ActivatorContent>
+                            <MudChip T="string" Icon="@Icons.Material.Filled.Language" Class="chipLanguage">@CurrentViewModel.Lang</MudChip>
+                        </ActivatorContent>
+                        <ChildContent>
+                            <MudMenuItem @onclick="@(async () => await CurrentViewModel.SetLanguage("it"))">Italiano</MudMenuItem>
+                            <MudMenuItem @onclick="@(async () => await CurrentViewModel.SetLanguage("en"))">English</MudMenuItem>
+                        </ChildContent>
                     </MudMenu>
                 </div>
             </div>
@@ -73,7 +104,17 @@
 
             <div class="px-2">
                 <span class="rightTextHeader" @onclick="OpenDialogAsync">@RightTitle</span>
+                <MudMenu AriaLabel="Language" Class="iconUserButton" ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="@Origin.BottomCenter" TransformOrigin="@Origin.TopCenter">
+                    <ActivatorContent>
+                        <MudChip T="string" Icon="@Icons.Material.Filled.Language" Class="chipLanguage">@CurrentViewModel.Lang</MudChip>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem @onclick="@(async () => await CurrentViewModel.SetLanguage("it"))">Italiano</MudMenuItem>
+                        <MudMenuItem @onclick="@(async () => await CurrentViewModel.SetLanguage("en"))">English</MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
             </div>
+
         }
 
     }
@@ -111,7 +152,6 @@
     [Parameter]
     public EventCallback OpenMenu { get; set; }
 
-
     protected override async Task OnParametersSetAsync()
     {
         _userIsGuest = CurrentViewModel.User.Roles is null || CurrentViewModel.UserIs(RoleConst.GUEST);
@@ -121,8 +161,11 @@
     {
         await CurrentViewModel.RegisterOnScreenResize(800);
         await CurrentViewModel.CheckUser();
+        CurrentViewModel.Lang = await TranslateService.GetCurrentLanguage();
         StateHasChanged();
     }
+
+  
 
     private async Task OpenDialogAsync()
     {
@@ -171,5 +214,14 @@
         font-size: 2rem;
     }
 
+    .mud-chip.mud-chip-filled.mud-chip-size-medium.mud-chip-color-default.chipLanguage {
+        color: white;
+        width: 100px;
+    }
+
+    .mud-chip.mud-chip-filled.mud-chip-size-medium.mud-chip-color-default.chipLanguageSmall {
+        color: white;
+        width: 50px;
+    }
 </style>
 

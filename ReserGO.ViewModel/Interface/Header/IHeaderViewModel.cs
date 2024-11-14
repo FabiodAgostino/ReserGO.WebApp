@@ -6,6 +6,8 @@
         bool IsLoggedIn { get; set; }
         Task Logout();
         Task CheckUser();
+        string Lang { get; set; }
+        Task SetLanguage(string lang);
 
     }
 }

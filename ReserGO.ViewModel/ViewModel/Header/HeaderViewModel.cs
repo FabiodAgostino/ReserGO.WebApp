@@ -1,15 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
-using ReserGO.Service.Interface.Utils;
-using ReserGO.Utils.Event;
-using ReserGO.ViewModel.Interface.Authentication;
+using ReserGO.Service.Interface.Service;
 using ReserGO.ViewModel.Interface.Header;
 using ReserGO.ViewModel.ViewModel.Authentication;
 using ReserGO.ViewModel.ViewModel.Home;
@@ -19,12 +15,17 @@ namespace ReserGO.ViewModel.ViewModel.Header
     public class HeaderViewModel : CompleteReserGOViewModell<object, HeaderViewModel>, IHeaderViewModel
     {
         private readonly IAuthenticationService _authService;
+        private readonly ITranslateService _translateService;
+        private readonly NavigationManager _navigation;
 
-        public HeaderViewModel(IBaseServicesReserGO<HeaderViewModel> baseService,IAuthenticationService authService) : base(baseService)
+        public HeaderViewModel(IBaseServicesReserGO<HeaderViewModel> baseService,IAuthenticationService authService, ITranslateService translateService, NavigationManager navigation) : base(baseService)
         {
             _authService = authService;
+            _translateService = translateService;
+            _navigation = navigation;
         }
         public bool IsLoggedIn { get; set; }
+        public string Lang { get; set; }
 
         public async Task OpenModal()
         {
@@ -73,6 +74,14 @@ namespace ReserGO.ViewModel.ViewModel.Header
                 IsLoading = false;
                 OnPropertyChanged();
             }
+        }
+
+        public async Task SetLanguage(string lang)
+        {
+            await _translateService.ReInitialize(lang);
+            Lang = await _translateService.GetCurrentLanguage();
+            OnPropertyChanged();
+            _navigation.NavigateTo("/", forceLoad: true);
         }
 
     }

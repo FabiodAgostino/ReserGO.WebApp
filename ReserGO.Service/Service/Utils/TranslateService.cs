@@ -1,8 +1,11 @@
 ﻿using Blazored.LocalStorage;
 using Blazored.SessionStorage;
+using ReserGO.Miscellaneous.Message;
+using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface.Home;
 using ReserGO.Service.Interface.Service;
 using ReserGO.Utils.DTO.Utils;
+using ReserGO.Utils.Event;
 
 namespace ReserGO.Service.Service.Utils
 {
@@ -10,9 +13,11 @@ namespace ReserGO.Service.Service.Utils
     {
         private readonly ISessionStorageService _localStorage;
         private IHomeService _service { get; }
+        private IEvent _event { get; set;}
 
-        public TranslateService(IHomeService service, ISessionStorageService localStorage)
+        public TranslateService(IHomeService service, ISessionStorageService localStorage, IEvent _event)
         {
+            this._event = _event;
             _service = service;
             _localStorage = localStorage;
         }
@@ -24,17 +29,44 @@ namespace ReserGO.Service.Service.Utils
             set => _words = value;
         }
 
-        public async Task Initialize(string culture)
+        public async Task<string> GetCurrentLanguage()
+        {
+            var lang = await _localStorage.GetItemAsync<string>("culture");
+            if (String.IsNullOrEmpty(lang))
+                return "Italiano";
+            else
+            {
+                switch(lang)
+                {
+                    case "it": return "Italiano";
+                    case "en": return "English";
+                    default: return "";
+                }
+            }
+        }
+
+        public async Task Initialize()
+        {
+            var lang = await _localStorage.GetItemAsync<string>("culture");
+            if (String.IsNullOrEmpty(lang))
+                lang = "it";
+            await ReInitialize(lang);
+        }
+
+        public async Task ReInitialize(string culture)
         {
             try
             {
                 var resources = await _localStorage.GetItemAsync<DictionaryTranslate<string, string>>("translation");
                 var lang = await _localStorage.GetItemAsync<string>("culture");
 
-                if ((resources == null || !resources.Any()) || lang!=culture)
+                if ((resources == null || !resources.Any()) || lang != culture)
                 {
+                    _event.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(true, "Caricamento lingua in corso...")));
                     if (lang == null)
                         lang = "it";
+                    else
+                        lang = culture;
 
                     await _localStorage.SetItemAsync<string>("culture", lang);
 
@@ -44,6 +76,7 @@ namespace ReserGO.Service.Service.Utils
                     {
                         resources = new DictionaryTranslate<string, string>(result.Data.KeyValueResources);
                         await _localStorage.SetItemAsync("translation", resources);
+                        _event.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(false, "Caricamento lingua in corso...")));
                     }
                     else
                         resources = new();

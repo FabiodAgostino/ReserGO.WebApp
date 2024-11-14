@@ -16,5 +16,7 @@ namespace ReserGO.Service.Interface.Schedule
         Task<ServiceResponse<DTOResource>> GetDetailResource(int idResource);
         [Post("/InsertResource")]
         Task<ServiceResponse<DTOResource>> InsertResource(DTOResource resource);
+        [Delete("/DeleteResource")]
+        Task<ServiceResponse<bool>> DeleteResource(int idResource);
     }
 }

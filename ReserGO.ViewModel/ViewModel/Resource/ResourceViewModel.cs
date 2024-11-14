@@ -20,6 +20,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource
         {
             _service = service;
             Pagination = new() { Page = 1, PageSize = 10, Filter = new() };
+            Aggregator.Subscribe<ObjectMessage<bool>>(GetType(),async (ObjectMessage<bool> message) => await GetResourceByCompanyFiltered());
         }
 
         private GenericPagedList<DTOResource> _resources { get; set; }
@@ -68,27 +69,46 @@ namespace ReserGO.ViewModel.ViewModel.Resource
                 Notification(action.Error, NotificationColor.Error);
                 return;
             }
-                switch (action.TypeActions)
-                {
-                    case TypeActionsGRID.PAGE_CHANGED:
-                    case TypeActionsGRID.PAGE_SIZE_CHANGED:
-                        Pagination.Page = action.PagingOptions.Page;
-                        Pagination.PageSize = action.PagingOptions.PageSize;
-                        await GetResourceByCompanyFiltered();
-                        break;
-                    case TypeActionsGRID.FILTER:
-                        Pagination.Filter = action.Filter;
-                        await GetResourceByCompanyFiltered();
-                        break;
-                    case TypeActionsGRID.UPDATE:
-                        break;
-                    case TypeActionsGRID.INSERT:
-                        Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(InsertResourceViewModel));
-                        break;
-                    case TypeActionsGRID.SINGLE_DELETE:
-                        break;
+            switch (action.TypeActions)
+            {
+                case TypeActionsGRID.PAGE_CHANGED:
+                case TypeActionsGRID.PAGE_SIZE_CHANGED:
+                    Pagination.Page = action.PagingOptions.Page;
+                    Pagination.PageSize = action.PagingOptions.PageSize;
+                    await GetResourceByCompanyFiltered();
+                    break;
+                case TypeActionsGRID.FILTER:
+                    Pagination.Filter = action.Filter;
+                    await GetResourceByCompanyFiltered();
+                    break;
+                case TypeActionsGRID.UPDATE:
+                    break;
+                case TypeActionsGRID.SINGLE_DELETE:
+                    await DeleteResource(action.Items.FirstOrDefault().Id.Value);
+                    break;
+                case TypeActionsGRID.INSERT:
+                    Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(InsertResourceViewModel));
+                    break;
 
-                }
+            }
+        }
+
+        private async Task DeleteResource(int idResource)
+        {
+            try
+            {
+                var response = await _service.DeleteResource(idResource);
+                if (response.Success)
+                    Notification(response.Message, NotificationColor.Success);
+                else
+                    Notification(response.Message, NotificationColor.Error);
+
+                await GetResourceByCompanyFiltered();
+            }
+            catch (Exception ex)
+            {
+                Notification(ex.Message, NotificationColor.Error);
+            }
         }
     }
 }

@@ -13,6 +13,7 @@
 @using ReserGO.Miscellaneous.Extensions;
 @using static ReserGO.Miscellaneous.Model.DTOResourceStepper
 @using ReserGO.ViewModel.Interface.FiltersComponent
+@using ReserGO.UI.Historical
 @inject IDialogService DialogService
 
 @if (Resources is object)
@@ -30,7 +31,7 @@
 						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Class="@(IsSmallView ? "btn-new-small":"btn-new")" Variant="Variant.Filled" @onclick="(async () => await OpenModal(TypeActionsGRID.INSERT))">@(IsSmallView ? "Nuova" : "Nuova risorsa")</MudButton>
 					</div>
 					<div class="toolItem @(IsSmallView ? "w-50":"w-100")">
-						<BaseTextField MinLenght="0" Required="false" Label="Ricerca per nome della risorsa e premi invio..."></BaseTextField>
+						<BaseTextField MinLenght="0" Required="false" Label="Ricerca per nome della risorsa e premi invio..." Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText"></BaseTextField>
 					</div>
 				</div>
 			</div>
@@ -38,7 +39,7 @@
 		<HeaderContent>
 			<MudTh>Nome Risorsa</MudTh>
 			<MudTh>Descrizione</MudTh>
-			<MudTh>Conferma</MudTh>
+			<MudTh>Richiesta di conferma</MudTh>
 			<MudTh>Servizi</MudTh>
 			<MudTh></MudTh>
 		</HeaderContent>
@@ -57,31 +58,46 @@
 				<div style="@(IsSmallView ? "margin-top:1vh;":"")">
 					@if (IsSmallView)
 					{
-						<b style="padding-inline:2vw;">Nome: </b>
+						<b style="padding-inline:2vw;">Descrizione: </b>
 					}
-					@element.ResourceName
+					@element.Description
+				</div>
+			</MudTd><MudTd>
+				<div style="@(IsSmallView ? "margin-top:1vh;":"") width:35%;" class="d-flex justify-content-center">
+					@if (IsSmallView)
+					{
+						<b style="padding-inline:2vw;">Conferma: </b>
+					}
+					<MudCheckBox @bind-Value="element.RequestToConfirm" ReadOnly="true"/>
 				</div>
 			</MudTd><MudTd>
 				<div style="@(IsSmallView ? "margin-top:1vh;":"")">
 					@if (IsSmallView)
 					{
-						<b style="padding-inline:2vw;">Nome: </b>
+						<b style="padding-inline:2vw;">Servizi: </b>
 					}
-					@element.ResourceName
-				</div>
-			</MudTd><MudTd>
-				<div style="@(IsSmallView ? "margin-top:1vh;":"")">
-					@if (IsSmallView)
+					@if (element.Services is object && element.Services.Count() > 0)
 					{
-						<b style="padding-inline:2vw;">Nome: </b>
+						var servizi = string.Join(", ", @element.Services.Select(x => x.ServiceName));
+						@if (servizi.Length > 50)
+						{
+							<MudButton StartIcon="@Icons.Material.Filled.ShoppingBasket" Size="Size.Small" Color="Color.Secondary" Variant="Variant.Filled" @onclick="(() => ShowServices(element.Services))">Mostra servizi</MudButton>
+						}
+						else
+						{
+							<span>@servizi</span>
+						}
 					}
-					@element.ResourceName
+					else
+					{
+						<span>(nessun servizio)</span>
+					}
 				</div>
 			</MudTd>
 			<MudTd>
 				<div class="d-flex flex-row @(IsSmallView ? "w-100":"")">
 					<div title="Elimina" class="m-3 @(IsSmallView ? "w-50":"")">
-						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
+						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small" @onclick="(() =>DeleteDialog(element))" ></MudIconButton>
 					</div>
 					<div title="Modifica" class="m-3 @(IsSmallView ? "w-50":"")">
 						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
@@ -121,6 +137,7 @@
 	public EventCallback<GridAction<DTOResource, DTOResourceFilter>> Action { get; set; }
 	[Parameter]
 	public bool IsSmallView { get; set; }
+	private DTOResourceFilter Filter = new();
 
 
 	private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
@@ -157,6 +174,65 @@
 			var action = new GridAction<DTOResource, DTOResourceFilter>(PagingOptions, TypeActionsGRID.PAGE_SIZE_CHANGED, "");
 			await Action.InvokeAsync(action);
 		}
+	}
+
+	private async Task DeleteDialog(DTOResource element)
+	{
+		var callback = EventCallback.Factory.Create<bool>(this, ((bool value) => DeleteCallback(value, element)));
+		string text = "<b>Questa azione è irreversibile.</b><br/>Sei sicuro di voler eliminare la risorsa?";
+		var modal = new GenericModal<bool>(callback, text, "Eliminazione risorsa", TypeActionsGRID.GENERIC_DELETE);
+
+		var dialogParameters = new DialogParameters
+			{
+				{ "Modal", modal },
+            };
+
+		var options = new DialogOptions
+			{
+				CloseOnEscapeKey = true,
+				Position = DialogPosition.Center
+			};
+
+		var result = await DialogService.Show<ConfirmModal>("Elimina risorsa", dialogParameters, options).Result;
+	}
+
+	private async Task DeleteCallback(bool value, DTOResource element)
+	{
+		if (Action.HasDelegate && value)
+		{
+			var list = new List<DTOResource>();
+			list.Add(element);
+
+			var action = new GridAction<DTOResource, DTOResourceFilter>(list, TypeActionsGRID.SINGLE_DELETE, "");
+			await Action.InvokeAsync(action);
+		}
+	}
+
+	private async Task OnChangeSearchText(string value)
+	{
+		Filter.SearchText = value;
+		var action = new GridAction<DTOResource, DTOResourceFilter>(Filter, TypeActionsGRID.FILTER, "");
+		if (Action.HasDelegate)
+		{
+			await Action.InvokeAsync(action);
+		}
+
+	}
+
+	private async Task ShowServices(List<DTOService> services)
+	{
+			var dialogParameters = new DialogParameters
+			{
+				{ "Services", services}
+			};
+
+			var options = new DialogOptions
+				{
+					CloseOnEscapeKey = true,
+					Position = DialogPosition.Center
+				};
+
+			var result = await DialogService.Show<ModalServicesHistorical>("Servizi", dialogParameters, options).Result;
 	}
 }
 
@@ -222,5 +298,9 @@
 			justify-content: unset !important;
 			padding: 0px 16px !important;
 		}
+	}
+
+	.mud-input-control.mud-input-control-boolean-input {
+		width:30px;
 	}
 </style>

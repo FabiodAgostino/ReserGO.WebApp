@@ -60,8 +60,9 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
                 Loading();
                 if (result.Success)
                 {
-                    Notification("Risorsa inserita con successo!", NotificationColor.Info);
+                    Notification("Risorsa inserita con successo!", NotificationColor.Success);
                     IsOpen = false;
+                    Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(ResourceViewModel));
                 }
                 else
                     Notification(result.Message, NotificationColor.Warning);
