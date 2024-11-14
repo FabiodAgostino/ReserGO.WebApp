@@ -21,8 +21,7 @@ namespace ReserGO.Service.Extensions
             services.AddScoped<IUserSession, UserSession>();
             services.AddScoped(typeof(IBaseServicesReserGO<>), typeof(BaseServicesReserGO<>));
             services.AddScoped<ITranslateService, TranslateService>();
-
-
+            services.AddScoped<IImageService, ImageService>();
 
             return services;
         }

@@ -4,6 +4,8 @@
 @using ReserGO.Utils.DTO.ExtensionMethod;
 @using ReserGO.Utils.DTO.Utils
 @using ReserGO.DTO.Extensions;
+@using ReserGO.Service.Interface.Utils;
+@inject IImageService image
 <div class="d-flex flex-column shadow cardScheduleDetails" @onclick="@(()=> Click())" style="@CardStyle">
     
     <div class="d-flex justify-content-center align-items-center cardScheduleDetailsHeader" style="background-color:#0066FF;" >

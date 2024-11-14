@@ -1,9 +1,11 @@
-﻿using ReserGO.DTO;
+﻿using Microsoft.AspNetCore.Components;
+using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Service;
 using ReserGO.Utils.DTO.Service;
 using ReserGO.ViewModel.Interface.FiltersComponent;
+using System.Linq;
 
 namespace ReserGO.ViewModel.ViewModel.FiltersComponent
 {
@@ -16,8 +18,22 @@ namespace ReserGO.ViewModel.ViewModel.FiltersComponent
             _service = service;
             List = new();
         }
+        public IEnumerable<string> _servicesChecked { get; set; }
+        public IEnumerable<string> ServicesChecked
+        {
+            get => _servicesChecked; 
+            set
+            {
+                _servicesChecked = value;
+                if(Callback.HasDelegate)
+                {
+                    var services = List.Where(s=> _servicesChecked.ToList().Contains(s.ServiceName)).ToList();
+                    Callback.InvokeAsync(services);
+                }
+            }
 
-        public IEnumerable<string> ServicesChecked { get; set; }
+        }
+        public EventCallback<List<DTOService>> Callback { get; set; }
 
         public async Task GetServices()
         {

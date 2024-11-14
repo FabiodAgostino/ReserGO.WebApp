@@ -1,5 +1,4 @@
 ﻿@using MudBlazor
-
 <div class="d-flex cardScheduleContainer @(IsSmallView ? "w-100" :"")" style="@(IsSmallView ? "" :"width:80%")">
 
     <div class="d-flex flex-column @(IsActive ? "active" : "") @(IsSmallView ? "w-100 cardScheduleSmall" :"cardSchedule")" @onclick="@Click">
@@ -17,6 +16,10 @@
         </div>
 
         <div class="d-flex w-100 bodyScheduleCard p-3">
+            @if (!String.IsNullOrEmpty(Image))
+            {
+                <img src="@Image" />
+            }
             @Description
         </div>
     </div>
@@ -32,6 +35,9 @@
 
     [Parameter]
     public string Title { get; set; } = "Titolo";
+
+    [Parameter]
+    public string Image { get; set; }
 
     [Parameter]
     public string Description { get; set; } = "Descrizione...";
