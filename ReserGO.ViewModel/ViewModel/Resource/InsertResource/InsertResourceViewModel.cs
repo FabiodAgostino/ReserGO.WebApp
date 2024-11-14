@@ -30,6 +30,8 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
 
         public async Task InsertResource()
         {
+            IsLoading = true;
+            Loading();
             if(Stepper.DaysSelected!=null)
             {
 
@@ -54,8 +56,13 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
             try
             {
                 var result = await _service.InsertResource(SelectedItem);
+                IsLoading = false;
+                Loading();
                 if (result.Success)
+                {
                     Notification("Risorsa inserita con successo!", NotificationColor.Info);
+                    IsOpen = false;
+                }
                 else
                     Notification(result.Message, NotificationColor.Warning);
             }

@@ -42,7 +42,7 @@
                             <div class="d-flex align-items-center" style="width:60%;">
                                 <BaseComponent TViewModel="IServicesComboViewModel" TModel="DTOService">
                                     <Content>
-                                        <ServicesCombo />
+                                        <ServicesCombo Callback="@((List<DTOService> list) => CurrentViewModel.SelectedItem.Services = list)"/>
                                     </Content>
                                 </BaseComponent>
                             </div>
