@@ -1,6 +1,8 @@
 ﻿@using MudBlazor
 @using ReserGO.UI.Utils
 @using ReserGO.DTO;
+@using ReserGO.Service.Interface.Utils
+@inject IImageService ImageService
 
 <div class="d-flex flex-column w-100 listScheduleContainer  @(IsSmallView ? "flex-column w-100 h-100":"align-items-center justify-content-center")">
     <div class="d-flex gridContainer @(IsSmallView ? "flex-column w-100":"justify-content-center")" style="@(IsSmallView ? "height:81vh;":"padding-block:20px;")">
@@ -12,7 +14,7 @@
                 @foreach (var resource in Resources)
                 {
                     <div class="d-flex flex-row" style="padding-block:0.5vh;">
-                        <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" IsSmallView="IsSmallView" Title="@resource.ResourceName" Description="@resource.Description"  IsActive="@(activeCardId == resource.Id.Value)"/>
+                        <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" IsSmallView="IsSmallView" Title="@resource.ResourceName" Description="@resource.Description"  IsActive="@(activeCardId == resource.Id.Value)" Image="@ImageService.GetImage(resource.ImageData)"/>
                     </div>
                 }
             }
@@ -37,7 +39,7 @@
                     @foreach (var resource in Resources)
                     {
                         <div class="d-flex flex-row justify-content-center">
-                            <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" IsActive="@(activeCardId == resource.Id.Value)"/>
+                            <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" IsActive="@(activeCardId == resource.Id.Value)" Image="@ImageService.GetImage(resource.ImageData)"/>
                         </div>
                     }
                     @if (!IsLoading && Resources == null)
@@ -64,7 +66,7 @@
                     {
                         <MudItem>
                             <div class="d-flex flex-row">
-                                <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" IsActive="@(activeCardId == resource.Id.Value)" />
+                                <ScheduleCard Icon="@InformationIcon" Callback="@(async () => await Click(resource.Id.Value))" Title="@resource.ResourceName" Description="@resource.Description" IsActive="@(activeCardId == resource.Id.Value)" Image="@ImageService.GetImage(resource.ImageData)" />
                             </div>
                         </MudItem>
                     }

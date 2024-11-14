@@ -14,10 +14,20 @@
     {
         <MudSelectItem T="string" Value="@service.ServiceName">@service.ServiceName</MudSelectItem>
     }
-
-
 </MudSelect>
+
+
 @code {
+
+    [Parameter]
+    public EventCallback<List<DTOService>> Callback { get; set; }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        CurrentViewModel.Callback = Callback;
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await CurrentViewModel.GetServices();

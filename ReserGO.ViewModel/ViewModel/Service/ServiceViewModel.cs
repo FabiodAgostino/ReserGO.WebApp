@@ -2,6 +2,7 @@
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Service;
+using ReserGO.Utils.DTO.ExtensionMethod;
 using ReserGO.Utils.DTO.Service;
 using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Service;
@@ -59,6 +60,7 @@ namespace ReserGO.ViewModel.ViewModel.Service
             try
             {
                 IsLoading = true;
+                service.ServiceName = service.ServiceName.ToUpperFirstLetter();
                 var result = await _service.InsertService(service);
                 if (result.Success)
                 {

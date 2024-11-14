@@ -30,21 +30,24 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
 
         public async Task InsertResource()
         {
+            IsLoading = true;
+            Loading();
             if(Stepper.DaysSelected!=null)
             {
 
                 SelectedItem.AvailabilityAdv = new();
-                var days=Stepper.DaysSelected.Select(x=> x.FullName).ToList().GetMissingDays();
-                SelectedItem.AvailabilityAdv.UnavailableByDaysOfTheWeek = new() { AvailabilityType = AvailabilityType.UnavailableByDaysOfTheWeek, Data = days };
+                var daySelected = Stepper.DaysSelected.Select(x => x.FullName).ToList();
+                var days = daySelected.GetMissingDays();
+                SelectedItem.AvailabilityAdv.UnavailableByDaysOfTheWeek = new() { Data = days };
 
                 if (Stepper.RecurringRules != null)
                 {
 
                     var recurringRules = DTOResourceExtension.ConvertAvailabilityToUnavailability(Stepper.RecurringRules);
                     var unavailableRecurringTimeDays = new List<DTOUnavailableRecurringTimeDay>();
-                    days.ForEach(day =>
+                    daySelected.ForEach(day =>
                     {
-                        unavailableRecurringTimeDays.Add(new DTOUnavailableRecurringTimeDay(day, recurringRules, AvailabilityType.UnavailableRecurringTime));
+                        unavailableRecurringTimeDays.Add(new DTOUnavailableRecurringTimeDay(day, recurringRules));
                     });
                     SelectedItem.AvailabilityAdv.UnavailableRecurringTimeDays = unavailableRecurringTimeDays;
                 }
@@ -53,8 +56,13 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
             try
             {
                 var result = await _service.InsertResource(SelectedItem);
+                IsLoading = false;
+                Loading();
                 if (result.Success)
+                {
                     Notification("Risorsa inserita con successo!", NotificationColor.Info);
+                    IsOpen = false;
+                }
                 else
                     Notification(result.Message, NotificationColor.Warning);
             }
