@@ -9,7 +9,7 @@
 @using ReserGO.DTO
 @inherits BaseComponentChild<IServicesComboViewModel, DTOService>
 
-<MudSelect T="string" Label="Servizi" Variant="Variant.Outlined" Class="w-100 h-100" HelperText="@(CurrentViewModel.IsLoading ? "Loading..." : "Scegli i servizi da associare alla risorsa")" MultiSelection="true" @bind-SelectedValues="CurrentViewModel.ServicesChecked" Disabled="CurrentViewModel.IsLoading">
+<MudSelect T="string" Label="Servizi" Variant="Variant.Text" Class="w-100 h-100" HelperText="@(CurrentViewModel.IsLoading ? "Loading..." : "Scegli i servizi da associare alla risorsa")" MultiSelection="true" @bind-SelectedValues="CurrentViewModel.ServicesChecked" Disabled="CurrentViewModel.IsLoading">
     @foreach (var service in CurrentViewModel.List)
     {
         <MudSelectItem T="string" Value="@service.ServiceName">@service.ServiceName</MudSelectItem>
