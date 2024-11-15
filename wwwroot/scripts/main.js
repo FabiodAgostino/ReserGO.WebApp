@@ -118,3 +118,7 @@ function filter_hour(value, type) {
     return (value % 60 == 0) ? 1 : 0;
 }
 
+function playAlertSound() {
+    const audio = new Audio('/sounds/alert.mp3'); // Percorso al file audio
+    audio.play();
+}

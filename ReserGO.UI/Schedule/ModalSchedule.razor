@@ -65,7 +65,7 @@
 							<MudTabPanel Text="Anagrafica" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.USER))">
 								<BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUserLight">
 									<Content>
-										<ScheduleForm Callback="@((DTOUserLight user) => CurrentViewModel.ScheduleStepper.UpdateUser(user))" PreviousClick="(() =>  CurrentViewModel.ScheduleStepper.PreviewsIndex())"/>
+										<ScheduleForm Callback="@((DTOUserLight user) => CurrentViewModel.ScheduleStepper.UpdateUser(user))" PreviousClick="(() =>  CurrentViewModel.ScheduleStepper.PreviewsIndex())" ForThird="CurrentViewModel.UserIs(RoleConst.ADMIN)"/>
 									</Content>
 								</BaseComponent>
 							</MudTabPanel>
@@ -138,7 +138,7 @@
 						<MudTabPanel Text="Anagrafica" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.USER))">
 							<BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUserLight">
 								<Content>
-									<ScheduleForm Callback="@((DTOUserLight user) => CurrentViewModel.ScheduleStepper.UpdateUser(user))" />
+									<ScheduleForm Callback="@((DTOUserLight user) => CurrentViewModel.ScheduleStepper.UpdateUser(user))" ForThird="CurrentViewModel.UserIs(RoleConst.ADMIN)"/>
 								</Content>
 							</BaseComponent>
 

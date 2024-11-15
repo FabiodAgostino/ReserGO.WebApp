@@ -13,7 +13,21 @@
 <div class="d-flex flex-column w-100" style="@(CurrentViewModel.IsSmallView ? "height:67vh !important;":"")">
 
     <div class="d-flex @(CurrentViewModel.IsSmallView ? "p-3":"p-5")">
-        <span class="descriptionFormDetails" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">Inserisci i tuoi dati</span>
+        @if (ForThird)
+        {
+            <div class="d-flex justify-content-between w-100">
+                <div>
+                    <span class="descriptionFormDetails" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">Prenotazione per terzi</span>
+                </div>
+                <div>
+                    <MudCheckBox @bind-Value="_enableEmail" RequiredError="">Inserisci email</MudCheckBox>
+                </div>
+            </div>
+        }
+        else
+        {
+            <span class="descriptionFormDetails" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">Inserisci i tuoi dati</span>
+        }
     </div>
 
     <div class="d-flex justify-content-around columnFormRegister w-100  @(CurrentViewModel.IsSmallView ? "flex-column":"flex-row")" style="@(CurrentViewModel.IsSmallView ? "height:59vh;":"height:80%;")">
@@ -32,16 +46,15 @@
                     <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido" Value="@CurrentViewModel.SelectedItem.PhoneNumber" />
                 </div>
                 <div class="inputSpace" style="height:65px;">
-                    <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
-                        <Content>
-                            <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email"
-                                          Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                          Required="true" RequiredError="Inserire Email corretta"
-                                          Immediate="true"
-                                          Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
-                            </MudTextField>
-                        </Content>
-                    </BaseComponent>
+                    @if (!ForThird || (ForThird && _enableEmail))
+                    {
+                        <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email"
+                                      Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                      Required="true" RequiredError="Inserire Email corretta"
+                                      Immediate="true"
+                                      Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
+                        </MudTextField>
+                    }
                 </div>
                 <div class="inputSpace">
                     <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.Privacy" Required="true" ErrorText=""><a href="#">Accetto le condizioni d'uso, l'informativa sulla privacy e le note legali</a> </MudCheckBox>
@@ -73,16 +86,16 @@
                         </td>
                         <td>
                             <div class="inputSpace">
-                                <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
-                                    <Content>
-                                        <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email"
-                                                      Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                                      Required="true" RequiredError="Inserire Email corretta"
-                                                      Immediate="true"
-                                                      Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
-                                        </MudTextField>
-                                    </Content>
-                                </BaseComponent>
+                                @if (!ForThird || (ForThird && _enableEmail))
+                                {
+                                    <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email"
+                                                  Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                  Required="true" RequiredError="Inserire Email corretta"
+                                                  Immediate="true"
+                                                  Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
+                                    </MudTextField>
+                                }
+
                             </div>
                         </td>
                     </tr>
@@ -116,6 +129,11 @@
 
     [Parameter]
     public EventCallback PreviousClick { get; set; }
+
+    [Parameter]
+    public bool ForThird { get; set; }
+
+    private bool _enableEmail { get; set; }
 
     private bool _success;
     MudForm form;

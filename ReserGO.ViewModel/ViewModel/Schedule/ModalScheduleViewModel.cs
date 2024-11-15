@@ -9,6 +9,7 @@ using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
+using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.DTO.ExtensionMethod;
 using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Schedule;
@@ -20,12 +21,15 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
     {
         private readonly IBookingService _bookService;
         private readonly IResourceService _service;
+        private readonly IMemoryCacheService _memoryCacheService;
 
-        public ModalScheduleViewModel(IBaseServicesReserGO<ModalScheduleViewModel> baseServices, IBookingService bookService, IResourceService service) : base(baseServices)
+        public ModalScheduleViewModel(IBaseServicesReserGO<ModalScheduleViewModel> baseServices, IBookingService bookService, 
+            IResourceService service, IMemoryCacheService memoryCacheService) : base(baseServices)
         {
             Aggregator.Subscribe<ObjectMessage<GenericModal<DTOResource>>>(GetType(), OpenModal);
             _bookService = bookService;
             _service = service;
+            _memoryCacheService = memoryCacheService;
             IsFirstLoad = false;
         }
         public bool IsOpen { get; set; }
@@ -45,7 +49,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             Booking.Resource = (DTOResource)SelectedItem.Clone();
             Booking.Services = new();
             TimeSlots = new();
-            ScheduleStepper = new(SelectedItem, !UserIs(RoleConst.GUEST), IsSmallView);
+            ScheduleStepper = new(SelectedItem, !UserIs(RoleConst.GUEST) && !UserIs(RoleConst.ADMIN), IsSmallView);
             TriggerMethodOnSmall= new EventCallback<bool>(null, (bool IsSmall) => { 
                 if(thisView!=IsSmall)
                 {
@@ -163,15 +167,23 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                     bookingToInsert.Services = ScheduleStepper.Services ?? new();
                     bookingToInsert.StartDateTime = Booking.StartDateTime.Date.Add(ScheduleStepper.Slot.StartTime);
                     bookingToInsert.EndDateTime = Booking.StartDateTime.Date.Add(ScheduleStepper.Slot.EndTime);
-                    bookingToInsert.User = ScheduleStepper.User.Email == null ? new DTOUserLight() { Email = User.Username, FirstName = User.FirstName, LastName = User.LastName} : ScheduleStepper.User;
+                    if(UserIs(RoleConst.CUSTOMER))
+                        bookingToInsert.User = new DTOUserLight() { Email = User.Username, FirstName = User.FirstName, LastName = User.LastName };
+                    else
+                    {
+                        bookingToInsert.User = ScheduleStepper.User;
+                        if (String.IsNullOrEmpty(bookingToInsert.User.Email))
+                            bookingToInsert.User.Email = bookingToInsert.User.PhoneNumber;
+                    }
                     bookingToInsert.TotalPrice = bookingToInsert.Services != null && bookingToInsert.Services.Count() > 0 ? bookingToInsert.Services.Sum(s => s.Price.Value) : null;
-
+                    bookingToInsert.Identifier = Guid.NewGuid();
 
                     var result = await _bookService.InsertBooking(bookingToInsert);
                     if(result.Success)
                     {
                         Notification("Prenotazione inserita correttamente", NotificationColor.Success);
                         IsOpen = false;
+                        await _memoryCacheService.AddReservation(bookingToInsert.Identifier.Value, $"Nuova prenotazione per la risorsa {bookingToInsert.Resource.ResourceName} il {bookingToInsert.StartDateTime:dd/MM/yyyy HH:mm}");
                     }
                     else
                         Notification(result.Message, NotificationColor.Warning);

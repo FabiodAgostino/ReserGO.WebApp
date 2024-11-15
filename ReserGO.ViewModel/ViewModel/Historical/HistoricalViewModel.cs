@@ -1,23 +1,29 @@
-﻿using ReserGO.DTO;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.JSInterop;
+using ReserGO.DTO;
 using ReserGO.Miscellaneous.Enum;
+using ReserGO.Miscellaneous.Message;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
 using ReserGO.Utils.DTO.Service;
 using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Historical;
-using System.Security.Cryptography.X509Certificates;
+using static MudBlazor.CategoryTypes;
 
 namespace ReserGO.ViewModel.ViewModel.Historical
 {
-    public class HistoricalViewModel : CompleteReserGOViewModell<DTOBooking, HistoricalViewModel>, IHistoricalViewModel
+    public class HistoricalViewModel : CompleteReserGOViewModell<DTOBooking, HistoricalViewModel>, IHistoricalViewModel, IAsyncDisposable
     {
         private readonly IBaseServicesReserGO<HistoricalViewModel> _baseServices;
         private readonly IBookingService _service;
+        private readonly NavigationManager _navigationManager;
 
-        public HistoricalViewModel(IBaseServicesReserGO<HistoricalViewModel> baseServices, IBookingService service) : base(baseServices)
+        public HistoricalViewModel(IBaseServicesReserGO<HistoricalViewModel> baseServices, IBookingService service, NavigationManager navigationManager) : base(baseServices)
         {
             _baseServices = baseServices;
             _service = service;
+            _navigationManager = navigationManager;
             Pagination = new() { Page = 1, PageSize = 10, Filter = new() { GetAll = UserIs(RoleConst.ADMIN) } };
         }
         private GenericPagedList<DTOBooking> _bookings { get; set; }
@@ -25,6 +31,14 @@ namespace ReserGO.ViewModel.ViewModel.Historical
         public GenericPagedList<DTOBooking> Bookings { get => _bookings; set => _bookings = value; }
         private GenericPagedFilter<DTOBookingFilter> _pagination { get; set; }
         public GenericPagedFilter<DTOBookingFilter> Pagination { get => _pagination; set => _pagination = value; }
+        public List<Guid> RowsSelected { get; set; } = new();
+        private HubConnection? hubConnection;
+
+        public async ValueTask DisposeAsync()
+        {
+            await DisposeMemoryCache();
+        }
+
         public override async Task Refresh()
         {
             try
@@ -120,6 +134,7 @@ namespace ReserGO.ViewModel.ViewModel.Historical
             }
         }
 
+        
         public async Task DeleteBooking(DTOBooking booking)
         {
             try
@@ -145,6 +160,37 @@ namespace ReserGO.ViewModel.ViewModel.Historical
             {
                 IsLoading = false;
                 Loading();
+            }
+        }
+        public async Task InitializeMemoryCache()
+        {
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl(_navigationManager.ToAbsoluteUri("/notificationHub"))
+                .Build();
+
+            hubConnection.On<NotificationMemoryCache>("ReceiveNotification", async (message) =>
+            {
+                RowsSelected.Add(message.Identifier);
+                var callback = EventCallback.Factory.Create(this, (() => RemoveRowUnderlined(message.Identifier)));
+                await _baseServices.JS.InvokeVoidAsync("playAlertSound");
+                Notification(message.Message, NotificationColor.Info,null, callback);
+                await Refresh();
+            });
+
+            await hubConnection.StartAsync();
+        }
+
+        private async Task RemoveRowUnderlined(Guid identifier)
+        {
+            RowsSelected = RowsSelected.Where(row => row != identifier).ToList();
+            OnPropertyChanged();
+        }
+
+        public async Task DisposeMemoryCache()
+        {
+            if (hubConnection is not null)
+            {
+                await hubConnection.DisposeAsync();
             }
         }
 

@@ -6,18 +6,28 @@
 @using ReserGO.UI.Utils
 @using ReserGO.Miscellaneous.Model;
 @using ReserGO.Utils.DTO.Utils;
+@using System.Text.RegularExpressions;
 @inject IDialogService DialogService
 
 @if (Bookings is object)
 {
-    <MudTable Items="@Bookings.CurrentPageData" Loading="IsLoading"
+    <MudTable Items="@Bookings.CurrentPageData" Loading="IsLoading" RowClassFunc="@SelectedRowClassFunc"
               Hover="true" Class="w-100 shadow tableClass" Breakpoint="Breakpoint.Sm"
               LoadingProgressColor="Color.Primary" RowsPerPage="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10"
               TotalItems="PagingOptions.TotalCount.Value">
         <ToolBarContent>
             <div class="d-flex w-100 h-100 align-items-center toolbarCss" style="background-color:#0066FF;">
+                <MudSpacer />
                 <MudText Typo="Typo.h6"> <span style="@(IsSmallView ? "padding-inline:2vw;":"")">@(IsSmallView ? "Storico" : "Storico prenotazioni")</span> </MudText>
                 <MudSpacer />
+                <div class="w-25 pr-1">
+                <MudDateRangePicker @bind-DateRange="@_dateRange" Margin="Margin.Dense" @ref="_picker" Style="height:4vh" Label="Ricerca per data"
+                                    PlaceholderStart="Data inizio" PlaceholderEnd="Data fine" TransformOrigin="@Origin.TopLeft" />
+                </div>
+                @if(IsSmallView)
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.CalendarMonth" @onclick="OpenCalendar" Style="color:white;"/>
+                }
                 <div class="d-flex flex-row align-items-center @(IsSmallView ? "w-100 justify-content-end":"w-50")">
                     <div class="m-2 w-100">
                         <MudSelect T="string" Label="Stato" ValueChanged="@((string value) => OnCheckBoxChange(value))" Variant="Variant.Outlined" Value="statusSelected" Class="selectStato">
@@ -38,8 +48,7 @@
             <MudTh>Cognome</MudTh>
             <MudTh>Email</MudTh>
             <MudTh>Telefono</MudTh>
-            <MudTh>Email</MudTh>
-            <MudTh>Data</MudTh>
+            <MudTh>Data e ora</MudTh>
             <MudTh>Stato</MudTh>
             <MudTh>Risorsa</MudTh>
             <MudTh>Servizi</MudTh>
@@ -69,15 +78,21 @@
                     @element.User.LastName
                 </div>
             </MudTd>
-            <MudTd>
-                <div style="@(IsSmallView ? "margin-top:1vh;":"")">
-                    @if (IsSmallView)
-                    {
-                        <b style="padding-inline:2vw;">Email: </b>
-                    }
-                    @element.User.Email
-                </div>
-            </MudTd>
+            @if (!IsSmallView || (IsSmallView && IsValidEmail(element.User.Email)))
+            {
+                <MudTd>
+                    <div style="@(IsSmallView ? "margin-top:1vh;":"")">
+                        @if (IsValidEmail(element.User.Email))
+                        {
+                            @if (IsSmallView)
+                            {
+                                <b style="padding-inline:2vw;">Email: </b>
+                            }
+                            @element.User.Email
+                        }
+                    </div>
+                </MudTd>
+            }
             <MudTd>
                 <div style="@(IsSmallView ? "margin-top:1vh;":"")">
                     @if (IsSmallView)
@@ -167,10 +182,11 @@
                         @if (element.Status.Value == (int)BookingStatus.Pending)
                         {
                             <div title="Valida" class="m-3 @(IsSmallView ? "w-100":"")">
-                                    <MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Style="@(IsSmallView ? "width:100%":"")" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
+                                <MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Style="@(IsSmallView ? "width:100%":"")" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
                             </div>
                         }
                     </div>  
+
                 </MudTd>
 
             }
@@ -208,14 +224,28 @@
     [Parameter]
     public bool IsSmallView { get; set; }
 
+    [Parameter]
+    public List<Guid> SelectedItems { get; set; }
+
     private DTOBookingFilter Filter = new();
     private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
     private List<string> status = new List<string> { "Tutte", "Da confermare", "Confermate", "Rifiutate" }; // Opzioni di conferma
     private string statusSelected = "Tutte";
+    private DateRange _dateRange { get; set; }
+    MudDateRangePicker _picker;
 
     protected override async Task OnParametersSetAsync()
     {
         StateHasChanged();
+    }
+
+    private string SelectedRowClassFunc(DTOBooking element, int rowNumber)
+    {
+
+        if (element.Identifier.HasValue && SelectedItems.Contains(element.Identifier.Value))
+            return "selected";
+        else
+            return String.Empty;
     }
 
     private async Task OnPageChangedHandler(int currPageIndex)
@@ -376,6 +406,20 @@
     }
 
 
+    public bool IsValidEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+
+        string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+        return Regex.IsMatch(email, pattern);
+    }
+
+    private async Task OpenCalendar()
+    {
+        await _picker.OpenAsync();
+    }
+
 }
 
 <style>
@@ -439,7 +483,35 @@
         }
     }
 
-    .mud-input > input.mud-input-root-outlined, div.mud-input-slot.mud-input-root-outlined{
-        padding:10px !important;
+    .mud-input > input.mud-input-root-outlined, div.mud-input-slot.mud-input-root-outlined {
+        padding: 10px !important;
     }
+
+    .selected {
+        background-color: #1E88E5 !important;
+    }
+
+    .selected > td {
+        color: white !important;
+    }
+
+    .selected > td .mud-input {
+        color: white !important;
+    }
+
 </style>
+
+
+@if(IsSmallView)
+{
+    <style>
+        .mud-input.mud-input-text.mud-input-adorned-end.mud-input-margin-dense.mud-input-underline.mud-shrink.mud-typography-input.mud-input-input-control {
+    display: none;
+}
+
+        .mud-popover.mud-popover-fixed.mud-popover-open.mud-popover-top-left.mud-popover-anchor-top-left.mud-popover-overflow-flip-onopen
+        {
+            left: 41.25px !important;
+        }
+    </style>
+}

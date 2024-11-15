@@ -18,6 +18,8 @@ var serverapi = builder.Configuration.GetValue<string>("serverapi");
 MyConfigurationAccessor.Configuration = builder.Configuration;
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IEvent, Event>();
+builder.Services.AddSignalR();
+builder.Services.AddMemoryCache();
 builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddRefitClients(builder.Configuration);
@@ -61,5 +63,7 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

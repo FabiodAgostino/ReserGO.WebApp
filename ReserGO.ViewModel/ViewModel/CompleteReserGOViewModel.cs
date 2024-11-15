@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Service.Interface;
@@ -41,12 +42,12 @@ namespace ReserGO.ViewModel.ViewModel
             await _baseServices.Notification.PushToList(text, color, position, block);
         }
 
-        public virtual void Notification(string text, NotificationColor color =NotificationColor.Info, string position = null)
+        public virtual void Notification(string text, NotificationColor color = NotificationColor.Info, string position = null, EventCallback? callback=null)
         {
             if (color == NotificationColor.Warning || color == NotificationColor.Error)
                 _baseServices.Log.LogError(text);
 
-            _baseServices.Notification.NotifyMessage(text, color, position);
+            _baseServices.Notification.NotifyMessage(text, color, position, false, callback);
         }
 
         public virtual bool IsLoggedIn() => !String.IsNullOrEmpty(User.FirstName);
