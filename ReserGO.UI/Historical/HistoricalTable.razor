@@ -161,15 +161,15 @@
             {
                 <MudTd>
                     <div class="d-flex flex-row @(IsSmallView ? "w-100":"")">
+                        <div title="Elimina" class="m-3 @(IsSmallView ? "w-100":"")">
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Style="@(IsSmallView ? "width:100%":"")" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))"></MudIconButton>
+                        </div>
                         @if (element.Status.Value == (int)BookingStatus.Pending)
                         {
                             <div title="Valida" class="m-3 @(IsSmallView ? "w-100":"")">
                                     <MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Style="@(IsSmallView ? "width:100%":"")" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
                             </div>
                         }
-                        <div title="Elimina" class="m-3 @(IsSmallView ? "w-100":"")">
-                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Style="@(IsSmallView ? "width:100%":"")" Color="Color.Error" Variant="Variant.Filled" @onclick="(() =>DeleteDialog(element))"></MudIconButton>
-                        </div>
                     </div>  
                 </MudTd>
 

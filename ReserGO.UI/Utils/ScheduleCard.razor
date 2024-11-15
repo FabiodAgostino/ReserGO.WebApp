@@ -1,11 +1,11 @@
 ﻿@using MudBlazor
-<div class="d-flex cardScheduleContainer @(IsSmallView ? "w-100" :"")" style="@(IsSmallView ? "" :"width:80%")">
+<div class="d-flex cardScheduleContainer" style="@(IsSmallView ? "width:100%" :"width:80%")">
 
     <div class="d-flex flex-row @(IsActive ? "active" : "") @(IsSmallView ? "w-100 cardScheduleSmall" :"cardSchedule")" @onclick="@Click">
-        <div class="d-flex flex-column h-100 align-items-center justify-content-center imageCss">
+        <div class="d-flex flex-column h-100 align-items-center justify-content-center imageCardCss">
             @if (!String.IsNullOrEmpty(Image))
             {
-                <img src="@Image" style="border-radius: 100%;width:9vw;height:17vh;" />
+                <img src="@Image" Class="@(IsSmallView ? "imageCssSmall" :"imageCss")" />
             }
             else
             {
@@ -16,11 +16,12 @@
             <div class="d-flex w-100 align-items-center headerScheduleCard" style="@(IsSmallView ? "padding-inline:5px" :"")">
                 @if (Title.Length > 1)
                 {
-                    <span class="textScheduleTitle" style="@(IsSmallView ? "font-size: x-large; padding-inline:2vw;" :"padding-inline:1vw;")" title="@Title">@Title </span>
+                    <span class="textScheduleTitle" style="@(IsSmallView ? "font-size: x-large; padding-inline:2vw;" :"padding-inline:1vw;")" title="@Title">
+                        @(IsSmallView ? TruncateText(Title,13):TruncateText(Title,18))
+                    </span>
                 }
 
             </div>
-
             <div class="d-flex w-100 bodyScheduleCard p-3">
                 <span style="max-width: 16vw;">@Description</span>
             </div>
@@ -43,7 +44,7 @@
     public string Image { get; set; }
 
     [Parameter]
-    public string Description { get; set; } = "Descrizione...";
+    public string Description { get; set; } = "Descrizione assente";
 
     [Parameter]
     public string Icon { get; set; } = "";
@@ -88,13 +89,32 @@
         opacity: 0.5;
     }
 
-    .imageCss{
+    .imageCardCss{
         width: 35%;
         max-width: 35%;
         border-radius: 15px 0px 0px 15px;
         background-color: whitesmoke;
         overflow: hidden;
         object-fit:cover;
+    }
+    .imageCardCssSmall{
+        width: 35%;
+        max-width: 35%;
+        border-radius: 15px 0px 0px 15px;
+        background-color: whitesmoke;
+        overflow: hidden;
+        object-fit:cover;
+    }
+
+    .imageCss{
+        border-radius: 100%;
+        width:9vw;
+        height:17vh;
+    }
+    .imageCssSmall{
+        border-radius: 100%;
+        width:28vw;
+        height:14vh;
     }
 </style>
 

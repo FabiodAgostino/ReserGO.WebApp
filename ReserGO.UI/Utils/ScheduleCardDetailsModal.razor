@@ -59,7 +59,7 @@
                     <div><span class="descriptionDetailsSmall">Orari di disponibilità</span></div>
                         <div class="dividerDetailsScheduleSmall" style="width:82%"></div>
                     <div class="d-felx flex-row w-100 h-100 bodyDescriptionSmall" style="overflow:auto;">
-                            @if (ResourceDetails.Resource.AvailabilityAdv.UnavailableRecurringTimeDays.Count() > 0)
+                            @if (ResourceDetails.Resource.AvailabilityAdv.UnavailableRecurringTimeDays != null && ResourceDetails.Resource.AvailabilityAdv.UnavailableRecurringTimeDays.Count() > 0)
                             {
                                 @foreach (var giorniConRegole in ResourceDetails.Resource.AvailabilityAdv.UnavailableRecurringTimeDays)
                                 {
@@ -90,7 +90,7 @@
                                 }
                             }
 
-                            @if (ResourceDetails.Resource.AvailabilityAdv.UnavailableTimeDatesSlot.Count() > 0)
+                            @if (ResourceDetails.Resource.AvailabilityAdv.UnavailableTimeDatesSlot != null && ResourceDetails.Resource.AvailabilityAdv.UnavailableTimeDatesSlot.Count() > 0)
                             {
                                 <div class="pt-1">
                                     <span style="font-size:medium;"> <i>( chiusura straordinara )</i></span>
