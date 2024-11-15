@@ -6,28 +6,57 @@
 
 @inherits BaseComponentChild<IDayOfWeekViewModel, DTODayOfWeekWizard>
 
-<div class="containerDayOfWeek h-100">
-	<MudGrid>
-		<MudItem>
-			<div class="days-container">
+<div class="containerDayOfWeek h-100 @(IsSmallView ? "w-100":"")">
+	@if(IsSmallView)
+	{
+		<div class="d-flex flex-column align-items-center justify-content-around w-100 p-2" style="height:34vh; overflow:auto;" >
+
+			<div class="d-flex flex-wrap justify-content-center w-100 h-100">
 				@foreach (var day in DaysOfWeek)
 				{
-					<MudButton Class="@($"day-circle {(day.IsSelected ? "selected" : "")}")" OnClick="@(() => ToggleDaySelection(day))" Title="@day.FullName">
-						@day.Initial
-					</MudButton>
+					var dayName = @day.FullName.Substring(0, 3);
+					<div class="d-flex p-1">
+						<MudButton Class="@($"day-circle-small {(day.IsSelected ? "selected" : "")}")" OnClick="@(() => ToggleDaySelection(day))" Title="@day.FullName">
+							@dayName
+						</MudButton>
+					</div>
 				}
 			</div>
-		</MudItem>
-	</MudGrid>
-<div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
-            <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+		</div>
+	<div class="d-flex flex-row w-100 h-25 justify-content-around align-items-center">
+		<div class="d-flex w-100 p-2 align-items-center justify-content-center">
+		<MudButton Variant="Variant.Filled" Color="Color.Error" Style="width:35vw;height:5vh" @onclick="Annulla" >Annulla</MudButton>
+		</div>
+		<div class="d-flex w-100 p-2 align-items-center justify-content-center">
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" Style="width:35vw;height:5vh" @onclick="GoNext" Disabled="CurrentViewModel.List.Count()==0">Avanti</MudButton>
+		</div>
+	</div>
+	}
+	else
+	{
+		<MudGrid>
+			<MudItem>
+				<div class="days-container">
+					@foreach (var day in DaysOfWeek)
+					{
+						<MudButton Class="@($"day-circle {(day.IsSelected ? "selected" : "")}")" OnClick="@(() => ToggleDaySelection(day))" Title="@day.FullName">
+							@day.Initial
+						</MudButton>
+					}
+				</div>
+			</MudItem>
+		</MudGrid>
+		<div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
+			<div class="d-flex w-100 p-2 align-items-center justify-content-center">
 			<MudButton Variant="Variant.Filled" Color="Color.Error" Style="width:10vw;height:5vh" @onclick="Annulla" EndIcon="@Icons.Material.Filled.Close">Annulla</MudButton>
-            </div>
-            <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-               	<MudButton Color="Color.Primary" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="GoNext" Disabled="CurrentViewModel.List.Count()==0" EndIcon="@Icons.Material.Filled.ArrowForward">Avanti</MudButton>
-            </div>
-        </div>
+			</div>
+			<div class="d-flex w-100 p-2 align-items-center justify-content-center">
+				<MudButton Color="Color.Primary" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="GoNext" Disabled="CurrentViewModel.List.Count()==0" EndIcon="@Icons.Material.Filled.ArrowForward">Avanti</MudButton>
+			</div>
+		</div>
+	}
 </div>
+
 
 
 @code {
@@ -39,6 +68,9 @@
 
 	[Parameter]
 	public List<DTODayOfWeekWizard> DaysSelected { get; set; }
+
+	[Parameter]
+	public bool IsSmallView { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -111,12 +143,22 @@
 		border:1px solid lightgrey !important;
 	}
 
+	.day-circle-small{
+		width: 30vw;
+		height: 7vh;
+		background-color: whitesmoke !important;
+		border:1px solid lightgrey !important;
+	}
+		.day-circle-small:hover {
+			background-color: #bdbdbd;
+		}
+
 		.day-circle:hover {
 			background-color: #bdbdbd;
 		}
 
 		.selected {
 			background-color: #0066FF !important;
-		color: white !important;
+			color: white !important;
 		}
 </style>

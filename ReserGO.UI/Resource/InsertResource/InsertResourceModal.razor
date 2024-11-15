@@ -16,7 +16,7 @@
 
 @inherits BaseComponentChild<IInsertResourceViewModel, DTOResource>
 
-<MudDialog Class="@(CurrentViewModel.IsSmallView ? "resourceDialogCssSmall" : "resourceDialogCss")" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler" Options="@Options">
+<MudDialog Class="@(IsSmallView ? "resourceDialogCssSmall" : "resourceDialogCss")" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler" Options="@Options">
     <TitleContent>
 
     </TitleContent>
@@ -27,202 +27,355 @@
         </div>
             
         <MudForm @ref="_form" @bind-IsValid="@_success" Class="w-100" >
-            <div class="d-flex flex-row p-3 h-75">
-                <div class="d-flex flex-column w-50">
-                    <div class="d-flex flex-column w-100">
-                    
-                        <div class="d-flex flex-column w-100 justify-content-around p-2">
-                            <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.ResourceName = value)" Label="Nome" />
-                            <div class="d-flex w-100">
-                                <BaseTextField MinLenght="0" Lines="10" Bind="@((string value) => CurrentViewModel.SelectedItem.Description = value)" Label="Descrizione" Required="false" />
-                            </div>
-                        </div>
 
-                        <div class="d-flex flex-row p-2" style="height:10vh;" >
-                            <div class="d-flex align-items-center" style="width:60%;">
-                                <BaseComponent TViewModel="IServicesComboViewModel" TModel="DTOService">
-                                    <Content>
-                                        <ServicesCombo Callback="@((List<DTOService> list) => CurrentViewModel.SelectedItem.Services = list)"/>
-                                    </Content>
-                                </BaseComponent>
-                            </div>
-                            <div class="d-flex flex-column align-items-center" style="width:40%; padding-top:1.2vh;">
-                                <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Accept=".png, .jpg" MaximumFileCount="1">
-                                    <ActivatorContent>
-                                        <MudButton Variant="Variant.Filled"
-                                                   Color="Color.Primary"
-                                                   StartIcon="@Icons.Material.Filled.Image">
-                                            Carica Immagine
-                                        </MudButton>
-                                    </ActivatorContent>
-                                </MudFileUpload>
-
-                                @if (selectedFile != null)
-                                {
-                                    <div class="w-100" >
-
-                                        <MudChip T="string" Color="Color.Default">
-                                            <div title="Rimuovi">
-                                                <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Size="Size.Small" @onclick="@(() => DeleteFile())" />
-                                            </div>
-                                            @selectedFile.Name
-                                        </MudChip>
-                                    </div>
-                                }
-                            </div>
-
-                            
-                            
-                        </div>
-                        <div class="d-flex flex-row justify-content-between align-items-center w-100">
-                            <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma" Color="Color.Primary"></MudCheckBox>
-                            @if (CurrentViewModel.SelectedItem.RequestToConfirm)
+               @* SEZIONE REGOLE DISPONIBILITA' IN SMALL *@
+               @if(_smallViewRule && _enableHoursRule)
+               {
+                <div class="d-flex flex-column p-3" style="height:90%;" >
+                       <div class="d-flex flex-column h-100 w-100" >
+                            @if (_enableHoursRule && CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
                             {
-                                <span style="padding-left:1vw;">(La prenotazione dovrà essere confermata da Admin)</span>
+                                <div class="d-flex flex-row w-100" style="padding-block:1vh; height:30%;">
+                                    <div class="d-flex flex-column w-100 p-2" style="border-radius:15px; border:1px solid lightgrey;" >
+                                        <span><b>Giorni disponibilità risorsa:</b> @_daysMarkup</span><br />
+                                        <span><b>Orari disponibilità risorsa: </b>@_recurringRulesMarkup</span>
+                                    </div>
+                                </div>
+
+
+                                <div class="d-flex justify-content-center w-100 ruleTable" style="height:78%;">
+                                    <div class="w-100 h-100">
+                                        <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.Stepper.Index" Style="height:100%">
+                                            <MudTabPanel Text="Giorni disponibilità">
+                                                <div class="d-flex flex-column w-100" style="height:55vh;" >
+
+                                                    <div class="d-flex w-100 p-3 justify-content-center" style="height:20%">
+                                                        <span style="color:#0066FF; font-size:large;">
+                                                            <b>
+                                                                Seleziona i giorni in cui la risorsa sarà disponibile
+                                                            </b>
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex w-100" style="height:70%;">
+                                                        <BaseComponent TViewModel="IDayOfWeekViewModel" TModel="DTODayOfWeekWizard">
+                                                            <Content>
+                                                                <DaysWeek IsSmallView="true" Callback="@(((List<DTODayOfWeekWizard> days, bool next) Value) => UpdateDays(Value))" Reset="@(() => Reset())" DaysSelected="CurrentViewModel.Stepper.DaysSelected" />
+                                                            </Content>
+                                                        </BaseComponent>
+                                                    </div>
+                                                </div>
+                                            </MudTabPanel>
+                                            <MudTabPanel Text="Orari ricorrenti" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.RECURRING_RULES)">
+                                                <div class="d-flex flex-column w-100" style="height: 47vh;" >
+
+                                                    <div class="d-flex w-100 p-3 justify-content-center" style="height:20%">
+                                                        <span style="color:#0066FF; font-size:large;">
+                                                            <b>
+                                                                Seleziona gli orari di disponibilità
+                                                            </b>
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex w-100" style="height:80%">
+                                                        <DaysSliderComponent IsSmallView="true" Callback="@(((List<DTOTimeSlot> slots, bool next)values) => UpdateRecurringRules(values))" Reset="@(() => Reset())" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
+                                                    </div>
+                                                </div>
+
+                                            </MudTabPanel>
+                                            <MudTabPanel Text="Conferma" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.CONFIRM)">
+                                                <div class="d-flex flex-column justify-content-around w-100" style="overflow:auto; height:40vh;" >
+                                                    <div class="d-flex flex-row w-100">
+                                                        <div class="d-flex flex-column justify-content-around w-100 p-3" >
+                                                            <span style="font-size:large; color:#0066FF;"><b>Hai selezionato per i seguenti giorni:</b></span>
+                                                            <span style="font-size:medium;">@_daysMarkup</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-row w-100">
+                                                        <div class="d-flex flex-column justify-content-around w-100 p-3">
+                                                            <span style="font-size:large; color:#0066FF;"><b>Hai selezionato queste regole orarie:</b></span>
+                                                            <span style="font-size:medium;"><b>@_recurringRulesMarkup</b></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-row w-100">
+                                                        <div class="d-flex flex-column justify-content-center align-items-center w-100 p-3">
+                                                            <span style="font-size:medium; text-align:center;">Potrai inserire ulteriori regole orarie accedendo alla funzione di modifica della risorsa</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex flex-row w-100 justify-content-around align-items-center p-3">
+                                                        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+                                                        <MudButton Color="Color.Error" Variant="Variant.Filled" Style="width:20vw;height:5vh" @onclick="() => Reset()">Annulla</MudButton>
+                                                        </div>
+                                                        <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
+                                                        <MudButton Color="Color.Default" Variant="Variant.Filled" Style="width:20vw;height:5vh" @onclick="@(() => {CurrentViewModel.Stepper = new(); StateHasChanged();_daysMarkup = (MarkupString)String.Empty;_recurringRulesMarkup = (MarkupString)String.Empty;})">Reset</MudButton>
+                                                        </div>
+                                                        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+                                                            <MudButton Color="Color.Success" Variant="Variant.Filled" Style="width:20vw;height:5vh" @onclick="@(() => {_smallViewRule = false; CurrentViewModel.Stepper.Confirm();})">Salva</MudButton>
+                                                        </div>
+                                                </div>
+
+                                            </MudTabPanel>
+
+                                        </MudTabs>
+                                    </div>
+                                </div>
                             }
-                            <MudSwitch @bind-Value="CurrentViewModel.EnableResource" Label="Abilita risorsa da subito" Color="Color.Success" />
-                        </div>
-                        
                     </div>
                 </div>
-                
-                <div class="d-flex flex-column w-50 h-100">
-                        @if (_enableHoursRule && CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
-                        {
-                        <div class="d-flex flex-row w-100" style="padding-block:1vh;">
-                                <div class="d-flex flex-column w-100 p-2" style="border-radius:15px; border:1px solid lightgrey;" >
-                                    <span><b>Giorni disponibilità risorsa:</b> @_daysMarkup</span><br />
-                                    <span><b>Orari disponibilità risorsa: </b>@_recurringRulesMarkup</span>
+               }
+               else
+               {
+                <div class="d-flex p-3 @(IsSmallView ? "flex-column" : "flex-row h-75")"  style="@(IsSmallView ? "height:80%;" : "")">
+
+                    <div class="d-flex flex-column @(IsSmallView ? "w-100" : "w-50")" style="@(IsSmallView ? "overflow:auto;" : "")" >
+                        <div class="d-flex flex-column w-100">
+                    
+                            <div class="d-flex flex-column w-100 justify-content-around p-2">
+                                <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.ResourceName = value)" Label="Nome" />
+                                <div class="d-flex w-100">
+                                    <BaseTextField MinLenght="0" Lines="10" Bind="@((string value) => CurrentViewModel.SelectedItem.Description = value)" Label="Descrizione" Required="false" />
                                 </div>
                             </div>
 
+                            <div class="d-flex p-2 @(IsSmallView ? "flex-column" : "flex-row")" style="@(IsSmallView ? "height:22vh;" : "height:10vh;")" >
+                                <div class="d-flex align-items-center" style="@(IsSmallView ? "width:100%;" : "width:60%;")">
+                                    <BaseComponent TViewModel="IServicesComboViewModel" TModel="DTOService">
+                                        <Content>
+                                            <ServicesCombo Callback="@((List<DTOService> list) => CurrentViewModel.SelectedItem.Services = list)"/>
+                                        </Content>
+                                    </BaseComponent>
+                                </div>
+                                <div class="d-flex flex-column align-items-center" style="@(IsSmallView ? "width:100%; padding-top:5vh;" : "width:40%; padding-top:1.2vh;")">
+                                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Accept=".png, .jpg" MaximumFileCount="1">
+                                        <ActivatorContent>
+                                            <MudButton Variant="Variant.Filled"
+                                                       Color="Color.Primary"
+                                                       StartIcon="@Icons.Material.Filled.Image">
+                                                Carica Immagine
+                                            </MudButton>
+                                        </ActivatorContent>
+                                    </MudFileUpload>
 
-                            <div class="d-flex justify-content-center h-100 w-100 ruleTable">
-                                <div class="w-100 h-100">
-                                    <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.Stepper.Index" Style="height:100%">
-                                        <MudTabPanel Text="Giorni disponibilità">
-                                            <div class="d-flex flex-column w-100" style="height:30vh;" >
+                                    @if (selectedFile != null)
+                                    {
+                                        <div class="w-100" >
 
-                                                <div class="d-flex w-100 p-3 justify-content-center" style="height:30%">
-                                                    <span style="color:#0066FF; font-size:large;">
-                                                        <b>
-                                                            Seleziona i giorni in cui la risorsa sarà disponibile
-                                                        </b>
-                                                    </span>
+                                            <MudChip T="string" Color="Color.Default">
+                                                <div title="Rimuovi">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Size="Size.Small" @onclick="@(() => DeleteFile())" />
                                                 </div>
-                                            <div class="d-flex w-100" style="height:70%">
-                                                    <BaseComponent TViewModel="IDayOfWeekViewModel" TModel="DTODayOfWeekWizard">
-                                                        <Content>
-                                                            <DaysWeek Callback="@(((List<DTODayOfWeekWizard> days, bool next) Value) => UpdateDays(Value))" Reset="@(() => Reset())" DaysSelected="CurrentViewModel.Stepper.DaysSelected" />
-                                                        </Content>
-                                                    </BaseComponent>
-                                                </div>
-                                            </div>
-                                        </MudTabPanel>
-                                        <MudTabPanel Text="Orari ricorrenti" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.RECURRING_RULES)">
-                                            <div class="d-flex flex-column w-100" style="height:30vh;" >
-
-                                                <div class="d-flex w-100 p-3 justify-content-center" style="height:20%">
-                                                    <span style="color:#0066FF; font-size:large;">
-                                                        <b>
-                                                            Seleziona gli orari di disponibilità
-                                                        </b>
-                                                    </span>
-                                                </div>
-                                                <div class="d-flex w-100" style="height:80%">
-                                                <DaysSliderComponent Callback="@(((List<DTOTimeSlot> slots, bool next)values) => UpdateRecurringRules(values))" Reset="@(() => Reset())" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
-                                                </div>
-                                            </div>
-
-                                        </MudTabPanel>
-                                        <MudTabPanel Text="Conferma" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.CONFIRM)">
-                                            <div class="d-flex flex-column justify-content-around w-100 h-100" >
-                                                <div class="d-flex flex-row w-100">
-                                                    <div class="d-flex flex-column justify-content-around w-100 p-3" >
-                                                        <span style="font-size:large; color:#0066FF;"><b>Hai selezionato per i seguenti giorni:</b></span>
-                                                        <span style="font-size:medium;">@_daysMarkup</span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-row w-100">
-                                                    <div class="d-flex flex-column justify-content-around w-100 p-3">
-                                                        <span style="font-size:large; color:#0066FF;"><b>Hai selezionato queste regole orarie:</b></span>
-                                                        <span style="font-size:medium;"><b>@_recurringRulesMarkup</b></span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-row w-100">
-                                                    <div class="d-flex flex-column justify-content-center align-items-center w-100 p-3">
-                                                        <span style="font-size:medium; text-align:center;">Potrai inserire ulteriori regole orarie accedendo alla funzione di modifica della risorsa</span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center p-3">
-                                                    <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-                                                    <MudButton Color="Color.Error" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="() => Reset()">Annulla</MudButton>
-                                                    </div>
-                                                    <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
-                                                    <MudButton Color="Color.Default" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => {CurrentViewModel.Stepper = new(); StateHasChanged();_daysMarkup = (MarkupString)String.Empty;_recurringRulesMarkup = (MarkupString)String.Empty;})">Reset</MudButton>
-                                                    </div>
-                                                    <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-                                                        <MudButton Color="Color.Success" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => CurrentViewModel.Stepper.Confirm())">Salva</MudButton>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </MudTabPanel>
-
-                                    </MudTabs>
+                                                @selectedFile.Name
+                                            </MudChip>
+                                        </div>
+                                    }
+                                </div>
+                            
+                            </div>
+                            <div class="d-flex justify-content-between w-100 @(IsSmallView ? "flex-column pt-4" : "align-items-center flex-row")">
+                                <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma" Color="Color.Primary"></MudCheckBox>
+                                @if (CurrentViewModel.SelectedItem.RequestToConfirm)
+                                {
+                                    <span style="padding-left:1vw;">(La prenotazione dovrà essere confermata da Admin)</span>
+                                }
+                                <div class="d-flex flex-row" style="@(IsSmallView ? "padding-inline:4vw;" : "")">
+                                    <MudSwitch @bind-Value="CurrentViewModel.EnableResource" Label="Abilita risorsa da subito" Color="Color.Success" />
                                 </div>
                             </div>
-                        }
-                        else
-                        {
-                            @if (CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
+
+                            @* SEZIONE REGOLE DISPONIBILITA CARD/RIPILOGO SMALL *@
+                            @if(IsSmallView && !_smallViewRule)
                             {
-                                <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2">
-                                    <div class="d-flex flex-column w-75 h-75 align-items-center justify-content-center shadow ruleMask" @onclick="() => _enableHoursRule=true">
-                                        <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
-                                        <span class="p-3"> Abilita regole di disponibilità </span>
+                                @if(CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
+                                {
+                                    <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 pt-4">
+                                        <div class="d-flex flex-column align-items-center justify-content-center shadow ruleMask" @onclick="() =>{_enableHoursRule = true; _smallViewRule = true;} ">
+                                            <div class="d-flex p-2" >
+                                                <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
+                                            </div>
+                                            <span class="p-3"> Abilita regole di disponibilità </span>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2">
+                                        <div class="d-flex flex-column shadow ruleRecap" @onclick="() => _enableHoursRule=true">
+                                            <div class="d-flex flex-row w-100 h-25 align-items-center p-3" style="background-color:#0066FF;color:white; border-radius: 15px 15px 0px 0px;">
+                                                <MudIcon Icon="@Icons.Material.Filled.AccessTimeFilled"></MudIcon>
+                                                <span style="font-size:x-large; padding-inline:1vw;" >Disponibilità risorsa</span>
+                                            </div>
+                                             <div class="d-flex flex-column w-100 h-100  p-3" style="border-radius: 0px 0px 15px 15px;">
+                                                 <div class="d-flex flex-row justify-content-center align-items-center p-1">
+                                                     <span style="font-size:x-large; color:#0066FF">Giorni disponibilità:</span>
+                                                 </div>
+                                                 <div class="d-flex flex-row justify-content-center p-3">
+                                                     <span style="font-size:large; text-align:center;"><b>@_daysMarkup</b></span>
+                                                 </div>
+                                                 <div class="d-flex flex-row justify-content-center align-items-center p-1">
+                                                     <span style="font-size:x-large; color:#0066FF">Orari disponibilità:</span>
+                                                 </div>
+                                                 <div class="d-flex flex-row justify-content-center p-3">
+                                                     <span style="font-size:large; text-align:center;"><b>@_recurringRulesMarkup</b></span>
+                                                 </div>
+                                            </div>
+    
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                
+                
+               
+                   @* SEZIONE REGOLE DISPONIBILITA LARGE *@
+                    <div class="flex-column w-50 h-100" style="@(IsSmallView ? "display:none;":"display:flex;")" >
+                            @if (_enableHoursRule && CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
+                            {
+                                <div class="d-flex flex-row w-100" style="padding-block:1vh;">
+                                    <div class="d-flex flex-column w-100 p-2" style="border-radius:15px; border:1px solid lightgrey;" >
+                                        <span><b>Giorni disponibilità risorsa:</b> @_daysMarkup</span><br />
+                                        <span><b>Orari disponibilità risorsa: </b>@_recurringRulesMarkup</span>
+                                    </div>
+                                </div>
+
+
+                                <div class="d-flex justify-content-center h-100 w-100 ruleTable">
+                                    <div class="w-100 h-100">
+                                        <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.Stepper.Index" Style="height:100%">
+                                            <MudTabPanel Text="Giorni disponibilità">
+                                                <div class="d-flex flex-column w-100" style="height:30vh;" >
+
+                                                    <div class="d-flex w-100 p-3 justify-content-center" style="height:30%">
+                                                        <span style="color:#0066FF; font-size:large;">
+                                                            <b>
+                                                                Seleziona i giorni in cui la risorsa sarà disponibile
+                                                            </b>
+                                                        </span>
+                                                    </div>
+                                                <div class="d-flex w-100" style="height:70%">
+                                                        <BaseComponent TViewModel="IDayOfWeekViewModel" TModel="DTODayOfWeekWizard">
+                                                            <Content>
+                                                                <DaysWeek Callback="@(((List<DTODayOfWeekWizard> days, bool next) Value) => UpdateDays(Value))" Reset="@(() => Reset())" DaysSelected="CurrentViewModel.Stepper.DaysSelected" />
+                                                            </Content>
+                                                        </BaseComponent>
+                                                    </div>
+                                                </div>
+                                            </MudTabPanel>
+                                            <MudTabPanel Text="Orari ricorrenti" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.RECURRING_RULES)">
+                                                <div class="d-flex flex-column w-100" style="height:30vh;" >
+
+                                                    <div class="d-flex w-100 p-3 justify-content-center" style="height:20%">
+                                                        <span style="color:#0066FF; font-size:large;">
+                                                            <b>
+                                                                Seleziona gli orari di disponibilità
+                                                            </b>
+                                                        </span>
+                                                    </div>
+                                                    @if(!IsSmallView)
+                                                    {
+                                                        <div class="d-flex w-100" style="height:80%">
+                                                            <DaysSliderComponent Callback="@(((List<DTOTimeSlot> slots, bool next)values) => UpdateRecurringRules(values))" Reset="@(() => Reset())" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
+                                                        </div>
+                                                    } 
+                                                </div>
+
+                                            </MudTabPanel>
+                                            <MudTabPanel Text="Conferma" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.CONFIRM)">
+                                                <div class="d-flex flex-column justify-content-around w-100 h-100" >
+                                                    <div class="d-flex flex-row w-100">
+                                                        <div class="d-flex flex-column justify-content-around w-100 p-3" >
+                                                            <span style="font-size:large; color:#0066FF;"><b>Hai selezionato per i seguenti giorni:</b></span>
+                                                            <span style="font-size:medium;">@_daysMarkup</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-row w-100">
+                                                        <div class="d-flex flex-column justify-content-around w-100 p-3">
+                                                            <span style="font-size:large; color:#0066FF;"><b>Hai selezionato queste regole orarie:</b></span>
+                                                            <span style="font-size:medium;"><b>@_recurringRulesMarkup</b></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-row w-100">
+                                                        <div class="d-flex flex-column justify-content-center align-items-center w-100 p-3">
+                                                            <span style="font-size:medium; text-align:center;">Potrai inserire ulteriori regole orarie accedendo alla funzione di modifica della risorsa</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center p-3">
+                                                        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+                                                        <MudButton Color="Color.Error" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="() => Reset()">Annulla</MudButton>
+                                                        </div>
+                                                        <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
+                                                        <MudButton Color="Color.Default" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => {CurrentViewModel.Stepper = new(); StateHasChanged();_daysMarkup = (MarkupString)String.Empty;_recurringRulesMarkup = (MarkupString)String.Empty;})">Reset</MudButton>
+                                                        </div>
+                                                        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+                                                            <MudButton Color="Color.Success" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => CurrentViewModel.Stepper.Confirm())">Salva</MudButton>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </MudTabPanel>
+
+                                        </MudTabs>
                                     </div>
                                 </div>
                             }
                             else
                             {
-                                <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2">
-                                    <div class="d-flex flex-column w-75 h-75 shadow ruleRecap" @onclick="() => _enableHoursRule=true">
-                                        <div class="d-flex flex-row w-100 h-25 align-items-center p-3" style="background-color:#0066FF;color:white; border-radius: 15px 15px 0px 0px;">
-                                            <MudIcon Icon="@Icons.Material.Filled.AccessTimeFilled"></MudIcon>
-                                            <span style="font-size:xx-large; padding-inline:1vw;" >Disponibilità risorsa</span>
+                            
+                            @* SEZIONE REGOLE DISPONIBILITA CARD/RIPILOGO LARGE *@
+                                @if(!IsSmallView)
+                                {
+                                    @if (CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
+                                    {
+                                        <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2">
+                                            <div class="d-flex flex-column w-75 h-75 align-items-center justify-content-center shadow ruleMask" @onclick="() => _enableHoursRule=true">
+                                                <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
+                                                <span class="p-3"> Abilita regole di disponibilità </span>
+                                            </div>
                                         </div>
-                                         <div class="d-flex flex-column w-100 h-100  p-3" style="border-radius: 0px 0px 15px 15px;">
-                                             <div class="d-flex flex-row align-items-center p-1">
-                                                 <span style="font-size:x-large; color:#0066FF">Giorni disponibilità:</span>
-                                             </div>
-                                             <div class="d-flex flex-row justify-content-center p-3">
-                                                 <span style="font-size:large; text-align:center;"><b>@_daysMarkup</b></span>
-                                             </div>
-                                             <div class="d-flex flex-row align-items-center p-1">
-                                                 <span style="font-size:x-large; color:#0066FF">Orari disponibilità:</span>
-                                             </div>
-                                             <div class="d-flex flex-row justify-content-center p-3">
-                                                 <span style="font-size:large; text-align:center;"><b>@_recurringRulesMarkup</b></span>
-                                             </div>
-                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2">
+                                            <div class="d-flex flex-column w-75 h-75 shadow ruleRecap" @onclick="() => _enableHoursRule=true">
+                                                <div class="d-flex flex-row w-100 h-25 align-items-center p-3" style="background-color:#0066FF;color:white; border-radius: 15px 15px 0px 0px;">
+                                                    <MudIcon Icon="@Icons.Material.Filled.AccessTimeFilled"></MudIcon>
+                                                    <span style="font-size:xx-large; padding-inline:1vw;" >Disponibilità risorsa</span>
+                                                </div>
+                                                 <div class="d-flex flex-column w-100 h-100  p-3" style="border-radius: 0px 0px 15px 15px;">
+                                                     <div class="d-flex flex-row align-items-center p-1">
+                                                         <span style="font-size:x-large; color:#0066FF">Giorni disponibilità:</span>
+                                                     </div>
+                                                     <div class="d-flex flex-row justify-content-center p-3">
+                                                         <span style="font-size:large; text-align:center;"><b>@_daysMarkup</b></span>
+                                                     </div>
+                                                     <div class="d-flex flex-row align-items-center p-1">
+                                                         <span style="font-size:x-large; color:#0066FF">Orari disponibilità:</span>
+                                                     </div>
+                                                     <div class="d-flex flex-row justify-content-center p-3">
+                                                         <span style="font-size:large; text-align:center;"><b>@_recurringRulesMarkup</b></span>
+                                                     </div>
+                                                </div>
                                         
-                                    </div>
-                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
                             }
-                    }
+
+                    </div>
                 </div>
-            </div>
+               }
         </MudForm>
-        <div>
+        
+        <div style="@(IsSmallView ? "height:8vh;" : "")">
             @if (!_enableHoursRule || _enableHoursRule && CurrentViewModel.Stepper.ActualState == ResourceStepperState.FINISH)
             {
-                <div class="d-flex justify-content-between align-items-end h-75">
-                    <div class="d-flex justify-content-center w-25">
-                        <MudButton Color="Color.Default" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper = new())" style="width:10vw;height:6vh;border-radius:15px;">Reset</MudButton>
+                <div class="d-flex  @(IsSmallView ? "flex-row align-items-end justify-content-around h-100" : "align-items-end justify-content-between  h-75")">
+                    <div class="d-flex justify-content-center @(IsSmallView ? "w-100 p-2" : "w-25")">
+                        <MudButton Color="Color.Default" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper = new())" style="@(IsSmallView ? "width:40vw;border-radius:15px;" : "width:10vw;border-radius:15px;")">Reset</MudButton>
                     </div>
-                    <div class="d-flex justify-content-center w-25">
-                        <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.InsertResource())" style="width:10vw;height:6vh;border-radius:15px;" Disabled="!_success">Salva</MudButton>
+                    <div class="d-flex justify-content-center @(IsSmallView ? "w-100 p-2" : "w-25")">
+                        <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.InsertResource())" style="@(IsSmallView ? "width:40vw;border-radius:15px;" : "width:10vw;border-radius:15px;")" Disabled="!_success">Salva</MudButton>
                     </div>
                 </div>
             }
@@ -233,6 +386,9 @@
 
 @code {
 
+    [Parameter]
+	public bool IsSmallView { get; set; }
+
     private bool _enablePrice = false;
     private bool _enableHoursRule = false;
     private int _numRecurringRules = 1;
@@ -242,6 +398,7 @@
     private MudForm _form;
     private bool _success { get; set; }
     private IBrowserFile selectedFile;
+    private bool _smallViewRule { get; set; }
 
     private Dictionary<int, DTOTimeSlot> _recurringRules = new();
     public DialogOptions Options = new DialogOptions
