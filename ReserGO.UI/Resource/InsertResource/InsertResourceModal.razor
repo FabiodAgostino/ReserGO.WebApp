@@ -74,14 +74,14 @@
                             
                             
                         </div>
-                        <div class="d-flex flex-row align-items-center w-100">
+                        <div class="d-flex flex-row justify-content-between align-items-center w-100">
                             <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma" Color="Color.Primary"></MudCheckBox>
                             @if (CurrentViewModel.SelectedItem.RequestToConfirm)
                             {
                                 <span style="padding-left:1vw;">(La prenotazione dovrà essere confermata da Admin)</span>
                             }
+                            <MudSwitch @bind-Value="CurrentViewModel.EnableResource" Label="Abilita risorsa da subito" Color="Color.Success" />
                         </div>
-                        <MudSwitch @bind-Value="CurrentViewModel.EnableResource" Label="Abilita risorsa da subito" Color="Color.Success" />
                         
                     </div>
                 </div>
@@ -177,7 +177,7 @@
                         {
                             @if (CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
                             {
-                                <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 ruleMaskContainer">
+                                <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2">
                                     <div class="d-flex flex-column w-75 h-75 align-items-center justify-content-center shadow ruleMask" @onclick="() => _enableHoursRule=true">
                                         <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
                                         <span class="p-3"> Abilita regole di disponibilità </span>
@@ -186,7 +186,29 @@
                             }
                             else
                             {
-                                <span> daje de riepilogo fassello</span>
+                                <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2">
+                                    <div class="d-flex flex-column w-75 h-75 shadow ruleRecap" @onclick="() => _enableHoursRule=true">
+                                        <div class="d-flex flex-row w-100 h-25 align-items-center p-3" style="background-color:#0066FF;color:white; border-radius: 15px 15px 0px 0px;">
+                                            <MudIcon Icon="@Icons.Material.Filled.AccessTimeFilled"></MudIcon>
+                                            <span style="font-size:xx-large; padding-inline:1vw;" >Disponibilità risorsa</span>
+                                        </div>
+                                         <div class="d-flex flex-column w-100 h-100  p-3" style="border-radius: 0px 0px 15px 15px;">
+                                             <div class="d-flex flex-row align-items-center p-1">
+                                                 <span style="font-size:x-large; color:#0066FF">Giorni disponibilità:</span>
+                                             </div>
+                                             <div class="d-flex flex-row justify-content-center p-3">
+                                                 <span style="font-size:large; text-align:center;"><b>@_daysMarkup</b></span>
+                                             </div>
+                                             <div class="d-flex flex-row align-items-center p-1">
+                                                 <span style="font-size:x-large; color:#0066FF">Orari disponibilità:</span>
+                                             </div>
+                                             <div class="d-flex flex-row justify-content-center p-3">
+                                                 <span style="font-size:large; text-align:center;"><b>@_recurringRulesMarkup</b></span>
+                                             </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
                             }
                     }
                 </div>
@@ -341,6 +363,12 @@
     .ruleTable{
         border:1px solid lightgrey;
         border-radius:15px;
+    }
+
+    .ruleRecap{
+        border-radius: 15px;
+        font-size: x-large;
+        text-align: center;
     }
 
 </style>
