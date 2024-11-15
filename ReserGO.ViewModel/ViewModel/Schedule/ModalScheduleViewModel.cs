@@ -93,14 +93,14 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             Booking.EndDateTime = day.Date;
             var slotOccupati = new List<DTOTimeSlot>();
             TimeSlots = new();
-            if (SelectedItem.AvailabilityAdv.UnavailableSpecificDays.Data.Contains(day))
+            if (SelectedItem.AvailabilityAdv.UnavailableSpecificDays!= null && SelectedItem.AvailabilityAdv.UnavailableSpecificDays.Data.Contains(day))
                 return;
             if (SelectedItem.AvailabilityAdv.Unavailable)
                 return;
 
             var firstSlot = SelectedItem.AvailabilityAdv.UnavailableRecurringTimeDays;
 
-            if (firstSlot.Count() > 0)
+            if (firstSlot!= null && firstSlot.Count() > 0)
             {
                 var recurringSlot = firstSlot.SingleOrDefault(x => x.DayOfTheWeek.Contains(day.DayOfWeek.DayToItalianString()));
                 if (recurringSlot != null)
@@ -108,7 +108,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             }
 
             var secondSlot = SelectedItem.AvailabilityAdv.UnavailableTimeDatesSlot;
-            if (secondSlot.Count() > 0)
+            if (secondSlot!= null && secondSlot.Count() > 0)
             {
                 var timeDateSlot = secondSlot.SingleOrDefault(x => x.SpecificDate.Date == day.Date);
                 if (timeDateSlot != null)

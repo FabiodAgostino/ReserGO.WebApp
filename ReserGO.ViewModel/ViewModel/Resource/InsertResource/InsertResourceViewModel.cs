@@ -27,6 +27,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
         }
         public DTOResourceStepper Stepper { get; set; }
         public bool IsOpen { get; set; }
+        public bool EnableResource { get; set; } = true;
 
         public async Task InsertResource()
         {
@@ -51,6 +52,12 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
                     });
                     SelectedItem.AvailabilityAdv.UnavailableRecurringTimeDays = unavailableRecurringTimeDays;
                 }
+            }
+            if(!EnableResource)
+            {
+                if(SelectedItem.AvailabilityAdv == null)
+                    SelectedItem.AvailabilityAdv = new();
+                SelectedItem.AvailabilityAdv.Unavailable = true;
             }
            
             try

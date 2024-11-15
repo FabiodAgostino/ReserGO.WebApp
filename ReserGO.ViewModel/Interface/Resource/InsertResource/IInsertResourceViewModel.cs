@@ -10,5 +10,6 @@ namespace ReserGO.ViewModel.Interface.Resource.InsertResource
         Task HandleFileSelected(IBrowserFile file);
         public bool IsOpen { get; set; }
         public Task InsertResource();
+        public bool EnableResource { get; set; }
     }
 }

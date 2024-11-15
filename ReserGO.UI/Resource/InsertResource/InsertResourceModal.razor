@@ -81,7 +81,7 @@
                                 <span style="padding-left:1vw;">(La prenotazione dovrà essere confermata da Admin)</span>
                             }
                         </div>
-
+                        <MudSwitch @bind-Value="CurrentViewModel.EnableResource" Label="Abilita risorsa da subito" Color="Color.Success" />
                         
                     </div>
                 </div>
@@ -113,14 +113,13 @@
                                             <div class="d-flex w-100" style="height:70%">
                                                     <BaseComponent TViewModel="IDayOfWeekViewModel" TModel="DTODayOfWeekWizard">
                                                         <Content>
-                                                            <DaysWeek Callback="@(((List<DTODayOfWeekWizard> days, bool next) Value) => CurrentViewModel.Stepper.UpdateDays(Value.days, Value.next))" DaysSelected="CurrentViewModel.Stepper.DaysSelected" />
+                                                            <DaysWeek Callback="@(((List<DTODayOfWeekWizard> days, bool next) Value) => UpdateDays(Value))" Reset="@(() => Reset())" DaysSelected="CurrentViewModel.Stepper.DaysSelected" />
                                                         </Content>
                                                     </BaseComponent>
                                                 </div>
                                             </div>
                                         </MudTabPanel>
                                         <MudTabPanel Text="Orari ricorrenti" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.RECURRING_RULES)">
-                                        
                                             <div class="d-flex flex-column w-100" style="height:30vh;" >
 
                                                 <div class="d-flex w-100 p-3 justify-content-center" style="height:20%">
@@ -131,15 +130,12 @@
                                                     </span>
                                                 </div>
                                                 <div class="d-flex w-100" style="height:80%">
-                                                    <DaysSliderComponent Callback="@(((List<DTOTimeSlot> slots, bool next)values) => CurrentViewModel.Stepper.UpdateRecurringRules(values.slots,values.next))" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
+                                                <DaysSliderComponent Callback="@(((List<DTOTimeSlot> slots, bool next)values) => UpdateRecurringRules(values))" Reset="@(() => Reset())" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
                                                 </div>
                                             </div>
 
                                         </MudTabPanel>
                                         <MudTabPanel Text="Conferma" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.CONFIRM)">
-                                        @{
-                                            _daysMarkup = (MarkupString)string.Join(", ", CurrentViewModel.Stepper.DaysSelected.Select(d => $"<b>{d.FullName}</b>"));
-                                        }
                                             <div class="d-flex flex-column justify-content-around w-100 h-100" >
                                                 <div class="d-flex flex-row w-100">
                                                     <div class="d-flex flex-column justify-content-around w-100 p-3" >
@@ -160,10 +156,10 @@
                                                 </div>
                                                 <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center p-3">
                                                     <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-                                                        <MudButton Color="Color.Error" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="() => _enableHoursRule=false">Annulla</MudButton>
+                                                    <MudButton Color="Color.Error" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="() => Reset()">Annulla</MudButton>
                                                     </div>
                                                     <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
-                                                        <MudButton Color="Color.Default" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => {CurrentViewModel.Stepper = new(); StateHasChanged();})">Reset</MudButton>
+                                                    <MudButton Color="Color.Default" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => {CurrentViewModel.Stepper = new(); StateHasChanged();_daysMarkup = (MarkupString)String.Empty;_recurringRulesMarkup = (MarkupString)String.Empty;})">Reset</MudButton>
                                                     </div>
                                                     <div class="d-flex w-100 p-2 align-items-center justify-content-center">
                                                         <MudButton Color="Color.Success" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => CurrentViewModel.Stepper.Confirm())">Salva</MudButton>
@@ -179,14 +175,20 @@
                         }
                         else
                         {
-                            
-                            <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 ruleMaskContainer">
-                                <div class="d-flex flex-column w-75 h-75 align-items-center justify-content-center shadow ruleMask" @onclick="() => _enableHoursRule=true">
-                                    <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
-                                    <span class="p-3" > Abilita regole di disponibilità </span>
+                            @if (CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
+                            {
+                                <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 ruleMaskContainer">
+                                    <div class="d-flex flex-column w-75 h-75 align-items-center justify-content-center shadow ruleMask" @onclick="() => _enableHoursRule=true">
+                                        <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
+                                        <span class="p-3"> Abilita regole di disponibilità </span>
+                                    </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                            else
+                            {
+                                <span> daje de riepilogo fassello</span>
+                            }
+                    }
                 </div>
             </div>
         </MudForm>
@@ -233,9 +235,29 @@
         await CurrentViewModel.RegisterOnScreenResize(800);
     }
 
+    private void UpdateRecurringRules((List<DTOTimeSlot> slots, bool next) values)
+    {
+        CurrentViewModel.Stepper.UpdateRecurringRules(values.slots, values.next);
+        _recurringRulesMarkup = (MarkupString)string.Join(", ", CurrentViewModel.Stepper.RecurringRules.Select(dic => $"dalle <b><u>{dic.StartTime}</u></b> alle <b><u>{dic.EndTime}</u></b>"));
+    }
+
+    private void UpdateDays((List<DTODayOfWeekWizard> days, bool next) Value)
+    {
+        CurrentViewModel.Stepper.UpdateDays(Value.days, Value.next);
+        _daysMarkup = (MarkupString)string.Join(", ", CurrentViewModel.Stepper.DaysSelected.Select(d => $"<b>{d.FullName}</b>"));
+    }
+
     private async Task OnBackdropClickHandler(MouseEventArgs e)
     {
         CurrentViewModel.IsOpen = false;
+    }
+
+    private void Reset()
+    {
+        CurrentViewModel.Stepper = new();
+        _enableHoursRule = false;
+        _daysMarkup = (MarkupString)String.Empty;
+        _recurringRulesMarkup = (MarkupString)String.Empty;
     }
     private void OnTimeChanged(DTOTimeSlot timePicker, int numRecurringRules, bool isEnd = false)
     {

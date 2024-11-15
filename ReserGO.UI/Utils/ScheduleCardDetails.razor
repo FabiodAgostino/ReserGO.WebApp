@@ -73,7 +73,7 @@
                     <div><span class="descriptionDetails">Orari di disponibilità</span></div>
                     <div class="dividerDetailsSchedule" style="width:82%"></div>
                     <div class="d-felx flex-row w-100 h-100 bodyDescription" style="overflow:auto;">
-                        @if (Resource.AvailabilityAdv.UnavailableRecurringTimeDays.Count() > 0)
+                        @if (Resource.AvailabilityAdv.UnavailableRecurringTimeDays != null && Resource.AvailabilityAdv.UnavailableRecurringTimeDays.Count() > 0)
                         {
                             @foreach (var giorniConRegole in Resource.AvailabilityAdv.UnavailableRecurringTimeDays)
                             {   
@@ -94,7 +94,7 @@
                     <div><span class="descriptionDetails">Giorni chiusura</span></div>
                     <div class="dividerDetailsSchedule" style="width:80%"></div>
                     <div class="d-felx flex-row w-100 h-100 bodyDescription">
-                        @if (Resource.AvailabilityAdv.UnavailableSpecificDays.Data.Count() > 0)
+                        @if (Resource.AvailabilityAdv.UnavailableSpecificDays!=null && Resource.AvailabilityAdv.UnavailableSpecificDays.Data.Count() > 0)
                         {
                             @foreach (var giorniChiusura in Resource.AvailabilityAdv.UnavailableSpecificDays.Data)
                             {
@@ -104,7 +104,7 @@
                             }
                         }
 
-                        @if (Resource.AvailabilityAdv.UnavailableTimeDatesSlot.Count() > 0)
+                        @if (Resource.AvailabilityAdv.UnavailableTimeDatesSlot!=null && Resource.AvailabilityAdv.UnavailableTimeDatesSlot.Count() > 0)
                         {
                             <div class="pt-1">
                                 <span style="font-size:medium;"> <i>( chiusura straordinara )</i></span>
@@ -117,7 +117,7 @@
                             }
                         }
 
-                        else if (Resource.AvailabilityAdv.UnavailableSpecificDays.Data.Count() == 0 || Resource.AvailabilityAdv.UnavailableSpecificDays.Data == null)
+                        else if ((Resource.AvailabilityAdv.UnavailableSpecificDays!=null && Resource.AvailabilityAdv.UnavailableSpecificDays.Data.Count() == 0) || Resource.AvailabilityAdv.UnavailableSpecificDays == null)
                         {
                             <div><span class="descriptionDetails" style="font-size:x-large; opacity:0.5; margin-right:20px;"><i>( Nessun dato )</i></span></div>
                         }
