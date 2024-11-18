@@ -18,15 +18,21 @@
         <ToolBarContent>
             <div class="d-flex w-100 h-100 align-items-center toolbarCss" style="background-color:#0066FF;">
                 <MudSpacer />
-                <MudText Typo="Typo.h6"> <span style="@(IsSmallView ? "padding-inline:2vw;":"")">@(IsSmallView ? "Storico" : "Storico prenotazioni")</span> </MudText>
+                <MudText Typo="Typo.h6" Class="justify-content-start w-50"> <span style="@(IsSmallView ? "padding-inline:2vw;":"")">@(IsSmallView ? "Storico" : "Storico prenotazioni")</span> </MudText>
                 <MudSpacer />
                 <div class="w-25 pr-1">
-                <MudDateRangePicker @bind-DateRange="@_dateRange" Margin="Margin.Dense" @ref="_picker" Style="height:4vh" Label="Ricerca per data"
-                                    PlaceholderStart="Data inizio" PlaceholderEnd="Data fine" TransformOrigin="@Origin.TopLeft" />
+                    <MudDateRangePicker @bind-DateRange="@DateRange" Margin="Margin.Dense" @ref="_picker" Label="@(IsSmallView ? "" : "Ricerca per data")"
+                                        PlaceholderStart="Data inizio" PlaceholderEnd="Data fine" TransformOrigin="@Origin.TopLeft" Variant="Variant.Outlined">
+                        <PickerActions>
+                            <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.ClearAsync())">Clear</MudButton>
+                            <MudButton OnClick="@(() => _picker.CloseAsync(false))">Cancel</MudButton>
+                            <MudButton Color="Color.Primary" OnClick="@(() => _picker.CloseAsync())">Ok</MudButton>
+                        </PickerActions>
+                    </MudDateRangePicker>
                 </div>
-                @if(IsSmallView)
+                @if (IsSmallView)
                 {
-                    <MudIconButton Icon="@Icons.Material.Filled.CalendarMonth" @onclick="OpenCalendar" Style="color:white;"/>
+                    <MudIconButton Icon="@Icons.Material.Filled.CalendarMonth" @onclick="OpenCalendar" Style="color:white;" />
                 }
                 <div class="d-flex flex-row align-items-center @(IsSmallView ? "w-100 justify-content-end":"w-50")">
                     <div class="m-2 w-100">
@@ -185,7 +191,7 @@
                                 <MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Style="@(IsSmallView ? "width:100%":"")" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
                             </div>
                         }
-                    </div>  
+                    </div>
 
                 </MudTd>
 
@@ -231,7 +237,21 @@
     private List<int> pageSizes = new List<int> { 5, 10, 20, 50 }; // Opzioni di PageSize
     private List<string> status = new List<string> { "Tutte", "Da confermare", "Confermate", "Rifiutate" }; // Opzioni di conferma
     private string statusSelected = "Tutte";
+
+
     private DateRange _dateRange { get; set; }
+    public DateRange DateRange
+    {
+        get => _dateRange;
+        set
+        {
+            if (_dateRange != value)
+            {
+                _dateRange = value;
+                OnChangeData();
+            }
+        }
+    }
     MudDateRangePicker _picker;
 
     protected override async Task OnParametersSetAsync()
@@ -283,6 +303,28 @@
                 return "";
         }
     }
+    private async Task OnChangeData()
+    {
+        if(DateRange!=null)
+        {
+            if (DateRange.Start.HasValue)
+            {
+                Filter.StartDateTime = DateRange.Start;
+                Filter.StartDateTime = Filter.StartDateTime.Value.Date;
+            }
+            if (DateRange.End.HasValue)
+            {
+                Filter.EndDateTime = DateRange.End;
+                Filter.EndDateTime = Filter.EndDateTime.Value.Date.AddDays(1).AddTicks(-1); // Imposta l'orario a 23:59:59.9999999
+            }
+            if (DateRange.Start.HasValue || DateRange.End.HasValue)
+            {
+                var action = new GridAction<DTOBooking, DTOBookingFilter>(Filter, TypeActionsGRID.FILTER, "");
+                await ChangeFilter(action);
+            }
+        }
+    }
+
     private async Task OnChangeSearchText(string value)
     {
         Filter.SearchText = value;
@@ -491,26 +533,25 @@
         background-color: #1E88E5 !important;
     }
 
-    .selected > td {
-        color: white !important;
-    }
+        .selected > td {
+            color: white !important;
+        }
 
-    .selected > td .mud-input {
-        color: white !important;
-    }
+            .selected > td .mud-input {
+                color: white !important;
+            }
 
 </style>
 
 
-@if(IsSmallView)
+@if (IsSmallView)
 {
     <style>
         .mud-input.mud-input-text.mud-input-adorned-end.mud-input-margin-dense.mud-input-underline.mud-shrink.mud-typography-input.mud-input-input-control {
-    display: none;
-}
+            display: none;
+        }
 
-        .mud-popover.mud-popover-fixed.mud-popover-open.mud-popover-top-left.mud-popover-anchor-top-left.mud-popover-overflow-flip-onopen
-        {
+        .mud-popover.mud-popover-fixed.mud-popover-open.mud-popover-top-left.mud-popover-anchor-top-left.mud-popover-overflow-flip-onopen {
             left: 41.25px !important;
         }
     </style>

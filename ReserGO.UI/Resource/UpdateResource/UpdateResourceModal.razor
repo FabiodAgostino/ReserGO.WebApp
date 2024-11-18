@@ -1,0 +1,31 @@
+﻿@using MudBlazor
+@using ReserGO.ViewModel.Interface.Resource.UpdateResource
+@using ReserGO.DTO
+@using ReserGO.Utils.UI
+@inherits BaseComponentChild<IUpdateResourceViewModel, DTOResource>
+
+<MudDialog Class="@(CurrentViewModel.IsSmallView ? "resourceDialogCssSmall" : "resourceDialogCss")" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler" Options="@Options">
+    <TitleContent>
+
+    </TitleContent>
+
+    <DialogContent>
+        <div class="d-flex flex-row align-items-center w-100 p-3" style="height:10%;background-color:#0066FF;">
+            <span style="font-size:xx-large; color:white; border-radius: 30px 30px 0px 0px;">Modifica risorsa</span>
+        </div>
+    </DialogContent>
+</MudDialog>
+
+@code
+{
+    public DialogOptions Options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.ExtraLarge,
+            NoHeader = true,
+        };
+
+    private async Task OnBackdropClickHandler(MouseEventArgs e)
+    {
+    }
+}

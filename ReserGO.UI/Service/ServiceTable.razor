@@ -163,7 +163,7 @@
 	private async Task DeleteDialog(DTOService service)
 	{
 		var callback = EventCallback.Factory.Create<bool>(this, ((bool value) => DeleteCallback(value, service)));
-		string text = "<b>Questa azione è irreversibile.</b><br/>Sei sicuro di voler eliminare il servizio?";
+		string text = "<b>Questa azione è irreversibile.</b><br/>*La cancellazione non avrà alcun effetto sulle prenotazioni già effettuate.<br/>Sei sicuro di voler eliminare il servizio?";
 		var modal = new GenericModal<bool>(callback, text, "Eliminazione servizio", TypeActionsGRID.GENERIC_DELETE);
 
 		var dialogParameters = new DialogParameters
