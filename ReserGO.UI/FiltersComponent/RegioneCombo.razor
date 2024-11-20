@@ -1,11 +1,13 @@
 ﻿@using MudBlazor
 @using System.Collections.Generic
 @using ReserGO.Miscellaneous.Model
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
 
     <MudAutocomplete T="string"
                      @ref ="@err"
                      SearchFunc="@SearchRegioni"
-                     Placeholder="Seleziona una regione..."
+                 Placeholder="@(t.Words["Seleziona una regione"])"
                      Clearable="true"
                      ResetValueOnEmptyText="true"
                      ValueChanged="@OnRegionChanged"
@@ -15,7 +17,7 @@
                      OnBlur="CheckError"
                      Required="true"
                      ClearIcon="null"
-                     RequiredError="Inserire regione di nascita"
+                 RequiredError="@(t.Words["Inserire regione di nascita"])"
                      Class="comboRegione" />
 
 
@@ -60,7 +62,7 @@
     {
         await Task.Delay(2000);
         err.Error = string.IsNullOrEmpty(regionSelected);
-        err.ErrorText = "Inserire regione di nascita";
+        err.ErrorText = t.Words["Inserire regione di nascita"];
     }
 }
 

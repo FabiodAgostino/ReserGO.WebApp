@@ -1,21 +1,24 @@
 ﻿@using MudBlazor
 @using ReserGO.Utils.DTO.Utils;
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
+
 <MudDialog Options="@Options" >
     <TitleContent>
         <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
-            <b>Valida prenotazione</b>
+            <b>@(t.Words["Valida prenotazione"])</b>
             <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Default" OnClick="() => Close(BookingStatus.Pending)" />
         </div>
     </TitleContent>
     <DialogContent>
         <div class="d-flex flex-column justify-content-center p-5" style="text-align:center">
-            <b>Attenzione, stai per modificare lo stato di questa prenotazione.</b><br />
-            Validata la prenotazione verrà inviata una mail all'utente che ha inoltrato la richiesta e non sarà più possibile modificare il suo stato.
+            <b>@(t.Words["Attenzione cambio stato"])</b><br />
+            @(t.Words["Valida prenotazione desc"])
         </div>
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="() => Close(BookingStatus.Canceled)">Rifiuta</MudButton>
-        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="() => Close(BookingStatus.Confirmed)">Conferma</MudButton>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="() => Close(BookingStatus.Canceled)">@(t.Words["Annulla"])</MudButton>
+        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="() => Close(BookingStatus.Confirmed)">@(t.Words["Conferma"])</MudButton>
     </DialogActions>
 </MudDialog>
 

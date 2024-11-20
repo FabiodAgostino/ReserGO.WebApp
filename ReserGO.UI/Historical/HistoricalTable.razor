@@ -7,6 +7,8 @@
 @using ReserGO.Miscellaneous.Model;
 @using ReserGO.Utils.DTO.Utils;
 @using System.Text.RegularExpressions;
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
 @inject IDialogService DialogService
 
 @if (Bookings is object)
@@ -21,8 +23,8 @@
                 <MudText Typo="Typo.h6" Class="justify-content-start w-50"> <span style="@(IsSmallView ? "padding-inline:2vw;":"")">@(IsSmallView ? "Storico" : "Storico prenotazioni")</span> </MudText>
                 <MudSpacer />
                 <div class="w-25 pr-1">
-                    <MudDateRangePicker @bind-DateRange="@DateRange" Margin="Margin.Dense" @ref="_picker" Label="@(IsSmallView ? "" : "Ricerca per data")"
-                                        PlaceholderStart="Data inizio" PlaceholderEnd="Data fine" TransformOrigin="@Origin.TopLeft" Variant="Variant.Outlined">
+                    <MudDateRangePicker @bind-DateRange="@DateRange" Margin="Margin.Dense" @ref="_picker" Label="@(IsSmallView ? "" : t.Words["Ricerca per data"])"
+                                        PlaceholderStart="@(t.Words["Data inizio"])" PlaceholderEnd="@(t.Words["Data fine"])" TransformOrigin="@Origin.TopLeft" Variant="Variant.Outlined">
                         <PickerActions>
                             <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.ClearAsync())">Clear</MudButton>
                             <MudButton OnClick="@(() => _picker.CloseAsync(false))">Cancel</MudButton>
@@ -44,20 +46,20 @@
                         </MudSelect>
                     </div>
                     <div class="toolItem w-100">
-                        <BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="Ricerca per nome, cognome, email e premi invio..."></BaseTextField>
+                        <BaseTextField MinLenght="0" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText" Required="false" Label="@(t.Words["Ricerca"])"></BaseTextField>
                     </div>
                 </div>
             </div>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Nome</MudTh>
-            <MudTh>Cognome</MudTh>
-            <MudTh>Email</MudTh>
-            <MudTh>Telefono</MudTh>
-            <MudTh>Data e ora</MudTh>
-            <MudTh>Stato</MudTh>
-            <MudTh>Risorsa</MudTh>
-            <MudTh>Servizi</MudTh>
+            <MudTh>@(t.Words["Nome"])</MudTh>
+            <MudTh>@(t.Words["Cognome"])</MudTh>
+            <MudTh>@(t.Words["E-mail"])</MudTh>
+            <MudTh>@(t.Words["Telefono"])</MudTh>
+            <MudTh>@(t.Words["Data e ora"])</MudTh>
+            <MudTh>@(t.Words["Stato"])</MudTh>
+            <MudTh>@(t.Words["Risorsa"])</MudTh>
+            <MudTh>@(t.Words["Servizi"])</MudTh>
             @if (IsAdmin)
             {
                 <MudTh></MudTh>
@@ -70,7 +72,7 @@
                 <div style="@(IsSmallView ? "margin-top:2vh;":"")">
                     @if (IsSmallView)
                     {
-                        <b style="padding-inline:2vw;">Nome: </b>
+                        <b style="padding-inline:2vw;">@(t.Words["Nome"]): </b>
                     }
                     @element.User.FirstName
                 </div>
@@ -79,7 +81,7 @@
                 <div style="@(IsSmallView ? "margin-top:1vh;":"")">
                     @if (IsSmallView)
                     {
-                        <b style="padding-inline:2vw;">Cognome: </b>
+                        <b style="padding-inline:2vw;">@(t.Words["Cognome"]): </b>
                     }
                     @element.User.LastName
                 </div>
@@ -92,7 +94,7 @@
                         {
                             @if (IsSmallView)
                             {
-                                <b style="padding-inline:2vw;">Email: </b>
+                                <b style="padding-inline:2vw;">@(t.Words["Email"]): </b>
                             }
                             @element.User.Email
                         }
@@ -103,7 +105,7 @@
                 <div style="@(IsSmallView ? "margin-top:1vh;":"")">
                     @if (IsSmallView)
                     {
-                        <b style="padding-inline:2vw;">Telefono: </b>
+                        <b style="padding-inline:2vw;">@(t.Words["Telefono"]): </b>
                     }
                     @element.User.PhoneNumber
                 </div>
@@ -112,7 +114,7 @@
                 <div style="@(IsSmallView ? "margin-top:1vh;":"")">
                     @if (IsSmallView)
                     {
-                        <b style="padding-inline:2vw;">Data inizio: </b>
+                        <b style="padding-inline:2vw;">@(t.Words["Data inizio"]): </b>
                     }
                     @element.StartDateTime
                 </div>
@@ -121,7 +123,7 @@
                 <div class="@(IsSmallView ? "d-flex flex-row w-100 align-items-center":"")" style="@(IsSmallView ? "margin-top:1vh;":"")">
                     @if (IsSmallView)
                     {
-                        <b style="padding-inline:2vw;">Stato: </b>
+                        <b style="padding-inline:2vw;">@(t.Words["Stato"]): </b>
                     }
                     @{
                         var statusText = GetStatus(element.Status.Value);
@@ -146,7 +148,7 @@
                 <div style="@(IsSmallView ? "margin-top:1vh;":"")">
                     @if (IsSmallView)
                     {
-                        <b style="padding-inline:2vw;">Risorsa: </b>
+                        <b style="padding-inline:2vw;">@(t.Words["Risorsa"]): </b>
                     }
                     @element.Resource.ResourceName
                 </div>
@@ -155,14 +157,14 @@
                 <div style="@(IsSmallView ? "margin-top:1vh;":"")">
                     @if (IsSmallView)
                     {
-                        <b style="padding-inline:2vw;">Servizi: </b>
+                        <b style="padding-inline:2vw;">@(t.Words["Servizi"]): </b>
                     }
                     @if (element.Services is object && element.Services.Count() > 0)
                     {
                         var servizi = string.Join(", ", @element.Services.Select(x => x.ServiceName));
                         @if (servizi.Length > 50)
                         {
-                            <MudButton StartIcon="@Icons.Material.Filled.ShoppingBasket" Size="Size.Small" Color="Color.Secondary" Variant="Variant.Filled" @onclick="(() => ShowServices(element.Services))">Mostra servizi</MudButton>
+                            <MudButton StartIcon="@Icons.Material.Filled.ShoppingBasket" Size="Size.Small" Color="Color.Secondary" Variant="Variant.Filled" @onclick="(() => ShowServices(element.Services))">@(t.Words["Mostra servizi"])</MudButton>
                         }
                         else
                         {
@@ -171,7 +173,7 @@
                     }
                     else
                     {
-                        <span>(nessun servizio)</span>
+                        <span>(@(t.Words["Nessun servizio"]))</span>
                     }
                 </div>
             </MudTd>
@@ -188,7 +190,7 @@
                         @if (element.Status.Value == (int)BookingStatus.Pending)
                         {
                             <div title="Valida" class="m-3 @(IsSmallView ? "w-100":"")">
-                                <MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Style="@(IsSmallView ? "width:100%":"")" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">Valida</MudButton>
+                                <MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Style="@(IsSmallView ? "width:100%":"")" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" @onclick="(() =>ValidateDialog(element))">@(t.Words["Valida"])</MudButton>
                             </div>
                         }
                     </div>
@@ -201,7 +203,7 @@
             <div class="d-flex flex-row align-items-center @(IsSmallView ? "":"justify-content-between")">
                 <MudPagination SelectedChanged="OnPageChangedHandler" ShowPageButtons="!IsSmallView" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
                 <div class="paginatorPageSize" style="@(IsSmallView ? "width:50%;":"")">
-                    <MudSelect T="int" Label="Elementi per pagina" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
+                    <MudSelect T="int" Label="@(t.Words["Elementi per pagina"])" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
                         @foreach (var size in pageSizes)
                         {
                             <MudSelectItem Value="size">@size</MudSelectItem>

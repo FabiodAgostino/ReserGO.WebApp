@@ -6,11 +6,14 @@
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.FiltersComponent
 @using ReserGO.ViewModel.ViewModel.FiltersComponent
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
+
 @inherits BaseComponentChild<IComuneComboViewModel, DTOComuneProvincia>
     <MudAutocomplete ValueChanged="@OnComuneChanged"
                     T="DTOComuneProvincia"
                      SearchFunc="@SearchComuni"
-                     Placeholder="Seleziona un comune..."
+                 Placeholder="@(t.Words["Seleziona un comune"])"
                      Clearable="false"
                      ResetValueOnEmptyText="true"
                      Disabled="String.IsNullOrEmpty(Regione)"
@@ -18,7 +21,7 @@
                      MaxItems="null"
                      Variant="Variant.Outlined"
                      Required="true"
-                     RequiredError="Inserire comune di nascita"
+                 RequiredError="@(t.Words["Inserire comune di nascita"])"
                      ClearIcon="null"
                      Class="comuneCombo"
                      Margin="Margin.Dense"
@@ -78,7 +81,7 @@
     {
         await Task.Delay(2000);
         err.Error = CurrentViewModel.SelectedItem == null || string.IsNullOrEmpty(CurrentViewModel.SelectedItem.Nome);
-        err.ErrorText = "Inserire comune di nascita";
+        err.ErrorText = t.Words["Inserire comune di nascita"];
     }
 
    

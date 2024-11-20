@@ -6,19 +6,21 @@
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.FiltersComponent
 @using ReserGO.ViewModel.ViewModel.FiltersComponent
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
 
 @inherits BaseComponentChild<INazioneViewModel, DTONazione>
 <MudAutocomplete ValueChanged="@OnNazioneChanged"
                     T="DTONazione"
                      SearchFunc="@SearchNazione"
-                     Placeholder="Seleziona luogo di nascita..."
+                 Placeholder="@(t.Words["Selezionare luogo di nascita"])"
                      Clearable="false"
                      ResetValueOnEmptyText="true"
                      ToStringFunc=DisplayValue
                      MaxItems="null"
                      Variant="Variant.Outlined"
                      Required="true"
-                     RequiredError="Inserire luogo di nascita"
+                 RequiredError="@(t.Words["Inserire luogo di nascita"])"
                      ClearIcon="null"
                      Class="comuneCombo"
                      Margin="Margin.Dense"
@@ -81,7 +83,7 @@
     {
         await Task.Delay(2000);
         err.Error = CurrentViewModel.SelectedItem == null || string.IsNullOrEmpty(CurrentViewModel.SelectedItem.Name);
-        err.ErrorText = "Inserire luogo di nascita";
+        err.ErrorText = t.Words["Inserire luogo di nascita"];
     }
 
    

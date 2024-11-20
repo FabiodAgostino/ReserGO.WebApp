@@ -2,10 +2,13 @@
 @using ReserGO.DTO
 @using ReserGO.Utils.DTO.Utils;
 @using ReserGO.Miscellaneous.Model;
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
+
 <MudDialog Options="@Options" Class="dialogServiceModal">
     <TitleContent>
         <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
-            <b>Dettaglio servizi</b>
+            <b>@(t.Words["Dettaglio servizi"])</b>
             <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Default" OnClick="() => Close(false)" />
         </div>
     </TitleContent>
@@ -21,7 +24,7 @@
     </DialogContent>
     <DialogActions>
         <div class="d-flex w-100 p-2 justify-content-center " style="height:10%;" >
-            <MudButton Class="btn-css" Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">Chiudi</MudButton>
+            <MudButton Class="btn-css" Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">@(t.Words["Chiudi"])</MudButton>
         </div>
     </DialogActions>
 </MudDialog>

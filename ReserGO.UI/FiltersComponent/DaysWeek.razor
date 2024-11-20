@@ -3,6 +3,8 @@
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.FiltersComponent
 @using ReserGO.ViewModel.ViewModel.FiltersComponent
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
 
 @inherits BaseComponentChild<IDayOfWeekViewModel, DTODayOfWeekWizard>
 
@@ -25,10 +27,10 @@
 		</div>
 	<div class="d-flex flex-row w-100 h-25 justify-content-around align-items-center">
 		<div class="d-flex w-100 p-2 align-items-center justify-content-center">
-		<MudButton Variant="Variant.Filled" Color="Color.Error" Style="width:35vw;height:5vh" @onclick="Annulla" >Annulla</MudButton>
+				<MudButton Variant="Variant.Filled" Color="Color.Error" Style="width:35vw;height:5vh" @onclick="Annulla">@(t.Words["Annulla"])</MudButton>
 		</div>
 		<div class="d-flex w-100 p-2 align-items-center justify-content-center">
-            <MudButton Color="Color.Primary" Variant="Variant.Filled" Style="width:35vw;height:5vh" @onclick="GoNext" Disabled="CurrentViewModel.List.Count()==0">Avanti</MudButton>
+				<MudButton Color="Color.Primary" Variant="Variant.Filled" Style="width:35vw;height:5vh" @onclick="GoNext" Disabled="CurrentViewModel.List.Count()==0">@(t.Words["Avanti"])</MudButton>
 		</div>
 	</div>
 	}
@@ -48,10 +50,10 @@
 		</MudGrid>
 		<div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
 			<div class="d-flex w-100 p-2 align-items-center justify-content-center">
-			<MudButton Variant="Variant.Filled" Color="Color.Error" Style="width:10vw;height:5vh" @onclick="Annulla" EndIcon="@Icons.Material.Filled.Close">Annulla</MudButton>
+				<MudButton Variant="Variant.Filled" Color="Color.Error" Style="width:10vw;height:5vh" @onclick="Annulla" EndIcon="@Icons.Material.Filled.Close">@(t.Words["Annulla"])</MudButton>
 			</div>
 			<div class="d-flex w-100 p-2 align-items-center justify-content-center">
-				<MudButton Color="Color.Primary" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="GoNext" Disabled="CurrentViewModel.List.Count()==0" EndIcon="@Icons.Material.Filled.ArrowForward">Avanti</MudButton>
+				<MudButton Color="Color.Primary" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="GoNext" Disabled="CurrentViewModel.List.Count()==0" EndIcon="@Icons.Material.Filled.ArrowForward">@(t.Words["Avanti"])</MudButton>
 			</div>
 		</div>
 	}
@@ -60,6 +62,7 @@
 
 
 @code {
+
 	[Parameter]
 	public EventCallback<(List<DTODayOfWeekWizard> days, bool next)> Callback { get; set; }
 
@@ -79,7 +82,7 @@
 
 	private List<DTODayOfWeekWizard> DaysOfWeek = new()
 	{
-		new DTODayOfWeekWizard { FullName = "Lunedì" },
+		new DTODayOfWeekWizard { FullName = "Lunedì"},
 		new DTODayOfWeekWizard { FullName = "Martedì" },
 		new DTODayOfWeekWizard { FullName = "Mercoledì" },
 		new DTODayOfWeekWizard { FullName = "Giovedì" },

@@ -1,9 +1,10 @@
 ﻿@using MudBlazor;
+@using ReserGO.Service.Interface.Service
 @using ReserGO.UI.Utils
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.Header
 @using ReserGO.UI.Admin;
-
+@inject ITranslateService t
 
 <div class="d-flex flex-column homeLoginContainer">
     <div class="d-flex flex-column homeLoginBody">
@@ -13,7 +14,7 @@
             <div class="d-flex align-items-center w-100 h-100 @(IsSmallView ? "flex-column":"justify-content-around")">
 
                 <div class="d-flex p-2 @(IsSmallView ? "w-100":"")" style="@(IsSmallView ? "height:25%;":"")">
-                    <CardReserGo Title="Prenotazione" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon" Callback="@(() => ClickChangeComponent("Prenotazione"))" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
+                    <CardReserGo Title="@t.Words["Prenotazione"]" Description="Richiedi un appuntamento per una nuova visita medica" Icon="@ReservationIcon" Callback="@(() => ClickChangeComponent("Prenotazione"))" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
 
                 </div>
 

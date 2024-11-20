@@ -1,4 +1,6 @@
 ﻿@using MudBlazor
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
 
 <MudTextField Value="@_value" ValueChanged="(string value) => OnValueChanged(value)" T="string" Immediate="@Required"
               Required="@Required" Pattern="GetMinLenght()"
@@ -72,7 +74,7 @@
     private string GetErrorText()
     {
         if(String.IsNullOrEmpty(CustomErrorText))
-            return $"Almeno {MinLenght} caratteri";
+            return $"{t.Words["Almeno"]} {MinLenght} {t.Words["Caratteri"]}";
         else
             return CustomErrorText;
     }
@@ -83,7 +85,7 @@
         {
 
             if(String.IsNullOrEmpty(CustomErrorRequired))
-                return $"Inserire {Label}";
+                return $"{t.Words["Inserire"]} {Label}";
             else
                 return CustomErrorRequired;
         }

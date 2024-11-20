@@ -1,11 +1,14 @@
 ﻿@using MudBlazor
 @using ReserGO.DTO.ListAvailability
 @using ReserGO.Miscellaneous.Model
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
+
 @inherits MudComponentBase
 
 <MudGrid>
     <MudItem xs="6">
-        <MudTimePicker Label="Ora inizio"
+        <MudTimePicker Label="@(t.Words["Ora inizio"])"
                        @bind-Time="StartTime"
                        AmPm="false"
                        AutoClose="true"
@@ -13,7 +16,7 @@
                        Required="true" />
     </MudItem>
     <MudItem xs="6">
-        <MudTimePicker Label="Ora fine"
+        <MudTimePicker Label="@(t.Words["Ora inizio"])"
                        @bind-Time="EndTime"
                        AmPm="false"
                        AutoClose="true"
