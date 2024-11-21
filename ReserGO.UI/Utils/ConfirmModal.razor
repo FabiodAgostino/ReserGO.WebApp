@@ -1,6 +1,8 @@
 ﻿@using MudBlazor
 @using ReserGO.Utils.DTO.Utils;
 @using ReserGO.Miscellaneous.Model;
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 <MudDialog Options="@Options">
     <TitleContent>
         <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
@@ -16,8 +18,8 @@
     <DialogActions>
         @if (Modal.TypeActionsGRID == TypeActionsGRID.GENERIC_DELETE)
         {
-            <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">Chiudi</MudButton>
-            <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="() => Close(true)">Elimina</MudButton>
+            <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">@(t.Words["Chiudi"])</MudButton>
+            <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="() => Close(true)">@(t.Words["Elimina"])</MudButton>
         }
     </DialogActions>
 </MudDialog>
