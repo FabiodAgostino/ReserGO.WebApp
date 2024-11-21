@@ -1,7 +1,11 @@
-﻿@using MudBlazor
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
 @using ReserGO.ViewModel.Interface.Resource.UpdateResource
 @using ReserGO.DTO
 @using ReserGO.Utils.UI
+@using ReserGO.UI.Utils
+@using ReserGO.UI.FiltersComponent
+@using ReserGO.ViewModel.Interface.FiltersComponent
 @inherits BaseComponentChild<IUpdateResourceViewModel, DTOResource>
 
 <MudDialog Class="@(CurrentViewModel.IsSmallView ? "resourceDialogCssSmall" : "resourceDialogCss")" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler" Options="@Options">
@@ -13,11 +17,92 @@
         <div class="d-flex flex-row align-items-center w-100 p-3" style="height:10%;background-color:#0066FF;">
             <span style="font-size:xx-large; color:white; border-radius: 30px 30px 0px 0px;">Modifica risorsa</span>
         </div>
+        @if (CurrentViewModel.SelectedItem != null)
+        {
+            <div class="d-flex flex-row">
+
+                <div class="d-flex flex-column @(CurrentViewModel.IsSmallView ? "w-100" : "w-50")" style="@(CurrentViewModel.IsSmallView ? "overflow:auto;" : "")">
+                    <div class="d-flex flex-column w-100">
+
+                        <div class="d-flex flex-column w-100 justify-content-around p-2">
+                            <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.ResourceName = value)" Value="@CurrentViewModel.SelectedItem.ResourceName" Label="Nome" />
+
+                            <div class="d-flex w-100">
+                                <BaseTextField MinLenght="0" Lines="10" Bind="@((string value) => CurrentViewModel.SelectedItem.Description = value)" Value="@CurrentViewModel.SelectedItem.Description" Label="Descrizione" Required="false" />
+                            </div>
+                        </div>
+
+                        <div class="d-flex p-2 @(CurrentViewModel.IsSmallView ? "flex-column" : "flex-row")" style="@(CurrentViewModel.IsSmallView ? "height:22vh;" : "height:10vh;")">
+                            <div class="d-flex align-items-center" style="@(CurrentViewModel.IsSmallView ? "width:100%;" : "width:50%;")">
+                                <BaseComponent TViewModel="IServicesComboViewModel" TModel="DTOService">
+                                    <Content>
+                                        <ServicesCombo Callback="@((List<DTOService> list) => CurrentViewModel.SelectedItem.Services = list)" SelectedServices="@CurrentViewModel.SelectedItem.Services" />
+                                    </Content>
+                                </BaseComponent>
+                            </div>
+                            <div class="d-flex flex-column align-items-center" style="@(CurrentViewModel.IsSmallView ? "width:100%; padding-top:5vh;" : "width:50%; padding-top:1.2vh;")">
+                                <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Accept=".png, .jpg" MaximumFileCount="1">
+                                    <ActivatorContent>
+                                        <MudButton Variant="Variant.Filled"
+                                                   Color="@(CurrentViewModel.SelectedItem.ImageData!=null ? Color.Warning : Color.Primary)"
+                                                   StartIcon="@Icons.Material.Filled.Image">
+                                            @(CurrentViewModel.SelectedItem.ImageData != null ? "Modifica immagine" : "Carica immagine")
+                                        </MudButton>
+                                    </ActivatorContent>
+                                </MudFileUpload>
+                                @if (selectedFile != null || CurrentViewModel.SelectedItem.ImageData != null)
+                                {
+                                    <div class="w-100">
+
+                                        <MudChip T="string" Color="Color.Default">
+                                            <div title="Rimuovi">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Size="Size.Small" @onclick="@(() => DeleteFile())" />
+                                            </div>
+                                            @(selectedFile != null ? selectedFile.Name : CurrentViewModel.SelectedItem.ImageName)
+                                        </MudChip>
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                        <div class="d-flex justify-content-between w-100 @(CurrentViewModel.IsSmallView ? "flex-column pt-4" : "align-items-center flex-row")">
+                            <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma" Color="Color.Primary"></MudCheckBox>
+                            @if (CurrentViewModel.SelectedItem.RequestToConfirm)
+                            {
+                                <span style="padding-left:1vw;">(La prenotazione dovrà essere confermata da Admin)</span>
+                            }
+                            <div class="d-flex flex-row" style="@(CurrentViewModel.IsSmallView ? "padding-inline:4vw;" : "")">
+                                <MudSwitch @bind-Value="CurrentViewModel.IsOpen" Label="Abilita risorsa" Color="Color.Success" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="d-flex flex-column w-50">
+                    <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
+                        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+                            <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(CurrentViewModel.IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" >Disabilita giorno specifico</MudButton>
+                        </div>
+                        <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
+                            <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(CurrentViewModel.IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")">Modifica regole giornaliere</MudButton>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
+                        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+                            <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(CurrentViewModel.IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")">Modifica orari giorno specifico</MudButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
     </DialogContent>
 </MudDialog>
 
 @code
 {
+    private IBrowserFile selectedFile;
     public DialogOptions Options = new DialogOptions
         {
             CloseOnEscapeKey = true,
@@ -27,5 +112,20 @@
 
     private async Task OnBackdropClickHandler(MouseEventArgs e)
     {
+        CurrentViewModel.IsOpen = false;
+    }
+
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        selectedFile = file;
+        await CurrentViewModel.HandleFileSelected(file);
+    }
+
+    private async Task DeleteFile()
+    {
+        selectedFile = null;
+        CurrentViewModel.SelectedItem.ImageData = null;
+        CurrentViewModel.SelectedItem.ImageContentType = String.Empty;
+        CurrentViewModel.SelectedItem.ImageName = String.Empty;
     }
 }

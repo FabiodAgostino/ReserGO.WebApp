@@ -8,5 +8,6 @@ namespace ReserGO.ViewModel.Interface.FiltersComponent
         public IEnumerable<string> ServicesChecked { get; set; }
         Task GetServices();
         public EventCallback<List<DTOService>> Callback { get; set; }
+        public List<DTOService> SelectedServices { get; set; }
     }
 }

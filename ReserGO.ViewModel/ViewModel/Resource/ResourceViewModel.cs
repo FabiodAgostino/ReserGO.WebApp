@@ -9,6 +9,7 @@ using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.ViewModel.ViewModel.Resource.InsertResource;
+using ReserGO.ViewModel.ViewModel.Resource.UpdateResource;
 
 namespace ReserGO.ViewModel.ViewModel.Resource
 {
@@ -69,6 +70,12 @@ namespace ReserGO.ViewModel.ViewModel.Resource
                 Notification(action.Error, NotificationColor.Error);
                 return;
             }
+            DTOResource item;
+            if (action.Items != null && action.Items.Count() > 0)
+                item = action.Items.FirstOrDefault();
+            else
+                item = null;
+
             switch (action.TypeActions)
             {
                 case TypeActionsGRID.PAGE_CHANGED:
@@ -82,9 +89,12 @@ namespace ReserGO.ViewModel.ViewModel.Resource
                     await GetResourceByCompanyFiltered();
                     break;
                 case TypeActionsGRID.UPDATE:
+                    if(item!=null)
+                        Aggregator.Publish<DTOResource, ObjectMessage<DTOResource>>(new ObjectMessage<DTOResource>(item), typeof(UpdateResourceViewModel));
                     break;
                 case TypeActionsGRID.SINGLE_DELETE:
-                    await DeleteResource(action.Items.FirstOrDefault().Id.Value);
+                    if(item!=null)
+                        await DeleteResource(item.Id.Value);
                     break;
                 case TypeActionsGRID.INSERT:
                     Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(InsertResourceViewModel));

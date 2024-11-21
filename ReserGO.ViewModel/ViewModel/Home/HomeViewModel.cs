@@ -81,7 +81,6 @@ namespace ReserGO.ViewModel.ViewModel.Home
                 }
             });
 
-            await _translationService.Initialize();
             await ReadNotification();
             var isLogged=await _authService.IsLoggedIn();
             var savedSettingsMenu = await _sessionStorage.GetItemAsync<IEnumerable<DTOSettingMenu>>(SettingsMenuKey);
@@ -112,6 +111,7 @@ namespace ReserGO.ViewModel.ViewModel.Home
                     OnPropertyChanged();
                 }
             }
+            await _translationService.Initialize(false);
             ItemsMenu = savedSettingsMenu.Where(menu => menu.Permissions.Any(permission => User.Roles.HasPermission((RoleConst)permission))).OrderBy(x => x.OrderN);
             SelectedItem = ItemsMenu.FirstOrDefault();
             ChangeComponent();

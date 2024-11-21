@@ -9,12 +9,14 @@
 @using ReserGO.UI.FiltersComponent
 @using ReserGO.ViewModel.Interface.FiltersComponent
 @using ReserGO.ViewModel.Interface.Resource.InsertResource
+@using ReserGO.ViewModel.Interface.Resource.UpdateResource
 @using ReserGO.Miscellaneous.Extensions;
 @using static ReserGO.Miscellaneous.Model.DTOResourceStepper
 @using ReserGO.ViewModel.Interface.FiltersComponent
 @using ReserGO.ViewModel.Interface.Resource;
 @using ReserGO.ViewModel.Interface.Resource.InsertResource;
 @using ReserGO.UI.Resource.InsertResource
+@using ReserGO.UI.Resource.UpdateResource
 @inherits BaseComponentChild<IResourceViewModel, DTOResource>
 
 @if (CurrentViewModel.UserIs(RoleConst.ADMIN))
@@ -23,9 +25,14 @@
         <ResourceTable Resources="CurrentViewModel.Resources" PagingOptions="@CurrentViewModel.Pagination" Action="@(async (GridAction<DTOResource, DTOResourceFilter> action) => await CurrentViewModel.ExecuteAction(action))" IsLoading="@CurrentViewModel.IsLoading" IsSmallView="CurrentViewModel.IsSmallView" />
     </div>
 
-    <BaseComponent TViewModel="IInsertResourceViewModel" TModel="DTOResource">
+<BaseComponent TViewModel="IInsertResourceViewModel" TModel="DTOResource">
 	<Content>
-		<InsertResourceModal IsSmallView="CurrentViewModel.IsSmallView"/>
+		<InsertResourceModal />
+	</Content>
+</BaseComponent>
+<BaseComponent TViewModel="IUpdateResourceViewModel" TModel="DTOResource">
+	<Content>
+		<UpdateResourceModal />
 	</Content>
 </BaseComponent>
 }

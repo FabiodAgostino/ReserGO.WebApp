@@ -45,15 +45,15 @@ namespace ReserGO.Service.Service.Utils
             }
         }
 
-        public async Task Initialize()
+        public async Task Initialize(bool loading = true)
         {
             var lang = await _localStorage.GetItemAsync<string>("culture");
             if (String.IsNullOrEmpty(lang))
                 lang = "it";
-            await ReInitialize(lang);
+            await ReInitialize(lang, loading);
         }
 
-        public async Task ReInitialize(string culture)
+        public async Task ReInitialize(string culture, bool loading=true)
         {
             try
             {
@@ -62,7 +62,8 @@ namespace ReserGO.Service.Service.Utils
 
                 if ((resources == null || !resources.Any()) || lang != culture)
                 {
-                    _event.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(true, "Caricamento lingua in corso...")));
+                    if(loading)
+                        _event.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(true, "Caricamento lingua in corso...")));
                     if (lang == null)
                         lang = "it";
                     else
@@ -76,7 +77,8 @@ namespace ReserGO.Service.Service.Utils
                     {
                         resources = new DictionaryTranslate<string, string>(result.Data.KeyValueResources);
                         await _localStorage.SetItemAsync("translation", resources);
-                        _event.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(false, "Caricamento lingua in corso...")));
+                        if (loading)
+                            _event.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(false, "Caricamento lingua in corso...")));
                     }
                     else
                         resources = new();

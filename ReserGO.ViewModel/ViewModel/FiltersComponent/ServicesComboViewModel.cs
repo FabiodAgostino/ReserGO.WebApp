@@ -21,19 +21,28 @@ namespace ReserGO.ViewModel.ViewModel.FiltersComponent
         public IEnumerable<string> _servicesChecked { get; set; }
         public IEnumerable<string> ServicesChecked
         {
-            get => _servicesChecked; 
+            get => _servicesChecked;
             set
             {
                 _servicesChecked = value;
-                if(Callback.HasDelegate)
+                if (Callback.HasDelegate)
                 {
-                    var services = List.Where(s=> _servicesChecked.ToList().Contains(s.ServiceName)).ToList();
+                    var services = List.Where(s => _servicesChecked.ToList().Contains(s.ServiceName)).ToList();
                     Callback.InvokeAsync(services);
                 }
             }
 
         }
         public EventCallback<List<DTOService>> Callback { get; set; }
+        private List<DTOService> _selectedServices { get; set; }
+        public List<DTOService> SelectedServices
+        {
+            get => _selectedServices; 
+            set
+            {
+                _selectedServices = value;
+            }
+        }
 
         public async Task GetServices()
         {
@@ -61,6 +70,15 @@ namespace ReserGO.ViewModel.ViewModel.FiltersComponent
             finally
             {
                 IsLoading = false;
+                if (IsFirstLoad && SelectedServices != null && SelectedServices.Count() > 0)
+                {
+                    var servicesSelectName = SelectedServices.Select(x => x.ServiceName);
+                    var selected = List.Where(s => servicesSelectName.ToList().Contains(s.ServiceName)).Select(x => x.ServiceName).AsEnumerable();
+                    ServicesChecked = selected;
+                }
+                else
+                    ServicesChecked = Enumerable.Empty<string>();
+                IsFirstLoad = false;
                 OnPropertyChanged();
             }
         }

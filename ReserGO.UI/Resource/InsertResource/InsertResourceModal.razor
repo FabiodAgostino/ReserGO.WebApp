@@ -16,7 +16,7 @@
 
 @inherits BaseComponentChild<IInsertResourceViewModel, DTOResource>
 
-<MudDialog Class="@(IsSmallView ? "resourceDialogCssSmall" : "resourceDialogCss")" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler" Options="@Options">
+<MudDialog Class="@(CurrentViewModel.IsSmallView ? "resourceDialogCssSmall" : "resourceDialogCss")" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler" Options="@Options">
     <TitleContent>
 
     </TitleContent>
@@ -59,7 +59,7 @@
                                                     <div class="d-flex w-100" style="height:70%;">
                                                         <BaseComponent TViewModel="IDayOfWeekViewModel" TModel="DTODayOfWeekWizard">
                                                             <Content>
-                                                                <DaysWeek IsSmallView="true" Callback="@(((List<DTODayOfWeekWizard> days, bool next) Value) => UpdateDays(Value))" Reset="@(() => Reset())" DaysSelected="CurrentViewModel.Stepper.DaysSelected" />
+                                                                <DaysWeek CurrentViewModel.IsSmallView="true" Callback="@(((List<DTODayOfWeekWizard> days, bool next) Value) => UpdateDays(Value))" Reset="@(() => Reset())" DaysSelected="CurrentViewModel.Stepper.DaysSelected" />
                                                             </Content>
                                                         </BaseComponent>
                                                     </div>
@@ -76,7 +76,7 @@
                                                         </span>
                                                     </div>
                                                     <div class="d-flex w-100" style="height:80%">
-                                                        <DaysSliderComponent IsSmallView="true" Callback="@(((List<DTOTimeSlot> slots, bool next)values) => UpdateRecurringRules(values))" Reset="@(() => Reset())" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
+                                                        <DaysSliderComponent CurrentViewModel.IsSmallView="true" Callback="@(((List<DTOTimeSlot> slots, bool next)values) => UpdateRecurringRules(values))" Reset="@(() => Reset())" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
                                                     </div>
                                                 </div>
 
@@ -124,9 +124,9 @@
                }
                else
                {
-                <div class="d-flex p-3 @(IsSmallView ? "flex-column" : "flex-row h-75")"  style="@(IsSmallView ? "height:80%;" : "")">
+                <div class="d-flex p-3 @(CurrentViewModel.IsSmallView ? "flex-column" : "flex-row h-75")"  style="@(CurrentViewModel.IsSmallView ? "height:80%;" : "")">
 
-                    <div class="d-flex flex-column @(IsSmallView ? "w-100" : "w-50")" style="@(IsSmallView ? "overflow:auto;" : "")" >
+                    <div class="d-flex flex-column @(CurrentViewModel.IsSmallView ? "w-100" : "w-50")" style="@(CurrentViewModel.IsSmallView ? "overflow:auto;" : "")" >
                         <div class="d-flex flex-column w-100">
                     
                             <div class="d-flex flex-column w-100 justify-content-around p-2">
@@ -136,15 +136,15 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex p-2 @(IsSmallView ? "flex-column" : "flex-row")" style="@(IsSmallView ? "height:22vh;" : "height:10vh;")" >
-                                <div class="d-flex align-items-center" style="@(IsSmallView ? "width:100%;" : "width:60%;")">
+                            <div class="d-flex p-2 @(CurrentViewModel.IsSmallView ? "flex-column" : "flex-row")" style="@(CurrentViewModel.IsSmallView ? "height:22vh;" : "height:10vh;")" >
+                                <div class="d-flex align-items-center" style="@(CurrentViewModel.IsSmallView ? "width:100%;" : "width:60%;")">
                                     <BaseComponent TViewModel="IServicesComboViewModel" TModel="DTOService">
                                         <Content>
                                             <ServicesCombo Callback="@((List<DTOService> list) => CurrentViewModel.SelectedItem.Services = list)"/>
                                         </Content>
                                     </BaseComponent>
                                 </div>
-                                <div class="d-flex flex-column align-items-center" style="@(IsSmallView ? "width:100%; padding-top:5vh;" : "width:40%; padding-top:1.2vh;")">
+                                <div class="d-flex flex-column align-items-center" style="@(CurrentViewModel.IsSmallView ? "width:100%; padding-top:5vh;" : "width:40%; padding-top:1.2vh;")">
                                     <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Accept=".png, .jpg" MaximumFileCount="1">
                                         <ActivatorContent>
                                             <MudButton Variant="Variant.Filled"
@@ -170,19 +170,19 @@
                                 </div>
                             
                             </div>
-                            <div class="d-flex justify-content-between w-100 @(IsSmallView ? "flex-column pt-4" : "align-items-center flex-row")">
+                            <div class="d-flex justify-content-between w-100 @(CurrentViewModel.IsSmallView ? "flex-column pt-4" : "align-items-center flex-row")">
                                 <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma" Color="Color.Primary"></MudCheckBox>
                                 @if (CurrentViewModel.SelectedItem.RequestToConfirm)
                                 {
                                     <span style="padding-left:1vw;">(La prenotazione dovrà essere confermata da Admin)</span>
                                 }
-                                <div class="d-flex flex-row" style="@(IsSmallView ? "padding-inline:4vw;" : "")">
+                                <div class="d-flex flex-row" style="@(CurrentViewModel.IsSmallView ? "padding-inline:4vw;" : "")">
                                     <MudSwitch @bind-Value="CurrentViewModel.EnableResource" Label="Abilita risorsa da subito" Color="Color.Success" />
                                 </div>
                             </div>
 
                             @* SEZIONE REGOLE DISPONIBILITA CARD/RIPILOGO SMALL *@
-                            @if(IsSmallView && !_smallViewRule)
+                            @if(CurrentViewModel.IsSmallView && !_smallViewRule)
                             {
                                 @if(CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
                                 {
@@ -228,7 +228,7 @@
                 
                
                    @* SEZIONE REGOLE DISPONIBILITA LARGE *@
-                    <div class="flex-column w-50 h-100" style="@(IsSmallView ? "display:none;":"display:flex;")" >
+                    <div class="flex-column w-50 h-100" style="@(CurrentViewModel.IsSmallView ? "display:none;":"display:flex;")" >
                             @if (_enableHoursRule && CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
                             {
                                 <div class="d-flex flex-row w-100" style="padding-block:1vh;">
@@ -271,7 +271,7 @@
                                                             </b>
                                                         </span>
                                                     </div>
-                                                    @if(!IsSmallView)
+                                                    @if(!CurrentViewModel.IsSmallView)
                                                     {
                                                         <div class="d-flex w-100" style="height:80%">
                                                             <DaysSliderComponent Callback="@(((List<DTOTimeSlot> slots, bool next)values) => UpdateRecurringRules(values))" Reset="@(() => Reset())" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
@@ -322,7 +322,7 @@
                             {
                             
                             @* SEZIONE REGOLE DISPONIBILITA CARD/RIPILOGO LARGE *@
-                                @if(!IsSmallView)
+                                @if(!CurrentViewModel.IsSmallView)
                                 {
                                     @if (CurrentViewModel.Stepper.ActualState != ResourceStepperState.FINISH)
                                     {
@@ -367,15 +367,15 @@
                }
         </MudForm>
         
-        <div style="@(IsSmallView ? "height:8vh;" : "")">
+        <div style="@(CurrentViewModel.IsSmallView ? "height:8vh;" : "")">
             @if (!_enableHoursRule || _enableHoursRule && CurrentViewModel.Stepper.ActualState == ResourceStepperState.FINISH)
             {
-                <div class="d-flex  @(IsSmallView ? "flex-row align-items-end justify-content-around h-100" : "align-items-end justify-content-between  h-75")">
-                    <div class="d-flex justify-content-center @(IsSmallView ? "w-100 p-2" : "w-25")">
-                        <MudButton Color="Color.Default" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper = new())" style="@(IsSmallView ? "width:40vw;border-radius:15px;" : "width:10vw;border-radius:15px;")">Reset</MudButton>
+                <div class="d-flex  @(CurrentViewModel.IsSmallView ? "flex-row align-items-end justify-content-around h-100" : "align-items-end justify-content-between  h-75")">
+                    <div class="d-flex justify-content-center @(CurrentViewModel.IsSmallView ? "w-100 p-2" : "w-25")">
+                        <MudButton Color="Color.Default" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper = new())" style="@(CurrentViewModel.IsSmallView ? "width:40vw;border-radius:15px;" : "width:10vw;border-radius:15px;")">Reset</MudButton>
                     </div>
-                    <div class="d-flex justify-content-center @(IsSmallView ? "w-100 p-2" : "w-25")">
-                        <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.InsertResource())" style="@(IsSmallView ? "width:40vw;border-radius:15px;" : "width:10vw;border-radius:15px;")" Disabled="!_success">Salva</MudButton>
+                    <div class="d-flex justify-content-center @(CurrentViewModel.IsSmallView ? "w-100 p-2" : "w-25")">
+                        <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.InsertResource())" style="@(CurrentViewModel.IsSmallView ? "width:40vw;border-radius:15px;" : "width:10vw;border-radius:15px;")" Disabled="!_success">Salva</MudButton>
                     </div>
                 </div>
             }
@@ -385,9 +385,6 @@
 </MudDialog>
 
 @code {
-
-    [Parameter]
-	public bool IsSmallView { get; set; }
 
     private bool _enablePrice = false;
     private bool _enableHoursRule = false;

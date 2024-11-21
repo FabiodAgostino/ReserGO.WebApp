@@ -21,15 +21,20 @@
 
     [Parameter]
     public EventCallback<List<DTOService>> Callback { get; set; }
+    [Parameter]
+    public List<DTOService> SelectedServices { get; set; }
 
 
     protected override async Task OnParametersSetAsync()
     {
         CurrentViewModel.Callback = Callback;
+        if(SelectedServices!=null)
+            CurrentViewModel.SelectedServices = SelectedServices;
     }
 
     protected override async Task OnInitializedAsync()
     {
+        CurrentViewModel.IsFirstLoad = true;
         await CurrentViewModel.GetServices();
     }
 }

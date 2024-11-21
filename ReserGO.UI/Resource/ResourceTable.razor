@@ -100,7 +100,7 @@
 						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small" @onclick="(() =>DeleteDialog(element))" ></MudIconButton>
 					</div>
 					<div title="Modifica" class="m-3 @(IsSmallView ? "w-50":"")">
-						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Small"></MudIconButton>
+						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Small" @onclick="(async () => await OpenModal(TypeActionsGRID.UPDATE, element))"></MudIconButton>
 					</div>
 				</div>
 			</MudTd>
@@ -135,7 +135,7 @@
 
 	[Parameter]
 	public EventCallback<GridAction<DTOResource, DTOResourceFilter>> Action { get; set; }
-	
+
 	[Parameter]
 	public bool IsSmallView { get; set; }
 
@@ -150,11 +150,21 @@
 	}
 
 
-	private async Task OpenModal(TypeActionsGRID typeAction)
+	private async Task OpenModal(TypeActionsGRID typeAction, DTOResource resource = null)
 	{
 		if (Action.HasDelegate)
 		{
-			var action = new GridAction<DTOResource, DTOResourceFilter>(TypeActionsGRID.INSERT);
+			var action = new GridAction<DTOResource, DTOResourceFilter>();
+
+			if(typeAction==TypeActionsGRID.INSERT)
+				action = new GridAction<DTOResource, DTOResourceFilter>(TypeActionsGRID.INSERT);
+			else
+			{
+				var list = new List<DTOResource>();
+				list.Add(resource);
+				action = new GridAction<DTOResource, DTOResourceFilter>(list, TypeActionsGRID.UPDATE, "");
+			}
+
 			await Action.InvokeAsync(action);
 		}
 	}

@@ -88,6 +88,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
                 await file.OpenReadStream().CopyToAsync(memoryStream);
                 SelectedItem.ImageData = memoryStream.ToArray();
                 SelectedItem.ImageContentType = file.ContentType;
+                SelectedItem.ImageName = file.Name;
             }
         }
     }
