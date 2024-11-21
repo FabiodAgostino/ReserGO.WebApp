@@ -13,6 +13,8 @@
 @using static ReserGO.Miscellaneous.Model.DTOResourceStepper
 @using ReserGO.ViewModel.Interface.FiltersComponent
 @using Microsoft.AspNetCore.Components.Forms
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 
 @inherits BaseComponentChild<IInsertResourceViewModel, DTOResource>
 
@@ -23,7 +25,7 @@
 
     <DialogContent>
         <div class="d-flex flex-row align-items-center w-100 p-3" style="height:10%;background-color:#0066FF;">
-            <span style="font-size:xx-large; color:white; border-radius: 30px 30px 0px 0px;">Nuova risorsa</span>
+            <span style="font-size:xx-large; color:white; border-radius: 30px 30px 0px 0px;">@(t.Words["Nuova risorsa"])</span>
         </div>
             
         <MudForm @ref="_form" @bind-IsValid="@_success" Class="w-100" >
@@ -37,8 +39,8 @@
                             {
                                 <div class="d-flex flex-row w-100" style="padding-block:1vh; height:30%;">
                                     <div class="d-flex flex-column w-100 p-2" style="border-radius:15px; border:1px solid lightgrey;" >
-                                        <span><b>Giorni disponibilità risorsa:</b> @_daysMarkup</span><br />
-                                        <span><b>Orari disponibilità risorsa: </b>@_recurringRulesMarkup</span>
+                                    <span><b>@(t.Words["Giorni disponibilità risorsa"]):</b> @_daysMarkup</span><br />
+                                    <span><b>@(t.Words["Orari disponibilità risorsa"]): </b>@_recurringRulesMarkup</span>
                                     </div>
                                 </div>
 
@@ -46,13 +48,13 @@
                                 <div class="d-flex justify-content-center w-100 ruleTable" style="height:78%;">
                                     <div class="w-100 h-100">
                                         <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.Stepper.Index" Style="height:100%">
-                                            <MudTabPanel Text="Giorni disponibilità">
+                                            <MudTabPanel Text="@(t.Words["Giorni disponibilità"])">
                                                 <div class="d-flex flex-column w-100" style="height:55vh;" >
 
                                                     <div class="d-flex w-100 p-3 justify-content-center" style="height:20%">
                                                         <span style="color:#0066FF; font-size:large;">
                                                             <b>
-                                                                Seleziona i giorni in cui la risorsa sarà disponibile
+                                                            @(t.Words["Seleziona giorni risorsa"])
                                                             </b>
                                                         </span>
                                                     </div>
@@ -65,13 +67,13 @@
                                                     </div>
                                                 </div>
                                             </MudTabPanel>
-                                            <MudTabPanel Text="Orari ricorrenti" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.RECURRING_RULES)">
+                                        <MudTabPanel Text="@(t.Words["Orari ricorrenti"])" Disabled="CurrentViewModel.Stepper.Disabled(ResourceStepperState.RECURRING_RULES)">
                                                 <div class="d-flex flex-column w-100" style="height: 47vh;" >
 
                                                     <div class="d-flex w-100 p-3 justify-content-center" style="height:20%">
                                                         <span style="color:#0066FF; font-size:large;">
                                                             <b>
-                                                                Seleziona gli orari di disponibilità
+                                                            @(t.Words["Seleziona orari risorsa"])
                                                             </b>
                                                         </span>
                                                     </div>
@@ -85,31 +87,31 @@
                                                 <div class="d-flex flex-column justify-content-around w-100" style="overflow:auto; height:40vh;" >
                                                     <div class="d-flex flex-row w-100">
                                                         <div class="d-flex flex-column justify-content-around w-100 p-3" >
-                                                            <span style="font-size:large; color:#0066FF;"><b>Hai selezionato per i seguenti giorni:</b></span>
+                                                        <span style="font-size:large; color:#0066FF;"><b>@(t.Words["Hai selezionato per i seguenti giorni"]):</b></span>
                                                             <span style="font-size:medium;">@_daysMarkup</span>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex flex-row w-100">
                                                         <div class="d-flex flex-column justify-content-around w-100 p-3">
-                                                            <span style="font-size:large; color:#0066FF;"><b>Hai selezionato queste regole orarie:</b></span>
+                                                        <span style="font-size:large; color:#0066FF;"><b>@(t.Words["Hai selezionato queste regole orarie"]):</b></span>
                                                             <span style="font-size:medium;"><b>@_recurringRulesMarkup</b></span>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex flex-row w-100">
                                                         <div class="d-flex flex-column justify-content-center align-items-center w-100 p-3">
-                                                            <span style="font-size:medium; text-align:center;">Potrai inserire ulteriori regole orarie accedendo alla funzione di modifica della risorsa</span>
+                                                        <span style="font-size:medium; text-align:center;">@(t.Words["Potrai inserire ulteriori regole"])</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex flex-row w-100 justify-content-around align-items-center p-3">
                                                         <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-                                                        <MudButton Color="Color.Error" Variant="Variant.Filled" Style="width:20vw;height:5vh" @onclick="() => Reset()">Annulla</MudButton>
+                                                    <MudButton Color="Color.Error" Variant="Variant.Filled" Style="width:20vw;height:5vh" @onclick="() => Reset()">@(t.Words["Annulla"])</MudButton>
                                                         </div>
                                                         <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
-                                                        <MudButton Color="Color.Default" Variant="Variant.Filled" Style="width:20vw;height:5vh" @onclick="@(() => {CurrentViewModel.Stepper = new(); StateHasChanged();_daysMarkup = (MarkupString)String.Empty;_recurringRulesMarkup = (MarkupString)String.Empty;})">Reset</MudButton>
+                                                    <MudButton Color="Color.Default" Variant="Variant.Filled" Style="width:20vw;height:5vh" @onclick="@(() => {CurrentViewModel.Stepper = new(); StateHasChanged();_daysMarkup = (MarkupString)String.Empty;_recurringRulesMarkup = (MarkupString)String.Empty;})">@(t.Words["Reset"])</MudButton>
                                                         </div>
                                                         <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-                                                            <MudButton Color="Color.Success" Variant="Variant.Filled" Style="width:20vw;height:5vh" @onclick="@(() => {_smallViewRule = false; CurrentViewModel.Stepper.Confirm();})">Salva</MudButton>
+                                                    <MudButton Color="Color.Success" Variant="Variant.Filled" Style="width:20vw;height:5vh" @onclick="@(() => {_smallViewRule = false; CurrentViewModel.Stepper.Confirm();})">@(t.Words["Salva"])</MudButton>
                                                         </div>
                                                 </div>
 
@@ -130,7 +132,7 @@
                         <div class="d-flex flex-column w-100">
                     
                             <div class="d-flex flex-column w-100 justify-content-around p-2">
-                                <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.ResourceName = value)" Label="Nome" />
+                                <BaseTextField MinLenght="0" Bind="@((string value) => CurrentViewModel.SelectedItem.ResourceName = value)" Label="@(t.Words["Nome"])" />
                                 <div class="d-flex w-100">
                                     <BaseTextField MinLenght="0" Lines="10" Bind="@((string value) => CurrentViewModel.SelectedItem.Description = value)" Label="Descrizione" Required="false" />
                                 </div>
@@ -150,7 +152,7 @@
                                             <MudButton Variant="Variant.Filled"
                                                        Color="Color.Primary"
                                                        StartIcon="@Icons.Material.Filled.Image">
-                                                Carica Immagine
+                                                @(t.Words["Carica immagine"])
                                             </MudButton>
                                         </ActivatorContent>
                                     </MudFileUpload>
@@ -160,7 +162,7 @@
                                         <div class="w-100" >
 
                                             <MudChip T="string" Color="Color.Default">
-                                                <div title="Rimuovi">
+                                                <div title="@(t.Words["Rimuovi"])">
                                                     <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Size="Size.Small" @onclick="@(() => DeleteFile())" />
                                                 </div>
                                                 @selectedFile.Name
@@ -171,13 +173,13 @@
                             
                             </div>
                             <div class="d-flex justify-content-between w-100 @(CurrentViewModel.IsSmallView ? "flex-column pt-4" : "align-items-center flex-row")">
-                                <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma" Color="Color.Primary"></MudCheckBox>
+                                <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="@(t.Words["Richiesta di conferma"])" Color="Color.Primary"></MudCheckBox>
                                 @if (CurrentViewModel.SelectedItem.RequestToConfirm)
                                 {
                                     <span style="padding-left:1vw;">(La prenotazione dovrà essere confermata da Admin)</span>
                                 }
                                 <div class="d-flex flex-row" style="@(CurrentViewModel.IsSmallView ? "padding-inline:4vw;" : "")">
-                                    <MudSwitch @bind-Value="CurrentViewModel.EnableResource" Label="Abilita risorsa da subito" Color="Color.Success" />
+                                    <MudSwitch @bind-Value="CurrentViewModel.EnableResource" Label="@(t.Words["Abilita risorsa da subito"])" Color="Color.Success" />
                                 </div>
                             </div>
 
@@ -191,7 +193,7 @@
                                             <div class="d-flex p-2" >
                                                 <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
                                             </div>
-                                            <span class="p-3"> Abilita regole di disponibilità </span>
+                                            <span class="p-3">@(t.Words["Abilita regole di disponibilità"])</span>
                                         </div>
                                     </div>
                                 }
@@ -201,17 +203,17 @@
                                         <div class="d-flex flex-column shadow ruleRecap" @onclick="() => _enableHoursRule=true">
                                             <div class="d-flex flex-row w-100 h-25 align-items-center p-3" style="background-color:#0066FF;color:white; border-radius: 15px 15px 0px 0px;">
                                                 <MudIcon Icon="@Icons.Material.Filled.AccessTimeFilled"></MudIcon>
-                                                <span style="font-size:x-large; padding-inline:1vw;" >Disponibilità risorsa</span>
+                                                <span style="font-size:x-large; padding-inline:1vw;">@(t.Words["Disponibilità risorsa"])</span>
                                             </div>
                                              <div class="d-flex flex-column w-100 h-100  p-3" style="border-radius: 0px 0px 15px 15px;">
                                                  <div class="d-flex flex-row justify-content-center align-items-center p-1">
-                                                     <span style="font-size:x-large; color:#0066FF">Giorni disponibilità:</span>
+                                                    <span style="font-size:x-large; color:#0066FF">@(t.Words["Giorni disponibilità"]):</span>
                                                  </div>
                                                  <div class="d-flex flex-row justify-content-center p-3">
                                                      <span style="font-size:large; text-align:center;"><b>@_daysMarkup</b></span>
                                                  </div>
                                                  <div class="d-flex flex-row justify-content-center align-items-center p-1">
-                                                     <span style="font-size:x-large; color:#0066FF">Orari disponibilità:</span>
+                                                    <span style="font-size:x-large; color:#0066FF">@(t.Words["Orari disponibilità"]):</span>
                                                  </div>
                                                  <div class="d-flex flex-row justify-content-center p-3">
                                                      <span style="font-size:large; text-align:center;"><b>@_recurringRulesMarkup</b></span>
@@ -233,8 +235,8 @@
                             {
                                 <div class="d-flex flex-row w-100" style="padding-block:1vh;">
                                     <div class="d-flex flex-column w-100 p-2" style="border-radius:15px; border:1px solid lightgrey;" >
-                                        <span><b>Giorni disponibilità risorsa:</b> @_daysMarkup</span><br />
-                                        <span><b>Orari disponibilità risorsa: </b>@_recurringRulesMarkup</span>
+                                    <span><b>@(t.Words["Giorni disponibilità risorsa"]):</b> @_daysMarkup</span><br />
+                                    <span><b>@(t.Words["Orari disponibilità risorsa"]): </b>@_recurringRulesMarkup</span>
                                     </div>
                                 </div>
 
@@ -242,13 +244,13 @@
                                 <div class="d-flex justify-content-center h-100 w-100 ruleTable">
                                     <div class="w-100 h-100">
                                         <MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.Stepper.Index" Style="height:100%">
-                                            <MudTabPanel Text="Giorni disponibilità">
+                                        <MudTabPanel Text="@(t.Words["Giorni disponibilità"])">
                                                 <div class="d-flex flex-column w-100" style="height:30vh;" >
 
                                                     <div class="d-flex w-100 p-3 justify-content-center" style="height:30%">
                                                         <span style="color:#0066FF; font-size:large;">
                                                             <b>
-                                                                Seleziona i giorni in cui la risorsa sarà disponibile
+                                                            @(t.Words["Seleziona giorni risorsa"])
                                                             </b>
                                                         </span>
                                                     </div>
@@ -267,7 +269,7 @@
                                                     <div class="d-flex w-100 p-3 justify-content-center" style="height:20%">
                                                         <span style="color:#0066FF; font-size:large;">
                                                             <b>
-                                                                Seleziona gli orari di disponibilità
+                                                            @(t.Words["Seleziona orari risorsa"])
                                                             </b>
                                                         </span>
                                                     </div>
@@ -284,30 +286,30 @@
                                                 <div class="d-flex flex-column justify-content-around w-100 h-100" >
                                                     <div class="d-flex flex-row w-100">
                                                         <div class="d-flex flex-column justify-content-around w-100 p-3" >
-                                                            <span style="font-size:large; color:#0066FF;"><b>Hai selezionato per i seguenti giorni:</b></span>
+                                                        <span style="font-size:large; color:#0066FF;"><b>@(t.Words["Hai selezionato per i seguenti giorni"]):</b></span>
                                                             <span style="font-size:medium;">@_daysMarkup</span>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex flex-row w-100">
                                                         <div class="d-flex flex-column justify-content-around w-100 p-3">
-                                                            <span style="font-size:large; color:#0066FF;"><b>Hai selezionato queste regole orarie:</b></span>
+                                                        <span style="font-size:large; color:#0066FF;"><b>@(t.Words["Hai selezionato queste regole orarie"]):</b></span>
                                                             <span style="font-size:medium;"><b>@_recurringRulesMarkup</b></span>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex flex-row w-100">
                                                         <div class="d-flex flex-column justify-content-center align-items-center w-100 p-3">
-                                                            <span style="font-size:medium; text-align:center;">Potrai inserire ulteriori regole orarie accedendo alla funzione di modifica della risorsa</span>
+                                                        <span style="font-size:medium; text-align:center;">@(t.Words["Potrai inserire ulteriori regole"])</span>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center p-3">
                                                         <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-                                                        <MudButton Color="Color.Error" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="() => Reset()">Annulla</MudButton>
+                                                        <MudButton Color="Color.Error" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="() => Reset()">@(t.Words["Annulla"])</MudButton>
                                                         </div>
                                                         <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
-                                                        <MudButton Color="Color.Default" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => {CurrentViewModel.Stepper = new(); StateHasChanged();_daysMarkup = (MarkupString)String.Empty;_recurringRulesMarkup = (MarkupString)String.Empty;})">Reset</MudButton>
+                                                        <MudButton Color="Color.Default" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => {CurrentViewModel.Stepper = new(); StateHasChanged();_daysMarkup = (MarkupString)String.Empty;_recurringRulesMarkup = (MarkupString)String.Empty;})">@(t.Words["Reset"])</MudButton>
                                                         </div>
                                                         <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-                                                            <MudButton Color="Color.Success" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => CurrentViewModel.Stepper.Confirm())">Salva</MudButton>
+                                                        <MudButton Color="Color.Success" Variant="Variant.Filled" Style="width:10vw;height:5vh" @onclick="@(() => CurrentViewModel.Stepper.Confirm())">@(t.Words["Salva"])</MudButton>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -329,7 +331,7 @@
                                         <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2">
                                             <div class="d-flex flex-column w-75 h-75 align-items-center justify-content-center shadow ruleMask" @onclick="() => _enableHoursRule=true">
                                                 <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
-                                                <span class="p-3"> Abilita regole di disponibilità </span>
+                                            <span class="p-3"> @(t.Words["Abilita regole disponibilità"]) </span>
                                             </div>
                                         </div>
                                     }
@@ -339,17 +341,17 @@
                                             <div class="d-flex flex-column w-75 h-75 shadow ruleRecap" @onclick="() => _enableHoursRule=true">
                                                 <div class="d-flex flex-row w-100 h-25 align-items-center p-3" style="background-color:#0066FF;color:white; border-radius: 15px 15px 0px 0px;">
                                                     <MudIcon Icon="@Icons.Material.Filled.AccessTimeFilled"></MudIcon>
-                                                    <span style="font-size:xx-large; padding-inline:1vw;" >Disponibilità risorsa</span>
+                                                <span style="font-size:xx-large; padding-inline:1vw;">@(t.Words["Disponibilità risorsa"])</span>
                                                 </div>
                                                  <div class="d-flex flex-column w-100 h-100  p-3" style="border-radius: 0px 0px 15px 15px;">
                                                      <div class="d-flex flex-row align-items-center p-1">
-                                                         <span style="font-size:x-large; color:#0066FF">Giorni disponibilità:</span>
+                                                    <span style="font-size:x-large; color:#0066FF">@(t.Words["Giorni disponibilità"]):</span>
                                                      </div>
                                                      <div class="d-flex flex-row justify-content-center p-3">
                                                          <span style="font-size:large; text-align:center;"><b>@_daysMarkup</b></span>
                                                      </div>
                                                      <div class="d-flex flex-row align-items-center p-1">
-                                                         <span style="font-size:x-large; color:#0066FF">Orari disponibilità:</span>
+                                                    <span style="font-size:x-large; color:#0066FF">@(t.Words["Orari disponibilità"]):</span>
                                                      </div>
                                                      <div class="d-flex flex-row justify-content-center p-3">
                                                          <span style="font-size:large; text-align:center;"><b>@_recurringRulesMarkup</b></span>
@@ -372,10 +374,10 @@
             {
                 <div class="d-flex  @(CurrentViewModel.IsSmallView ? "flex-row align-items-end justify-content-around h-100" : "align-items-end justify-content-between  h-75")">
                     <div class="d-flex justify-content-center @(CurrentViewModel.IsSmallView ? "w-100 p-2" : "w-25")">
-                        <MudButton Color="Color.Default" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper = new())" style="@(CurrentViewModel.IsSmallView ? "width:40vw;border-radius:15px;" : "width:10vw;border-radius:15px;")">Reset</MudButton>
+                        <MudButton Color="Color.Default" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.Stepper = new())" style="@(CurrentViewModel.IsSmallView ? "width:40vw;border-radius:15px;" : "width:10vw;border-radius:15px;")">@(t.Words["Reset"])</MudButton>
                     </div>
                     <div class="d-flex justify-content-center @(CurrentViewModel.IsSmallView ? "w-100 p-2" : "w-25")">
-                        <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.InsertResource())" style="@(CurrentViewModel.IsSmallView ? "width:40vw;border-radius:15px;" : "width:10vw;border-radius:15px;")" Disabled="!_success">Salva</MudButton>
+                        <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="@(() => CurrentViewModel.InsertResource())" style="@(CurrentViewModel.IsSmallView ? "width:40vw;border-radius:15px;" : "width:10vw;border-radius:15px;")" Disabled="!_success">@(t.Words["Salva"])</MudButton>
                     </div>
                 </div>
             }

@@ -2,6 +2,8 @@
 @using ReserGO.UI.Utils
 @using ReserGO.DTO;
 @using ReserGO.Service.Interface.Utils
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 @inject IImageService ImageService
 
 <div class="d-flex flex-column w-100 listScheduleContainer  @(IsSmallView ? "flex-column w-100 h-100":"align-items-center justify-content-center")">

@@ -8,12 +8,14 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 @using ReserGO.Utils.DTO.Utils
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
 @inherits BaseComponentChild<IRegisterViewModel, DTOUser>
 
 <MudDialog Class="@(CurrentViewModel.IsSmallView ? "registerDialogCssSmall":"registerDialogCss")" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler">
     <TitleContent>
         <div class="d-flex flex-column" style="padding-inline: 0.5vw;">
-            <span class="dialogTitleRegister" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">Registrazione Utente</span>
+            <span class="dialogTitleRegister" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">@(t.Words["Registrazione utente"])</span>
         </div>
     </TitleContent>
     <DialogContent>
@@ -78,7 +80,7 @@
                                 <div class="inputSpace" style="margin-top:6px">
                                     <BaseComponent TViewModel="INazioneViewModel" TModel="DTONazione">
                                         <Content>
-                                            <NationalityCombo OnNazioneSelected="@((string? nazione) => OnNazioneChanged(nazione))" Label="Luogo di nascita" />
+                                            <NationalityCombo OnNazioneSelected="@((string? nazione) => OnNazioneChanged(nazione))" Label="@(t.Words["Luogo di nascita"])" />
                                         </Content>
                                     </BaseComponent>
                                 </div>
@@ -91,7 +93,7 @@
                                                   Pattern="@GetMinLenght()"
                                                   RequiredError="inserire codice fiscale"
                                                   ErrorText="@GetErrorText()"
-                                                  Label="Codice fiscale"
+                                                  Label="@(t.Words["Codice fiscale"])"
                                                   Error="GetError()"
                                                   Immediate="true"
                                                   MaxLength="MaxLenghtCF"
@@ -105,7 +107,7 @@
 
                         <MudItem xs="12" sm="6">
                             <div class="inputSpace">
-                                <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido" />
+                                <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="@(t.Words["Inserisci un numero valido"])" />
                             </div>
                         </MudItem>
 
@@ -113,7 +115,7 @@
                             <div class="inputSpace">
                                 <BaseComponent TViewModel="IComuneComboViewModel" TModel="DTOComuneProvincia">
                                     <Content>
-                                        <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email" Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Required="true" RequiredError="Inserire Email corretta" Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })" />
+                                        <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.Email" Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Required="true" RequiredError="Inserire Email corretta" Validation="@(new EmailAddressAttribute() { ErrorMessage = t.Words["la mail non è valida"] })" />
                                     </Content>
                                 </BaseComponent>
                             </div>
@@ -127,17 +129,17 @@
 
                         <MudItem xs="12" sm="6">
                             <div class="inputSpace">
-                                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.ConfirmPassword" Required="true" InputType="InputType.Password" Immediate="true" Validation="@(new Func<string, string>(PasswordMatch))" RequiredError="La password non corrisponde" Label="Conferma password" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                <MudTextField @bind-Value="@CurrentViewModel.SelectedItem.ConfirmPassword" Required="true" InputType="InputType.Password" Immediate="true" Validation="@(new Func<string, string>(PasswordMatch))" RequiredError="@(t.Words["La password non corrisponde"])" Label="Conferma password" Variant="Variant.Outlined" Margin="Margin.Dense" />
                             </div>
                         </MudItem>
                         <MudItem xs="12" sm="6">
                             <div class="inputSpace">
-                                <MudCheckBox @bind-Value="_privacy" Required="true" RequiredError=""><a href="#">Accetto le condizioni d'uso, l'informativa sulla privacy e le note legali</a> </MudCheckBox>
+                                <MudCheckBox @bind-Value="_privacy" Required="true" RequiredError=""><a href="#">@(t.Words["Accetto le condizioni"])</a> </MudCheckBox>
                             </div>
                         </MudItem>
                         <MudItem xs="12" sm="6">
                             <div class="inputSpace">
-                                <MudCheckBox @bind-Value="_trattamentoDati" Required="true" RequiredError=""><a href="#">Acconsento al trattamento dei dati personali</a></MudCheckBox>
+                                <MudCheckBox @bind-Value="_trattamentoDati" Required="true" RequiredError=""><a href="#">@(t.Words["Acconsento al trattamento"])</a></MudCheckBox>
                             </div>
                         </MudItem>
                     </MudGrid>
@@ -148,11 +150,11 @@
                 {
                     <div class="s-flex flex-column" >
                         <div class="d-flex justify-content-center align-items-center p-2" >
-                            <MudButton OnClick="Cancel" class="cancelButtonSmall btn-primary" type="submit">Annulla</MudButton>
+                        <MudButton OnClick="Cancel" class="cancelButtonSmall btn-primary" type="submit">@(t.Words["Annulla"])</MudButton>
                         </div>
 
                         <div class="d-flex justify-content-center align-items-center p-2" >
-                        <MudButton OnClick="Submit" class="registerButtonSmall btn-primary mt-1" Disabled="@(!_success)" type="submit">Salva</MudButton>
+                        <MudButton OnClick="Submit" class="registerButtonSmall btn-primary mt-1" Disabled="@(!_success)" type="submit">@(t.Words["Salva"])</MudButton>
                         </div>
                     </div>
                 }
@@ -171,11 +173,11 @@
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center p-2" style="height:40%; margin-left: 1vw;">
-                    <MudButton OnClick="Cancel" class="cancelButton btn-primary" style="width:15vw;" type="submit">Annulla</MudButton>
+                    <MudButton OnClick="Cancel" class="cancelButton btn-primary" style="width:15vw;" type="submit">@(t.Words["Annulla"])</MudButton>
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center p-2" style="height:20%;margin-left: 1vw;">
-                    <MudButton OnClick="Submit" class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw;" type="submit">Salva</MudButton>
+                    <MudButton OnClick="Submit" class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw;" type="submit">@(t.Words["Salva"])</MudButton>
                 </div>
             </div>
 

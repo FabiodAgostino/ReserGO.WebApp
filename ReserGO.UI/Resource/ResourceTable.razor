@@ -14,6 +14,8 @@
 @using static ReserGO.Miscellaneous.Model.DTOResourceStepper
 @using ReserGO.ViewModel.Interface.FiltersComponent
 @using ReserGO.UI.Historical
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 @inject IDialogService DialogService
 
 @if (Resources is object)
@@ -24,23 +26,23 @@
 			  TotalItems="10">
 		<ToolBarContent>
 			<div class="d-flex w-100 h-100 align-items-center toolbarCss" style="background-color:#0066FF;" >
-				<MudText Typo="Typo.h6"> <span style="@(IsSmallView ? "padding-inline:2vw;":"")"> Risorse </span></MudText>
+				<MudText Typo="Typo.h6"> <span style="@(IsSmallView ? "padding-inline:2vw;":"")"> @(t.Words["Risorse"]) </span></MudText>
 				<MudSpacer />
 				<div class="d-flex flex-row @(IsSmallView ? "w-100 justify-content-end":"w-50")">
 					<div class="d-flex justify-content-end align-items-center w-50 toolItem">
 						<MudButton StartIcon="@Icons.Material.Filled.NotificationAdd" Size="Size.Small" Color="Color.Success" Class="@(IsSmallView ? "btn-new-small":"btn-new")" Variant="Variant.Filled" @onclick="(async () => await OpenModal(TypeActionsGRID.INSERT))">@(IsSmallView ? "Nuova" : "Nuova risorsa")</MudButton>
 					</div>
 					<div class="toolItem @(IsSmallView ? "w-50":"w-100")">
-						<BaseTextField MinLenght="0" Required="false" Label="Ricerca per nome della risorsa e premi invio..." Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText"></BaseTextField>
+						<BaseTextField MinLenght="0" Required="false" Label="@(t.Words["Ricerca risorsa"])" Bind="@((string value) => OnChangeSearchText(value))" Value="@PagingOptions.Filter.SearchText"></BaseTextField>
 					</div>
 				</div>
 			</div>
 		</ToolBarContent>
 		<HeaderContent>
-			<MudTh>Nome Risorsa</MudTh>
-			<MudTh>Descrizione</MudTh>
-			<MudTh>Richiesta di conferma</MudTh>
-			<MudTh>Servizi</MudTh>
+			<MudTh>@(t.Words["Nome risorsa"])</MudTh>
+			<MudTh>@(t.Words["Descrizione"])</MudTh>
+			<MudTh>@(t.Words["Richiesta di conferma"])</MudTh>
+			<MudTh>@(t.Words["Servizi"])</MudTh>
 			<MudTh></MudTh>
 		</HeaderContent>
 
@@ -49,7 +51,7 @@
 				<div style="@(IsSmallView ? "margin-top:2vh;":"")">
 					@if (IsSmallView)
 					{
-						<b style="padding-inline:2vw;">Nome: </b>
+						<b style="padding-inline:2vw;">@(t.Words["Nome"]): </b>
 					}
 					@element.ResourceName
 				</div>
@@ -58,7 +60,7 @@
 				<div style="@(IsSmallView ? "margin-top:1vh;":"")">
 					@if (IsSmallView)
 					{
-						<b style="padding-inline:2vw;">Descrizione: </b>
+						<b style="padding-inline:2vw;">@(t.Words["Descrizione"]): </b>
 					}
 					@element.Description
 				</div>
@@ -66,7 +68,7 @@
 				<div style="@(IsSmallView ? "margin-top:1vh;":"") width:35%;" class="d-flex justify-content-center">
 					@if (IsSmallView)
 					{
-						<b style="padding-inline:2vw;">Conferma: </b>
+						<b style="padding-inline:2vw;">@(t.Words["Conferma"]): </b>
 					}
 					<MudCheckBox @bind-Value="element.RequestToConfirm" ReadOnly="true"/>
 				</div>
@@ -74,7 +76,7 @@
 				<div style="@(IsSmallView ? "margin-top:1vh;":"")">
 					@if (IsSmallView)
 					{
-						<b style="padding-inline:2vw;">Servizi: </b>
+						<b style="padding-inline:2vw;">@(t.Words["Servizi"]): </b>
 					}
 					@if (element.Services is object && element.Services.Count() > 0)
 					{
@@ -90,16 +92,16 @@
 					}
 					else
 					{
-						<span>(nessun servizio)</span>
+						<span>(@(t.Words["Nessun servizio"]))</span>
 					}
 				</div>
 			</MudTd>
 			<MudTd>
 				<div class="d-flex flex-row @(IsSmallView ? "w-100":"")">
-					<div title="Elimina" class="m-3 @(IsSmallView ? "w-50":"")">
+					<div title="@(t.Words["Elimina"])" class="m-3 @(IsSmallView ? "w-50":"")">
 						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small" @onclick="(() =>DeleteDialog(element))" ></MudIconButton>
 					</div>
-					<div title="Modifica" class="m-3 @(IsSmallView ? "w-50":"")">
+					<div title="@(t.Words["Modifica"])" class="m-3 @(IsSmallView ? "w-50":"")">
 						<MudIconButton Class="@(IsSmallView ? "w-100":"")" Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Small" @onclick="(async () => await OpenModal(TypeActionsGRID.UPDATE, element))"></MudIconButton>
 					</div>
 				</div>
@@ -109,7 +111,7 @@
 			<div class="d-flex flex-row align-items-center @(IsSmallView ? "":"justify-content-between")">
 				<MudPagination SelectedChanged="OnPageChangedHandler" ShowPageButtons="!IsSmallView" Count="@((PagingOptions.TotalCount.Value + PagingOptions.PageSize.Value - 1) / PagingOptions.PageSize.Value)" Class="pa-4" />
 				<div class="paginatorPageSize" style="@(IsSmallView ? "width:50%;":"")">
-					<MudSelect T="int" Label="Elementi per pagina" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
+					<MudSelect T="int" Label="@(t.Words["Elementi per pagina"])" ValueChanged="@OnPageSizeHandler" Value="PagingOptions.PageSize.HasValue ? PagingOptions.PageSize.Value : 10" Variant="Variant.Outlined">
 						@foreach (var size in pageSizes)
 						{
 							<MudSelectItem Value="size">@size</MudSelectItem>

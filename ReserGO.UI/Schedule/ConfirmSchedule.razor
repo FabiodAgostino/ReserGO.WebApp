@@ -2,12 +2,14 @@
 @using MudBlazor
 @using ReserGO.DTO.Extensions;
 @using ReserGO.Miscellaneous.Model;
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 @if (Stepper is object)
 {
     <div class="d-flex flex-column justify-content-around w-100 @(IsSmallView ? "p-2":"") " style="@(IsSmallView ? "":"height:100%;")">
 
         <div class="d-flex flex-row align-items-center w-100 titleSummary" style="@(IsSmallView ? "font-size:large; padding:1vh;":"height:18%;")">
-            <span>Riepilogo prenotazione</span>
+            <span>@(t.Words["Riepilogo prenotazione"])</span>
         </div>
 
         <div class="d-flex flex-column align-items-center w-100 @(IsSmallView ? "":"justify-content-center")" style="@(IsSmallView ? "overflow:auto":"max-height:65%;height:65%;")">
@@ -15,7 +17,7 @@
 
                 <div class="d-flex flex-column @(IsSmallView ? "p-3":"p-2")" style="@(IsSmallView ? "width:100%;height:100%;":"width:48%; height:95%;")">
 
-                    <div class="d-flex w-100 cardTitleSummry" style="@(IsSmallView ? "font-size:large;":"")">Dettagli</div>
+                    <div class="d-flex w-100 cardTitleSummry" style="@(IsSmallView ? "font-size:large;":"")">@(t.Words["Dettagli"])</div>
                     <div class="d-flex p-1 dividerTitleSummary" style="width:50%"></div>
                     <div class="d-flex flex-column w-100 h-100 justify-content-around cardSummaryDescription" style="@(IsSmallView ? "font-size:larger;":"overflow:auto;") ">
                         <span>NOME: @Stepper.User.FirstName</span>
@@ -35,7 +37,7 @@
 
 
                 <div class="d-flex flex-column p-2" style="@(IsSmallView ? "width:100%;":"width:48%;height:95%;")">
-                    <div class="d-flex w-100 cardTitleSummry" style="@(IsSmallView ? "font-size:larger;" :"")">Servizi</div>
+                    <div class="d-flex w-100 cardTitleSummry" style="@(IsSmallView ? "font-size:larger;" :"")">@(t.Words["Servizi"])</div>
                     <div class="d-flex p-1 dividerTitleSummary" style="width:50%"></div>
                     <div class="d-flex w-100  @(IsSmallView ? "":"align-items-end h-100")">
                         <div class="d-flex flex-column justfy-content-center w-100 cardSummaryService" style="@(IsSmallView ? "font-size:larger;max-height:none;" :"overflow:auto;")">
@@ -56,7 +58,7 @@
             @if (!Stepper.RequestToConfirm)
             {
                 <div class="d-flex justify-content-center pt-4 w-100 @(IsSmallView ? "infoMailSmall" : "infoMail")">
-                    <span><b>*Ti verrà inviata una mail nel momento della conferma della prenotazione</b></span>
+                    <span><b>* @(t.Words["Invio email prenotazione"])</b></span>
                 </div>
             }
         </div>
@@ -65,10 +67,10 @@
         {
             <div class="d-flex justify-content-around align-items-center p-2" style="height:20%">
                 <div class="d-flex p-1" style="width:25%;">
-                    <MudButton @onclick="@(() => Submit(false))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Annulla</MudButton>
+                    <MudButton @onclick="@(() => Submit(false))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">@(t.Words["Annulla"])</MudButton>
                 </div>
                 <div class="d-flex p-1" style="width:25%;">
-                    <MudButton @onclick="@(() => Submit(true))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">Salva</MudButton>
+                    <MudButton @onclick="@(() => Submit(true))" class="registerButtonConfirm btn-primary" style="width:100%;" type="submit">@(t.Words["Salva"])</MudButton>
                 </div>
             </div>
         }

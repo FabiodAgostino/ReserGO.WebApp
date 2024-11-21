@@ -48,7 +48,7 @@
                     <CalendarHome />
 
                     <div class="d-flex align-items-center p-2">
-                        <CardReserGo Title="Storico prenotazioni" IsSmallView="@IsSmallView"  Description="Storico delle tue prenotazioni" Icon="@Icons.Material.Filled.ContentPasteSearch" Callback="@(() => ClickChangeComponent("Storico"))"/>
+                        <CardReserGo Title="@(t.Words["Storico prenotazioni"])" IsSmallView="@IsSmallView"  Description="@(t.Words["Storico delle tue prenotazioni"])" Icon="@Icons.Material.Filled.ContentPasteSearch" Callback="@(() => ClickChangeComponent("Storico"))"/>
                     </div>
                 
                 </div>

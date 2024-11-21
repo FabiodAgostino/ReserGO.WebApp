@@ -8,6 +8,8 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 @using ReserGO.ViewModel.Interface.Schedule
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 @inherits BaseComponentChild<IScheduleFormViewModel, DTOUserLight>
 
 <div class="d-flex flex-column w-100" style="@(CurrentViewModel.IsSmallView ? "height:67vh !important;":"")">
@@ -17,16 +19,16 @@
         {
             <div class="d-flex justify-content-between w-100">
                 <div>
-                    <span class="descriptionFormDetails" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">Prenotazione per terzi</span>
+                    <span class="descriptionFormDetails" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">@(t.Words["Prenota per terzi"])</span>
                 </div>
                 <div>
-                    <MudCheckBox @bind-Value="_enableEmail" RequiredError="">Inserisci email</MudCheckBox>
+                    <MudCheckBox @bind-Value="_enableEmail" RequiredError="">@(t.Words["Inserisci email"])</MudCheckBox>
                 </div>
             </div>
         }
         else
         {
-            <span class="descriptionFormDetails" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">Inserisci i tuoi dati</span>
+            <span class="descriptionFormDetails" style="@(CurrentViewModel.IsSmallView ? "font-size:x-large":"")">@(t.Words["Inserisci i tuoi dati"])</span>
         }
     </div>
 
@@ -52,15 +54,15 @@
                                       Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
                                       Required="true" RequiredError="Inserire Email corretta"
                                       Immediate="true"
-                                      Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
+                                      Validation="@(new EmailAddressAttribute() { ErrorMessage = t.Words["La mail non è valida"] })">
                         </MudTextField>
                     }
                 </div>
                 <div class="inputSpace">
-                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.Privacy" Required="true" ErrorText=""><a href="#">Accetto le condizioni d'uso, l'informativa sulla privacy e le note legali</a> </MudCheckBox>
+                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.Privacy" Required="true" ErrorText=""><a href="#">@(t.Words["Accetto le condizioni"])</a> </MudCheckBox>
                 </div>
                 <div class="inputSpace">
-                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.TrattamentoDati" Required="true" ErrorText=""><a href="#">Acconsento al trattamento dei dati personali</a></MudCheckBox>
+                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.TrattamentoDati" Required="true" ErrorText=""><a href="#"> @(t.Words["Acconsento al trattamento"])</a></MudCheckBox>
                 </div>
             }
             else
@@ -69,19 +71,19 @@
                     <tr>
                         <td>
                             <div class="inputSpace">
-                                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FirstName = value)" Label="Nome" Value="@CurrentViewModel.SelectedItem.FirstName" />
+                                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.FirstName = value)" Label="@(t.Words["Nome"])" Value="@CurrentViewModel.SelectedItem.FirstName" />
                             </div>
                         </td>
                         <td>
                             <div class="inputSpace">
-                                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.LastName = value)" Label="Cognome" Value="@CurrentViewModel.SelectedItem.LastName" />
+                                <BaseTextField Bind="@((string value) => CurrentViewModel.SelectedItem.LastName = value)" Label="@(t.Words["Cognome"])" Value="@CurrentViewModel.SelectedItem.LastName" />
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="inputSpace">
-                                <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="Numero di telefono" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido" Value="@CurrentViewModel.SelectedItem.PhoneNumber" />
+                                <BaseTextField Bind="@((string? value) => CurrentViewModel.SelectedItem.PhoneNumber = value)" Label="@(t.Words["Numero di telefono"])" Regex="^(\d{10}|3\d{9})$" NumericField="true" CustomErrorText="Inserisci un numero valido" Value="@CurrentViewModel.SelectedItem.PhoneNumber" />
                             </div>
                         </td>
                         <td>
@@ -92,7 +94,7 @@
                                                   Label="E-mail" Variant="Variant.Outlined" Margin="Margin.Dense"
                                                   Required="true" RequiredError="Inserire Email corretta"
                                                   Immediate="true"
-                                                  Validation="@(new EmailAddressAttribute() { ErrorMessage = "L'email non è valida'" })">
+                                                  Validation="@(new EmailAddressAttribute() { ErrorMessage = t.Words["La mail non è valida"] })">
                                     </MudTextField>
                                 }
 
@@ -103,11 +105,11 @@
                 </table>
 
                 <div class="inputSpace">
-                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.Privacy" Required="true" RequiredError=""><a href="#">Accetto le condizioni d'uso, l'informativa sulla privacy e le note legali</a> </MudCheckBox>
+                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.Privacy" Required="true" RequiredError=""><a href="#">@(t.Words["Accetto le condizioni"])</a> </MudCheckBox>
                 </div>
 
                 <div class="inputSpace">
-                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.TrattamentoDati" Required="true" RequiredError=""><a href="#">Acconsento al trattamento dei dati personali</a></MudCheckBox>
+                    <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.TrattamentoDati" Required="true" RequiredError=""><a href="#">@(t.Words["Acconsento al trattamento"])</a></MudCheckBox>
                 </div>
             }
         </MudForm>
@@ -116,7 +118,7 @@
     @if (!CurrentViewModel.IsSmallView)
     {
         <div class="d-flex flex-row justify-content-center w-100 columnFormRegister" style="height:30%">
-            <MudButton class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw; height:8vh;" type="submit" OnClick="Click">Conferma</MudButton>
+            <MudButton class="registerButton btn-primary" Disabled="@(!_success)" style="width:15vw; height:8vh;" type="submit" OnClick="Click">@(t.Words["Conferma"])</MudButton>
         </div>
     }
 

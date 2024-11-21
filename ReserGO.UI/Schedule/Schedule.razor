@@ -8,6 +8,8 @@
 @using ReserGO.DTO;
 @using ReserGO.Utils.DTO.Utils
 @using Utils
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 
 @inherits BaseComponentChild<IScheduleViewModel,DTOResource>
 @inject IDialogService DialogService
@@ -26,12 +28,12 @@
 					@if (CurrentViewModel.IsLoading)
 					{
 						<div style="position:fixed;">
-							<span class="loadingText">In attessa della risorsa...</span>
+							<span class="loadingText">@(t.Words["In attesa della risorsa"])</span>
 						</div>
 					}
 					else
 					{
-						<CardReserGo Title=" " Description="Seleziona Risorsa" BodyStyle="@CardItemEmptyStyle" ZoomEffect="false" Icon="@InformationIcon" />
+						<CardReserGo Title=" " Description="@(t.Words["Seleziona risorsa"])" BodyStyle="@CardItemEmptyStyle" ZoomEffect="false" Icon="@InformationIcon" />
 					}
 				}
 			</div>

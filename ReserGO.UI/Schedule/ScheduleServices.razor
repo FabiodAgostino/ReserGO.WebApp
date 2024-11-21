@@ -3,10 +3,12 @@
 @using ReserGO.Miscellaneous.Model
 @using ReserGO.Utils.UI
 @using ReserGO.ViewModel.Interface.Schedule
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 
 @inherits BaseComponentChild<IScheduleServicesViewModel, DTOService>
 <div class="d-flex p-3 @(IsSmallView ? "p-3":"")">
-    <span class="titleServiceSelection" style="@(IsSmallView ? "font-size:larger; text-align:center;":"")">Seleziona i servizi che intendi prenotare</span>
+    <span class="titleServiceSelection" style="@(IsSmallView ? "font-size:larger; text-align:center;":"")">@(t.Words["Seleziona i servizi"])</span>
 </div>
 
 <div class="d-flex w-100 h-100" style="@(IsSmallView ? "padding-block:1vh;max-height:73%;":"padding-block:2vh;") overflow:auto;">
@@ -23,7 +25,6 @@
                     {
                         <span>@($"{service.Service.ServiceName} | {service.Service.Price?.ToString() ?? "N/A"} €")</span>
                     }
-                    <!-- Usa un checkbox con binding per ogni servizio -->
                     <MudCheckBox Value="service.IsSelected" Color="Color.Primary" ValueChanged="@((bool value) => UpdateTotal(value, service))"></MudCheckBox>
                 </div>
             </div>
