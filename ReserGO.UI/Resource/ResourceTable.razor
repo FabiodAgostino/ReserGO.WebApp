@@ -193,12 +193,13 @@
 	private async Task DeleteDialog(DTOResource element)
 	{
 		var callback = EventCallback.Factory.Create<bool>(this, ((bool value) => DeleteCallback(value, element)));
-		string text = "<b>Questa azione è irreversibile.</b><br/>Sei sicuro di voler eliminare la risorsa?";
-		var modal = new GenericModal<bool>(callback, text, "Eliminazione risorsa", TypeActionsGRID.GENERIC_DELETE);
+		string text = $"<b>{t.Words["Irreversibile"]}</b><br/>*{t.Words["Conferma elimina risorsa"]}";
+		var modal = new GenericModal<bool>(callback, text, t.Words["Elimina risorsa"], TypeActionsGRID.GENERIC_DELETE);
 
 		var dialogParameters = new DialogParameters
 			{
 				{ "Modal", modal },
+				{ "IsSmallView", IsSmallView }
             };
 
 		var options = new DialogOptions
@@ -207,7 +208,7 @@
 				Position = DialogPosition.Center
 			};
 
-		var result = await DialogService.Show<ConfirmModal>("Elimina risorsa", dialogParameters, options).Result;
+		var result = await DialogService.Show<ConfirmModal>(t.Words["Elimina risorsa"], dialogParameters, options).Result;
 	}
 
 	private async Task DeleteCallback(bool value, DTOResource element)

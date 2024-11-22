@@ -3,7 +3,7 @@
 @using ReserGO.Miscellaneous.Model;
 @using ReserGO.Service.Interface.Service;
 @inject ITranslateService t
-<MudDialog Options="@Options">
+<MudDialog Options="@Options" Class="@(IsSmallView ? "dialogServiceModalSmall":"dialogServiceModal")">
     <TitleContent>
         <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
             <b>@Modal.Title</b>
@@ -11,15 +11,17 @@
         </div>
     </TitleContent>
     <DialogContent>
-        <div class="d-flex flex-column justify-content-center p-5" style="text-align:center">
+        <div class="d-flex flex-column justify-content-center p-5" style="text-align:center; font-size:large">
             @((MarkupString)Modal.Text)
         </div>
     </DialogContent>
     <DialogActions>
         @if (Modal.TypeActionsGRID == TypeActionsGRID.GENERIC_DELETE)
         {
-            <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">@(t.Words["Chiudi"])</MudButton>
-            <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="() => Close(true)">@(t.Words["Elimina"])</MudButton>
+            <div class="d-flex justify-content-around p-4 w-100">
+                <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">@(t.Words["Chiudi"])</MudButton>
+                <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="() => Close(true)">@(t.Words["Elimina"])</MudButton>
+            </div>
         }
     </DialogActions>
 </MudDialog>
@@ -27,6 +29,8 @@
 @code {
     [Parameter]
     public GenericModal<bool> Modal { get; set; }
+    [Parameter]
+    public bool IsSmallView { get; set; }
     public DialogOptions Options = new DialogOptions
         {
             CloseOnEscapeKey = true,
@@ -50,6 +54,7 @@
         background: #0066FF;
         color: white;
         padding: 15px;
+        font-size: x-large;
     }
 
     .mud-dialog .mud-dialog-title {
@@ -58,5 +63,16 @@
 
     .mud-dialog .mud-dialog-actions {
         justify-content: space-around !important;
+    }
+
+    .dialogServiceModal {
+        border-radius: 30px !important;
+        width: 30vw !important;
+        height: 40vh !important;
+    }
+
+    .dialogServiceModalSmall {
+        border-radius: 30px !important;
+        height: 75vh !important;
     }
 </style>
