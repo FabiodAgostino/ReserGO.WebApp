@@ -10,12 +10,14 @@ using ReserGO.Service.Interface.Schedule;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.ViewModel.ViewModel.Resource.InsertResource;
 using ReserGO.ViewModel.ViewModel.Resource.UpdateResource;
+using ReserGO.Service.Interface.Service;
 
 namespace ReserGO.ViewModel.ViewModel.Resource
 {
     public class ResourceViewModel : CompleteReserGOViewModell<DTOResource, ResourceViewModel>, IResourceViewModel
     {
         private readonly IResourceService _service;
+        private readonly ITranslateService t;
 
         public ResourceViewModel(IBaseServicesReserGO<ResourceViewModel> baseServices, IResourceService service) : base(baseServices)
         {
@@ -36,7 +38,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource
             {
                 IsLoading = true;
                 if (IsFirstLoad)
-                    Loading("Caricamento risorse in corso...");
+                    Loading(t.Words["Caricamento risorse in corso"]);
 
                 var result = await _service.GetResourceByCompanyFiltered(Pagination);
                 if (result.Success)

@@ -11,12 +11,14 @@ using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Resource.InsertResource;
 using ReserGO.DTO.Extensions;
 using ReserGO.DTO.ListAvailability;
+using ReserGO.Service.Interface.Service;
 
 namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
 {
     public class InsertResourceViewModel : CompleteReserGOViewModell<DTOResource, InsertResourceViewModel>, IInsertResourceViewModel
     {
         private readonly IResourceService _service;
+        private readonly ITranslateService t;
 
         public InsertResourceViewModel(IBaseServicesReserGO<InsertResourceViewModel> baseServices, IResourceService service) : base(baseServices)
         {
@@ -67,7 +69,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
                 Loading();
                 if (result.Success)
                 {
-                    Notification("Risorsa inserita con successo!", NotificationColor.Success);
+                    Notification(t.Words["Risorsa inserita con successo"], NotificationColor.Success);
                     IsOpen = false;
                     Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(ResourceViewModel));
                 }

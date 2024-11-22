@@ -171,6 +171,7 @@
 		var dialogParameters = new DialogParameters
 			{
 				{ "Modal", modal },
+				{ "IsSmallView", IsSmallView }
             };
 
 		var options = new DialogOptions
@@ -197,7 +198,7 @@
 	private async Task InsertUpdateDialog(TypeActionsGRID typeActionGrid, DTOService service = null)
 	{
 		var callback = EventCallback.Factory.Create<DTOService>(this, ((DTOService value) => InsertUpdateCallback(value, typeActionGrid)));
-		string text = "<b>Questa azione è irreversibile.</b><br/>Sei sicuro di voler eliminare il servizio?";
+		string text = $"<b>{t.Words["Irreversibile"]}</b><br/>{t.Words["Conferma elimina servizio"]}";
 		var modal = new GenericModal<DTOService>(callback, text, "", typeActionGrid, service);
 
 		var dialogParameters = new DialogParameters
@@ -212,7 +213,7 @@
 				Position = DialogPosition.Center
 			};
 
-		var result = await DialogService.Show<ServiceModalInsertUpdate>("Modifica servizio", dialogParameters, options).Result;
+		var result = await DialogService.Show<ServiceModalInsertUpdate>(t.Words["Modifica servizio"], dialogParameters, options).Result;
 	}
 
 	private async Task InsertUpdateCallback(DTOService service, TypeActionsGRID actiongrid)

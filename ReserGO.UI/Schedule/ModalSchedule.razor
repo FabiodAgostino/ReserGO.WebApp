@@ -41,7 +41,7 @@
 					<MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.ScheduleStepper.Index">
 						@if (CurrentViewModel.ScheduleStepper.EnableServices)
 						{
-							<MudTabPanel Text="@(t.Words["Servizio"])">
+							<MudTabPanel Text="@(t.Words["Servizi"])">
 								<div class="d-flex flex-column w-100 justify-content-around columnCalendar" style="height:65vh;">
 									<BaseComponent TViewModel="IScheduleServicesViewModel" TModel="DTOService">
 										<Content>
@@ -110,7 +110,7 @@
 				<MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary" @ref="tabs" @bind-ActivePanelIndex="CurrentViewModel.ScheduleStepper.Index">
 					@if (CurrentViewModel.ScheduleStepper.EnableServices)
 					{
-						<MudTabPanel Text="@(t.Words["Servizio"])">
+						<MudTabPanel Text="@(t.Words["Servizi"])">
 							<div class="d-flex flex-column w-100 justify-content-around columnCalendar">
 								<BaseComponent TViewModel="IScheduleServicesViewModel" TModel="DTOService">
 									<Content>
