@@ -18,13 +18,14 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
     public class InsertResourceViewModel : CompleteReserGOViewModell<DTOResource, InsertResourceViewModel>, IInsertResourceViewModel
     {
         private readonly IResourceService _service;
-        private readonly ITranslateService t;
+        private readonly ITranslateService _t;
 
-        public InsertResourceViewModel(IBaseServicesReserGO<InsertResourceViewModel> baseServices, IResourceService service) : base(baseServices)
+        public InsertResourceViewModel(IBaseServicesReserGO<InsertResourceViewModel> baseServices, ITranslateService t, IResourceService service) : base(baseServices)
         {
             SelectedItem = new();
             Stepper = new();
             _service = service;
+            _t = t;
             Aggregator.Subscribe<ObjectMessage<bool>>(GetType(),(ObjectMessage<bool> open) => IsOpen = true);
         }
         public DTOResourceStepper Stepper { get; set; }
@@ -69,7 +70,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource.InsertResource
                 Loading();
                 if (result.Success)
                 {
-                    Notification(t.Words["Risorsa inserita con successo"], NotificationColor.Success);
+                    Notification(_t.Words["Risorsa inserita con successo"], NotificationColor.Success);
                     IsOpen = false;
                     Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(ResourceViewModel));
                 }

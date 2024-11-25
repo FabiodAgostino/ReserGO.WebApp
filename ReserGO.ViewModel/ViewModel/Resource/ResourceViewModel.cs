@@ -17,11 +17,12 @@ namespace ReserGO.ViewModel.ViewModel.Resource
     public class ResourceViewModel : CompleteReserGOViewModell<DTOResource, ResourceViewModel>, IResourceViewModel
     {
         private readonly IResourceService _service;
-        private readonly ITranslateService t;
+        private readonly ITranslateService _t;
 
-        public ResourceViewModel(IBaseServicesReserGO<ResourceViewModel> baseServices, IResourceService service) : base(baseServices)
+        public ResourceViewModel(IBaseServicesReserGO<ResourceViewModel> baseServices, ITranslateService t, IResourceService service) : base(baseServices)
         {
             _service = service;
+            _t = t;
             Pagination = new() { Page = 1, PageSize = 10, Filter = new() };
             Aggregator.Subscribe<ObjectMessage<bool>>(GetType(),async (ObjectMessage<bool> message) => await GetResourceByCompanyFiltered());
         }
@@ -38,7 +39,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource
             {
                 IsLoading = true;
                 if (IsFirstLoad)
-                    Loading(t.Words["Caricamento risorse in corso"]);
+                    Loading(_t.Words["Caricamento risorse in corso"]);
 
                 var result = await _service.GetResourceByCompanyFiltered(Pagination);
                 if (result.Success)

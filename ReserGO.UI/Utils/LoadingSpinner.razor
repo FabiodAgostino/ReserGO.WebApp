@@ -1,6 +1,8 @@
 ﻿@using MudBlazor;
 @using ReserGO.ViewModel.Interface.Utils;
 @using ReserGO.Utils.UI
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
 
 @inherits BaseComponentChild<ILoadingSpinnerViewModel, object>
 @if (CurrentViewModel is object && CurrentViewModel.LoadingSpinner is object && CurrentViewModel.LoadingSpinner.IsLoading)
@@ -10,7 +12,7 @@
         <div class="overlayText" style="backdrop-filter: blur(40px);">
         <div class="wrapper">
             <div class="bgtext">
-                @CurrentViewModel.LoadingSpinner.Text
+                @(t.Words[CurrentViewModel.LoadingSpinner.Text])
             </div>
         </div>
         </div>

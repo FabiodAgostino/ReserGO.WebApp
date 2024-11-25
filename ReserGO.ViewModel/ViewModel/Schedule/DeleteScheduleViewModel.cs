@@ -17,14 +17,15 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
         private readonly IBookingService service;
         private readonly NavigationManager _navigationManager;
         private readonly INotificationService notification;
-        private readonly ITranslateService t;
+        private readonly ITranslateService _t;
 
-        public DeleteScheduleViewModel(IEvent aggregator, ILogger<DeleteScheduleViewModel> logger, 
+        public DeleteScheduleViewModel(IEvent aggregator, ILogger<DeleteScheduleViewModel> logger, ITranslateService t,
             IBookingService service, NavigationManager navigationManager, INotificationService notification, IJSRuntime js) : base(aggregator, logger, js)
         {
             this.logger = logger;
             this.service = service;
             _navigationManager = navigationManager;
+            _t = t;
             this.notification = notification;
         }
 
@@ -33,10 +34,10 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             try
             {
                 IsLoading = true;
-                Loading(t.Words["Eliminazione della prenotazione in corso"]);
+                Loading(_t.Words["Eliminazione della prenotazione in corso"]);
                 var res = await service.DeleteBookingEmail(deleteBooking);
                 if (res.Success)
-                    await notification.PushToList(t.Words["Eliminazione avvenuta con successo"], NotificationColor.Success,null, true);
+                    await notification.PushToList(_t.Words["Eliminazione avvenuta con successo"], NotificationColor.Success,null, true);
                 else
                     await notification.PushToList(res.Message, NotificationColor.Error, null, true);   
                 _navigationManager.NavigateTo("/", forceLoad: true);

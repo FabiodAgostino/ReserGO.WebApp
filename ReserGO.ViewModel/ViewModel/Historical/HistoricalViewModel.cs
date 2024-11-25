@@ -19,13 +19,14 @@ namespace ReserGO.ViewModel.ViewModel.Historical
         private readonly IBaseServicesReserGO<HistoricalViewModel> _baseServices;
         private readonly IBookingService _service;
         private readonly NavigationManager _navigationManager;
-        private readonly ITranslateService t;
+        private readonly ITranslateService _t;
 
-        public HistoricalViewModel(IBaseServicesReserGO<HistoricalViewModel> baseServices, IBookingService service, NavigationManager navigationManager) : base(baseServices)
+        public HistoricalViewModel(IBaseServicesReserGO<HistoricalViewModel> baseServices, ITranslateService t, IBookingService service, NavigationManager navigationManager) : base(baseServices)
         {
             _baseServices = baseServices;
             _service = service;
             _navigationManager = navigationManager;
+            _t = t;
             Pagination = new() { Page = 1, PageSize = 10, Filter = new() { GetAll = UserIs(RoleConst.ADMIN) } };
         }
         private GenericPagedList<DTOBooking> _bookings { get; set; }
@@ -47,7 +48,7 @@ namespace ReserGO.ViewModel.ViewModel.Historical
             {
                 IsLoading = true;
                 if (IsFirstLoad)
-                    Loading(t.Words["Caricamento prenotazioni in corso"]);
+                    Loading(_t.Words["Caricamento prenotazioni in corso"]);
                 var result = await _service.GetBookings(Pagination);
                 if (result.Success)
                 {
@@ -121,7 +122,7 @@ namespace ReserGO.ViewModel.ViewModel.Historical
                 var result=await _service.UpdateBookingState(booking);
                 if(result.Success)
                 {
-                    Notification(t.Words["Prenotazione validata correttamente"], NotificationColor.Success);
+                    Notification(_t.Words["Prenotazione validata correttamente"], NotificationColor.Success);
                     await Refresh();
                 }
             }
@@ -146,7 +147,7 @@ namespace ReserGO.ViewModel.ViewModel.Historical
                 var result = await _service.DeleteBooking(booking.Id);
                 if (result.Success)
                 {
-                    Notification(t.Words["Prenotazione eliminata correttamente"], NotificationColor.Success);
+                    Notification(_t.Words["Prenotazione eliminata correttamente"], NotificationColor.Success);
                     await Refresh();
                 }
                 else

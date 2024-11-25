@@ -6,6 +6,7 @@ using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
+using ReserGO.Service.Interface.Service;
 using ReserGO.Service.Interface.Utils;
 using ReserGO.Utils.Event;
 using ReserGO.ViewModel.Interface.Register;
@@ -16,15 +17,17 @@ namespace ReserGO.ViewModel.ViewModel.Register
     {
         ILoginService _authService;
         private readonly NavigationManager _navigationManager;
+        private readonly ITranslateService _t;
 
         public bool IsOpen { get; set; }
 
 
-        public RegisterViewModel(IBaseServicesReserGO<RegisterViewModel> baseService, ILoginService authService, NavigationManager navigationManager) 
+        public RegisterViewModel(IBaseServicesReserGO<RegisterViewModel> baseService, ITranslateService t, ILoginService authService, NavigationManager navigationManager) 
             : base(baseService)
         {
             _authService = authService;
             _navigationManager = navigationManager;
+            _t = t;
             Aggregator.Subscribe<ObjectMessage<bool>>(GetType(), OpenModal);
             SelectedItem = new DTOUser();
         }
@@ -34,10 +37,10 @@ namespace ReserGO.ViewModel.ViewModel.Register
             try
             {
                 IsLoading = true;
-                Loading("Conferma della mail in corso...");
+                Loading(_t.Words["Conferma della mail in corso"]);
                 var result = await _authService.RegistrationConfirm(username);
                 if(result.Success)
-                    await PushNotification("Conferma della mail effettuata con successo!", NotificationColor.Success,null,true);
+                    await PushNotification(_t.Words["Conferma della mail effettuata con successo"], NotificationColor.Success,null,true);
                 else
                     await PushNotification(result.Message, NotificationColor.Error,null,true);
 
@@ -74,7 +77,7 @@ namespace ReserGO.ViewModel.ViewModel.Register
                 var result=await _authService.Register(SelectedItem);
                 if(result.Success)
                 {
-                    Notification("Registrazione effettuata con successo, conferma la mail.", NotificationColor.Success);
+                    Notification(_t.Words["Registrazione effettuata con successo, conferma la mail"], NotificationColor.Success);
                     IsOpen = false;
                 }
                 else
