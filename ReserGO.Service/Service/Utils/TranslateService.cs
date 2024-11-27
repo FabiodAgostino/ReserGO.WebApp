@@ -55,16 +55,17 @@ namespace ReserGO.Service.Service.Utils
             var lang = await _localStorage.GetItemAsync<string>("culture");
             if (String.IsNullOrEmpty(lang))
                 lang = "it";
+
             await ReInitialize(lang, loading);
         }
 
         public async Task ReInitialize(string culture, bool loading=true)
         {
+            bool success = false;
             try
             {
                 var resources = await _localStorage.GetItemAsync<DictionaryTranslate<string, string>>("translation");
                 var lang = await _localStorage.GetItemAsync<string>("culture");
-
                 if ((resources == null || !resources.Any()) || lang != culture)
                 {
                     if(loading)
@@ -80,6 +81,7 @@ namespace ReserGO.Service.Service.Utils
 
                     if (result.Success)
                     {
+                        success = true;
                         resources = new DictionaryTranslate<string, string>(result.Data.KeyValueResources);
                         await _localStorage.SetItemAsync("translation", resources);
                         if (loading)

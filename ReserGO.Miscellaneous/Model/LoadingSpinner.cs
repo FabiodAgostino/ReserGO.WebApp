@@ -4,7 +4,7 @@
     {
         public bool IsLoading { get; set; }
         public string? Text { get; set; }
-
+        public bool NoTranslate { get; set; }
         public LoadingSpinner(bool isLoading)
         {
             IsLoading = isLoading;
@@ -13,6 +13,13 @@
         {
             IsLoading = isLoading;
             Text = text;
+        }
+
+        public LoadingSpinner(bool isLoading, string text, bool noTranslate)
+        {
+            IsLoading = isLoading;
+            Text = text;
+            NoTranslate = noTranslate;
         }
     }
 }

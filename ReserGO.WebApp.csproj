@@ -42,6 +42,7 @@
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,6 +54,9 @@
   <ItemGroup>
     <Reference Include="ReserGO.DTO">
       <HintPath>..\ReserGo\ReserGO.DTO\obj\Debug\net9.0\ReserGO.DTO.dll</HintPath>
+    </Reference>
+    <Reference Include="ReserGO.Utils.DTO">
+      <HintPath>..\ReserGO.Utils\ReserGO.Utils.DTO\bin\Debug\net9.0\ReserGO.Utils.DTO.dll</HintPath>
     </Reference>
     <Reference Include="ReserGO.Utils.Events">
       <HintPath>..\ReserGO.Utils\ReserGO.Utils.Events\obj\Debug\net9.0\ReserGO.Utils.Events.dll</HintPath>

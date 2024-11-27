@@ -10,11 +10,18 @@
     @if (!String.IsNullOrEmpty(CurrentViewModel.LoadingSpinner.Text))
     {
         <div class="overlayText" style="backdrop-filter: blur(40px);">
-        <div class="wrapper">
-            <div class="bgtext">
-                @(t.Words[CurrentViewModel.LoadingSpinner.Text])
+            <div class="wrapper">
+                <div class="bgtext">
+                    @if (CurrentViewModel.LoadingSpinner.NoTranslate)
+                    {
+                        <span>@CurrentViewModel.LoadingSpinner.Text</span>
+                    }
+                    else
+                    {
+                        <span>@(t.Words[CurrentViewModel.LoadingSpinner.Text])</span>
+                    }
+                </div>
             </div>
-        </div>
         </div>
     }
     else
@@ -40,10 +47,10 @@
     </style>
 }
 <style>
-    .mudProgressCircular
-    {
-        color:#006;
+    .mudProgressCircular {
+        color: #006;
     }
+
     .overlay {
         position: fixed;
         top: 0;
@@ -71,7 +78,7 @@
 
     .textSpinner {
         position: absolute;
-        text-align:center;
+        text-align: center;
         color: black;
     }
 </style>
