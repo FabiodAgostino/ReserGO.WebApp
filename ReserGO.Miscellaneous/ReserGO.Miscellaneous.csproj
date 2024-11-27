@@ -1,25 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="ReserGO.DTO">
-      <HintPath>..\..\ReserGo\ReserGO.DTO\bin\Debug\net8.0\ReserGO.DTO.dll</HintPath>
+      <HintPath>..\..\ReserGo\ReserGO.DTO\bin\Debug\net9.0\ReserGO.DTO.dll</HintPath>
     </Reference>
     <Reference Include="ReserGO.Utils.DTO">
-      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.DTO\obj\Debug\net8.0\ReserGO.Utils.DTO.dll</HintPath>
+      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.DTO\bin\Debug\net9.0\ReserGO.Utils.DTO.dll</HintPath>
     </Reference>
     <Reference Include="ReserGO.Utils.Events">
-      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.Events\obj\Debug\net8.0\ReserGO.Utils.Events.dll</HintPath>
+      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.Events\obj\Debug\net9.0\ReserGO.Utils.Events.dll</HintPath>
     </Reference>
   </ItemGroup>
 

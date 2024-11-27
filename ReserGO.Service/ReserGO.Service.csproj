@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -9,14 +9,14 @@
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.0.15" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-    <PackageReference Include="MudBlazor" Version="7.8.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
+    <PackageReference Include="MudBlazor" Version="7.15.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Refit" Version="8.0.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,13 +25,13 @@
 
   <ItemGroup>
     <Reference Include="ReserGO.DTO">
-      <HintPath>..\..\ReserGo\ReserGO.DTO\bin\Debug\net8.0\ReserGO.DTO.dll</HintPath>
+      <HintPath>..\..\ReserGo\ReserGO.DTO\bin\Debug\net9.0\ReserGO.DTO.dll</HintPath>
     </Reference>
     <Reference Include="ReserGO.Utils.DTO">
-      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.DTO\bin\Debug\net8.0\ReserGO.Utils.DTO.dll</HintPath>
+      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.DTO\bin\Debug\net9.0\ReserGO.Utils.DTO.dll</HintPath>
     </Reference>
     <Reference Include="ReserGO.Utils.Events">
-      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.Events\obj\Debug\net8.0\ReserGO.Utils.Events.dll</HintPath>
+      <HintPath>..\..\ReserGO.Utils\ReserGO.Utils.Events\obj\Debug\net9.0\ReserGO.Utils.Events.dll</HintPath>
     </Reference>
   </ItemGroup>
 
