@@ -8,6 +8,7 @@ using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.ViewModel.Interface.Authentication;
 using ReserGO.ViewModel.ViewModel.Register;
+using ReserGO.ViewModel.ViewModel.Utils;
 
 namespace ReserGO.ViewModel.ViewModel.Authentication
 {
@@ -15,7 +16,6 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
     {
         private readonly IAuthenticationService _authService;
         private readonly NavigationManager _navigationManager;
-
         public LoginViewModel(IBaseServicesReserGO<LoginViewModel> baseServices, IAuthenticationService authService, NavigationManager navigationManager)
            : base(baseServices)
         {
@@ -30,10 +30,9 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
         public string? LoginError { get; set; }
         public bool IsOpen { get; set; }
         EventCallback Callback { get; set; }
-
         public async void OpenModal(ObjectMessage<GenericModalVoid> message)
         {
-            if(message.Value.Event.HasDelegate)
+            if (message.Value.Event.HasDelegate)
             {
                 LoginError = String.Empty;
                 Callback = message.Value.Event;
@@ -41,14 +40,19 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
                 SelectedItem = new();
                 OnPropertyChanged();
             }
-                
+
         }
         public async Task FirstLogin()
         {
+           
             try
             {
                 var user = new DTOLoginRequest() { IsGuest = true };
                 var data = await _authService.Login(user);
+            }
+            catch (HttpRequestException ex)
+            {
+                Logger.LogError(ex.Message);
             }
             catch (Exception ex)
             {
@@ -56,6 +60,7 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
             }
             finally
             {
+                
                 OnPropertyChanged();
             }
         }
@@ -105,7 +110,7 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
 
         public async Task OpenModal()
         {
-            Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true),typeof(RegisterViewModel));
+            Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(RegisterViewModel));
         }
     }
 }

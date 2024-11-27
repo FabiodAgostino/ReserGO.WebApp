@@ -25,7 +25,12 @@ namespace ReserGO.Service.Service.Utils
 
         public DictionaryTranslate<string, string> Words
         {
-            get => _words;
+            get
+            {
+                if (_words == null)
+                    _words = new();
+                return _words;
+            }
             set => _words = value;
         }
 

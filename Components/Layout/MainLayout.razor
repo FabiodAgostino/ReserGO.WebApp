@@ -2,50 +2,53 @@
 @using MudBlazor
 @using ReserGO.DTO
 @using ReserGO.Service.Extensions
+@using ReserGO.Service.Service.Utils
 @using ReserGO.Utils.Event
 @using ReserGO.Utils.UI
 @using ReserGO.UI.Utils
 @using ReserGO.ViewModel.Interface.Authentication
 @using ReserGO.ViewModel.Interface.Utils
 @using ReserGO.UI.Authentication;
-@using Microsoft.AspNetCore.Components.Authorization;
 @using Microsoft.AspNetCore.Components;
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.Miscellaneous.Message
+@using ReserGO.ViewModel.ViewModel.Utils
+@using ReserGO.WebApp.Components.Pages
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
-    <div class="pageContainer">
-        <BaseComponent TViewModel="ILoadingSpinnerViewModel" TModel="object">
-            <Content>
-                <LoadingSpinner />
-            </Content>
-        </BaseComponent>
-        <MudPopoverProvider />
-        <MudDialogProvider />
-        <MudSnackbarProvider />
-        <MudThemeProvider Theme="@_theme" />
+<div class="pageContainer">
+    <BaseComponent TViewModel="ILoadingSpinnerViewModel" TModel="object">
+        <Content>
+            <LoadingSpinner />
+        </Content>
+    </BaseComponent>
+    <MudPopoverProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+    <MudThemeProvider Theme="@_theme" />
 
+    @{
+        var Manutenzione = MyConfigurationAccessor.GetValue("ConfigServer:Manutenzione");
+        bool inManutenzione = bool.Parse(Manutenzione);
+    }
+    @if (!inManutenzione)
+    {
         @if (!IsRedirect)
         {
             <AuthorizeView>
                 <Authorized>
                     @if (Render)
                     {
-                       @Body
+                        @Body
                     }
                 </Authorized>
                 <NotAuthorized>
                     <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
                         <Content>
                             <Login />
-                        </Content>  
+                        </Content>
                     </BaseComponent>
-                    <div class="containerWrapper">
-                        <div class="wrapper">
-                           <div class="bgtext">
-                               Loading...
-                            </div>
-                        </div>
-                    </div>
                 </NotAuthorized>
             </AuthorizeView>
         }
@@ -53,29 +56,38 @@
         {
             @Body
         }
-      
-    </div>
+    }
+    else
+    {
+        <Manutenzione />
+    }
+
+</div>
 
 @code {
-    private MudTheme _theme = new MudTheme
+    protected override async Task OnInitializedAsync()
     {
-        PaletteLight = new PaletteLight
+    }
+
+
+    private MudTheme _theme = new MudTheme
         {
-            Primary = "#0066FF"
-        }
-    };
+            PaletteLight = new PaletteLight
+            {
+                Primary = "#0066FF"
+            }
+        };
 }
 
 <style>
 
-    .containerWrapper
-    {
-        width:100%;
-        height:100%;
+    .containerWrapper {
+        width: 100%;
+        height: 100%;
         backdrop-filter: blur(40px);
     }
-    .wrapper
-    {
+
+    .wrapper {
         margin: 0;
         position: absolute;
         top: 50%;
@@ -83,28 +95,29 @@
         transform: translate(-50%, -50%);
     }
 
-    .bgtext
-    {
-        font-size:20px;
-        letter-spacing:3px;
-        font-weight:600;
+    .bgtext {
+        font-size: 20px;
+        letter-spacing: 3px;
+        font-weight: 600;
         font-family: Arial,Helvetica, sans-serif;
-        color:#0066FF;
-        width:100%;
-        text-transform:uppercase;
-        border-right:5px solid;
-        white-space:nowrap;
-        overflow:hidden;
+        color: #0066FF;
+        width: 100%;
+        text-transform: uppercase;
+        border-right: 5px solid;
+        white-space: nowrap;
+        overflow: hidden;
         animation: typing 1.7s steps(19), cursor .4s step-end infinite alternate;
     }
 
-    @@keyframes cursor{
-        50% {border-color:transparent;}
+    @@keyframes cursor {
+        50% {
+            border-color: transparent;
+        }
     }
 
-    @@keyframes typing{
-        from{
-            width:0;
+    @@keyframes typing {
+        from {
+            width: 0;
         }
     }
 
@@ -118,7 +131,5 @@
         margin: 0 !important;
     }
 
-
-  
 </style>
 
