@@ -25,7 +25,7 @@
 
     <DialogContent>
         <div class="d-flex flex-row align-items-center w-100 p-3" style="height:10%;background-color:#0066FF;">
-            <span style="font-size:xx-large; color:white; border-radius: 30px 30px 0px 0px;">@(t.Words["Nuova risorsa"])</span>
+            <span style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"font-size:xx-large;") color:white; border-radius: 30px 30px 0px 0px;">@(t.Words["Nuova risorsa"])</span>
         </div>
             
         <MudForm @ref="_form" @bind-IsValid="@_success" Class="w-100" >
@@ -61,7 +61,7 @@
                                                     <div class="d-flex w-100" style="height:70%;">
                                                         <BaseComponent TViewModel="IDayOfWeekViewModel" TModel="DTODayOfWeekWizard">
                                                             <Content>
-                                                                <DaysWeek CurrentViewModel.IsSmallView="true" Callback="@(((List<DTODayOfWeekWizard> days, bool next) Value) => UpdateDays(Value))" Reset="@(() => Reset())" DaysSelected="CurrentViewModel.Stepper.DaysSelected" />
+                                                                <DaysWeek IsSmallView="true" Callback="@(((List<DTODayOfWeekWizard> days, bool next) Value) => UpdateDays(Value))" Reset="@(() => Reset())" DaysSelected="CurrentViewModel.Stepper.DaysSelected" />
                                                             </Content>
                                                         </BaseComponent>
                                                     </div>
@@ -138,7 +138,7 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex p-2 @(CurrentViewModel.IsSmallView ? "flex-column" : "flex-row")" style="@(CurrentViewModel.IsSmallView ? "height:22vh;" : "height:10vh;")" >
+                            <div class="d-flex p-2 @(CurrentViewModel.IsSmallView ? "flex-column" : "flex-row")" style="@(CurrentViewModel.IsSmallView ? "height:28vh;" : "height:10vh;")" >
                                 <div class="d-flex align-items-center" style="@(CurrentViewModel.IsSmallView ? "width:100%;" : "width:60%;")">
                                     <BaseComponent TViewModel="IServicesComboViewModel" TModel="DTOService">
                                         <Content>
@@ -159,7 +159,7 @@
 
                                     @if (selectedFile != null)
                                     {
-                                        <div class="w-100" >
+                                        <div class="d-flex w-100 align-items-center justify-content-center pt-1">
 
                                             <MudChip T="string" Color="Color.Default">
                                                 <div title="@(t.Words["Rimuovi"])">
@@ -172,7 +172,7 @@
                                 </div>
                             
                             </div>
-                            <div class="d-flex justify-content-between w-100 @(CurrentViewModel.IsSmallView ? "flex-column pt-4" : "align-items-center flex-row")">
+                            <div class="d-flex justify-content-between w-100 pt-4 @(CurrentViewModel.IsSmallView ? "flex-column" : "align-items-center flex-row")">
                                 <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="@(t.Words["Richiesta di conferma"])" Color="Color.Primary"></MudCheckBox>
                                 @if (CurrentViewModel.SelectedItem.RequestToConfirm)
                                 {
@@ -434,6 +434,7 @@
     {
         CurrentViewModel.Stepper = new();
         _enableHoursRule = false;
+        _smallViewRule = false;
         _daysMarkup = (MarkupString)String.Empty;
         _recurringRulesMarkup = (MarkupString)String.Empty;
     }

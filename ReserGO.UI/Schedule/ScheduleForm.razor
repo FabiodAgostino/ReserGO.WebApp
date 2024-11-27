@@ -58,10 +58,10 @@
                         </MudTextField>
                     }
                 </div>
-                <div class="inputSpace">
+                <div class="inputSpace" style="height:80px;">
                     <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.Privacy" Required="true" ErrorText=""><a href="#">@(t.Words["Accetto le condizioni"])</a> </MudCheckBox>
                 </div>
-                <div class="inputSpace">
+                <div class="inputSpace" style="height:80px;">
                     <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.TrattamentoDati" Required="true" ErrorText=""><a href="#"> @(t.Words["Acconsento al trattamento"])</a></MudCheckBox>
                 </div>
             }

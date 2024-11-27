@@ -112,5 +112,10 @@ namespace ReserGO.ViewModel.ViewModel.Authentication
         {
             Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(RegisterViewModel));
         }
+
+        //public async Task OpenModalResetPassword()
+        //{
+        //    Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(RegisterViewModel));
+        //}
     }
 }

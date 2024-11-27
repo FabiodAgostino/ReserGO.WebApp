@@ -17,11 +17,11 @@
 
     <DialogContent>
         <div class="d-flex flex-row align-items-center w-100 p-3" style="height:10%;background-color:#0066FF;">
-            <span style="font-size:xx-large; color:white; border-radius: 30px 30px 0px 0px;">@(t.Words["Modifica risorsa"])</span>
+            <span style="@(CurrentViewModel.IsSmallView ? "font-size:x-large;":"font-size:xx-large;") color:white; border-radius: 30px 30px 0px 0px;">@(t.Words["Modifica risorsa"])</span>
         </div>
         @if (CurrentViewModel.SelectedItem != null)
         {
-            <div class="d-flex flex-row">
+            <div class="d-flex p-3 @(CurrentViewModel.IsSmallView ? "flex-column" : "flex-row h-75")" style="@(CurrentViewModel.IsSmallView ? "height:80%;" : "")">
 
                 <div class="d-flex flex-column @(CurrentViewModel.IsSmallView ? "w-100" : "w-50")" style="@(CurrentViewModel.IsSmallView ? "overflow:auto;" : "")">
                     <div class="d-flex flex-column w-100">
@@ -54,7 +54,7 @@
                                 </MudFileUpload>
                                 @if (selectedFile != null || CurrentViewModel.SelectedItem.ImageData != null)
                                 {
-                                    <div class="w-100">
+                                    <div class="d-flex w-100 align-items-center justify-content-center pt-1">
 
                                         <MudChip T="string" Color="Color.Default">
                                             <div title="Rimuovi">
@@ -67,7 +67,8 @@
                             </div>
 
                         </div>
-                        <div class="d-flex justify-content-between w-100 @(CurrentViewModel.IsSmallView ? "flex-column pt-4" : "align-items-center flex-row")">
+
+                        <div class="d-flex justify-content-between w-100 pt-4 @(CurrentViewModel.IsSmallView ? "flex-column" : "align-items-center flex-row")">
                             <MudCheckBox @bind-Value="CurrentViewModel.SelectedItem.RequestToConfirm" Label="Richiesta di conferma" Color="Color.Primary"></MudCheckBox>
                             @if (CurrentViewModel.SelectedItem.RequestToConfirm)
                             {
@@ -78,11 +79,37 @@
                             </div>
                         </div>
 
+
                     </div>
 
                 </div>
-                <div class="d-flex flex-column w-50">
-                    <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
+                <div class="d-flex flex-column justify-content-around align-items-center w-50 p-3">
+                    <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 pt-4">
+                        <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask">
+                            <div class="d-flex p-2">
+                                <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
+                            </div>
+                            <span class="p-3">Disabilita giorno specifico</span>
+                        </div>
+                    </div>
+                    <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 pt-4">
+                        <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask">
+                            <div class="d-flex p-2">
+                                <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
+                            </div>
+                            <span class="p-3">Modifica regole giornaliere</span>
+                        </div>
+                    </div>
+                    <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 pt-4">
+                        <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask">
+                            <div class="d-flex p-2">
+                                <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
+                            </div>
+                            <span class="p-3">Modifica orari giorno specifico</span>
+                        </div>
+                    </div>
+                    
+                    @* <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
                         <div class="d-flex w-100 p-2 align-items-center justify-content-center">
                             <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(CurrentViewModel.IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" >Disabilita giorno specifico</MudButton>
                         </div>
@@ -94,7 +121,7 @@
                         <div class="d-flex w-100 p-2 align-items-center justify-content-center">
                             <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(CurrentViewModel.IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")">Modifica orari giorno specifico</MudButton>
                         </div>
-                    </div>
+                    </div> *@
                 </div>
             </div>
 
@@ -111,6 +138,11 @@
             MaxWidth = MaxWidth.ExtraLarge,
             NoHeader = true,
         };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CurrentViewModel.RegisterOnScreenResize(800);
+    }
 
     private async Task OnBackdropClickHandler(MouseEventArgs e)
     {
@@ -131,3 +163,15 @@
         CurrentViewModel.SelectedItem.ImageName = String.Empty;
     }
 }
+
+<style>
+    .ruleMask {
+        border-radius: 30px;
+        background-color: #0066FF;
+        font-size: x-large;
+        text-align: center;
+        color: white;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+</style>
