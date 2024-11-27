@@ -15,6 +15,8 @@
 @using ReserGO.UI.FiltersComponent
 @using ReserGO.DTO.ListAvailability
 @using ReserGO.Miscellaneous.Extensions;
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 
 @inherits BaseComponentChild<IModalScheduleViewModel, DTOResource>
 
@@ -30,7 +32,7 @@
 			<div class="d-flex flex-column smallDialogContainer">
 
 				<div class="d-flex flex-row p-3 headerDialogSmall">
-					<span class="d-flex align-items-center h-100 headerTextSmall">Prenotazione</span>
+					<span class="d-flex align-items-center h-100 headerTextSmall">@(t.Words["Prenotazione"])</span>
 					<span class="d-flex align-items-end" style="width:10%;height:100%;" onclick="@(() => CurrentViewModel.Close())">
 						<MudIcon Icon="@Icons.Material.Filled.Close" Style="font-size: x-large; color:white;" />
 					</span>
@@ -39,7 +41,7 @@
 					<MudTabs Elevation="4" Rounded="true" Color="@Color.Primary" NextIcon="@String.Empty" PrevIcon="@String.Empty" @bind-ActivePanelIndex="CurrentViewModel.ScheduleStepper.Index">
 						@if (CurrentViewModel.ScheduleStepper.EnableServices)
 						{
-							<MudTabPanel Text="Servizio">
+							<MudTabPanel Text="@(t.Words["Servizi"])">
 								<div class="d-flex flex-column w-100 justify-content-around columnCalendar" style="height:65vh;">
 									<BaseComponent TViewModel="IScheduleServicesViewModel" TModel="DTOService">
 										<Content>
@@ -49,12 +51,12 @@
 								</div>
 							</MudTabPanel>
 						}
-						<MudTabPanel Text="Giorno" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.DATE))">
+						<MudTabPanel Text="@(t.Words["Giorno"])" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.DATE))">
 							<div class="d-flex p-2 justify-content-center w-100 h-100">
 								<Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => {CurrentViewModel.ScheduleStepper.UpdateDate(date);await GetSlot();})" IsSmallView="true" />
 							</div>
 						</MudTabPanel>
-						<MudTabPanel Text="Orario" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.SLOT))">
+						<MudTabPanel Text="@(t.Words["Orario"])" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.SLOT))">
 							<div class="d-flex flex-column w-100 columnCalendar">
 								<TimeSchedule TimeSlots="CurrentViewModel.TimeSlots" SavedTimeSlot="CurrentViewModel.ScheduleStepper.Slot"
 										  OnClick="@((DTOTimeSlot selectedSlot) => CurrentViewModel.ScheduleStepper.UpdateSlot(selectedSlot))" IsLoading="@CurrentViewModel.SlotLoading" IsFirstLoading="@CurrentViewModel.IsFirstLoad"></TimeSchedule>
@@ -62,7 +64,7 @@
 						</MudTabPanel>
 						@if (!CurrentViewModel.ScheduleStepper.IsLoggedIn)
 						{
-							<MudTabPanel Text="Anagrafica" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.USER))">
+							<MudTabPanel Text="@(t.Words["Anagrafica"])" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.USER))">
 								<BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUserLight">
 									<Content>
 										<ScheduleForm Callback="@((DTOUserLight user) => CurrentViewModel.ScheduleStepper.UpdateUser(user))" PreviousClick="(() =>  CurrentViewModel.ScheduleStepper.PreviewsIndex())" ForThird="CurrentViewModel.UserIs(RoleConst.ADMIN)"/>
@@ -70,7 +72,7 @@
 								</BaseComponent>
 							</MudTabPanel>
 						}
-						<MudTabPanel Text="Conferma" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.CONFIRM))">
+						<MudTabPanel Text="@(t.Words["Conferma"])" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.CONFIRM))">
 							<ConfirmSchedule Stepper="@CurrentViewModel.ScheduleStepper" IsSmallView="true"  />
 						</MudTabPanel>
 					</MudTabs>
@@ -86,7 +88,7 @@
 							@if (CurrentViewModel.ScheduleStepper.IsLastButtonSmartphone())
 							{
 								<MudButton class="registerButton btn-primary" style="width:100%;height:7vh;font-size:4vw;" type="submit" OnClick="@(async () => await CurrentViewModel.InsertBooking(true))" >
-									Conferma
+									@(t.Words["Conferma"])
 								</MudButton>
 							}
 							else
@@ -108,7 +110,7 @@
 				<MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary" @ref="tabs" @bind-ActivePanelIndex="CurrentViewModel.ScheduleStepper.Index">
 					@if (CurrentViewModel.ScheduleStepper.EnableServices)
 					{
-						<MudTabPanel Text="Servizio">
+						<MudTabPanel Text="@(t.Words["Servizi"])">
 							<div class="d-flex flex-column w-100 justify-content-around columnCalendar">
 								<BaseComponent TViewModel="IScheduleServicesViewModel" TModel="DTOService">
 									<Content>
@@ -118,7 +120,7 @@
 							</div>
 						</MudTabPanel>
 					}
-					<MudTabPanel Text="Giorno e ora" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.DATESLOT))">
+					<MudTabPanel Text="@(t.Words["Giorno e ora"])" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.DATESLOT))">
 						<div class="d-flex flex-column justify-content-around columnCalendar" style="width:50%;">
 							<Calendar DisabledWhen="CurrentViewModel.DayDisabled" OnClick="@(async (DateTime date) => {CurrentViewModel.ScheduleStepper.UpdateDate(date); await GetSlot();} )" />
 						</div>
@@ -135,7 +137,7 @@
 
 					@if (!CurrentViewModel.ScheduleStepper.IsLoggedIn)
 					{
-						<MudTabPanel Text="Anagrafica" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.USER))">
+						<MudTabPanel Text="@(t.Words["Anagrafica"])" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.USER))">
 							<BaseComponent TViewModel="IScheduleFormViewModel" TModel="DTOUserLight">
 								<Content>
 									<ScheduleForm Callback="@((DTOUserLight user) => CurrentViewModel.ScheduleStepper.UpdateUser(user))" ForThird="CurrentViewModel.UserIs(RoleConst.ADMIN)"/>
@@ -144,7 +146,7 @@
 
 						</MudTabPanel>
 					}
-					<MudTabPanel Text="Conferma" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.CONFIRM))">
+					<MudTabPanel Text="@(t.Words["Conferma"])" Disabled="@(CurrentViewModel.ScheduleStepper.Disabled(StateOfStepper.CONFIRM))">
 						<ConfirmSchedule Stepper="@CurrentViewModel.ScheduleStepper" OnClick="@(async (bool submit) => await CurrentViewModel.InsertBooking(submit))" />
 					</MudTabPanel>
 				</MudTabs>
@@ -231,11 +233,6 @@
 	.mud-tabs-tabbar-primary {
 		background-color: #0066FF !important;
 		color: var(--mud-palette-primary-text);
-	}
-
-	.mud-dialog-content {
-		width: 71vw;
-		height: 60vh;
 	}
 
 	.mud-tabs-panels {

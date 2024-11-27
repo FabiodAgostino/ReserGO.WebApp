@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="d-flex p-2 @(IsSmallView ? "w-100":"")" style="@(IsSmallView ? "height:25%;":"")">
-                    <CardReserGo Title="Storico prenotazioni" Description="Storico delle richieste di prenotazione" Icon="@InformationIcon" Callback="@(() => ClickChangeComponent("Storico"))" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
+                    <CardReserGo Title="@(t.Words["Storico prenotazioni"])" Description="Storico delle richieste di prenotazione" Icon="@InformationIcon" Callback="@(() => ClickChangeComponent("Storico"))" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
 
                 </div>
 
@@ -28,11 +28,11 @@
                     <div class="d-felx flex-column h-50 w-100">
 
                         <div class="d-flex justify-content-center p-2 h-50 informationHomeContiner">
-                            <CardReserGo Title="Inserisci risorsa" Description="Inserisci una nuova risorsa" Icon="@ReservationIcon" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
+                            <CardReserGo Title="@(t.Words["Inserisci risorsa"])" Description="@(t.Words["Inserisci una nuova risorsa"])" Icon="@ReservationIcon" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
                         </div>
 
                         <div class="d-flex justify-content-center p-2 h-50 informationHomeContiner">
-                            <CardReserGo Title="Inserisci comunicazione" Description="Il giorno xx lo studio resterà chiuso" Icon="@ComunicationIcon" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
+                            <CardReserGo Title="@(t.Words["Inserisci comunicazione"])" Description="Il giorno xx lo studio resterà chiuso" Icon="@ComunicationIcon" IsSmallView="@IsSmallView" CardStyle="@(IsSmallView ? "width:100%;height:100%;":"")" />
                         </div>
                     </div>
                 }
@@ -49,10 +49,10 @@
                     <CalendarHome />
 
                     <div class="d-flex align-items-center p-2">
-                        <CardReserGo Title="Inserisci risorsa" Description="Inserisci una nuova risorsa" Icon="@ReservationIcon" CardStyle="width:19vw;height:44vh" IsSmallView="@IsSmallView" Vertical="@(IsSmallView ? false : true )" />
+                        <CardReserGo Title="@(t.Words["Inserisci risorsa"])" Description="Inserisci una nuova risorsa" Icon="@ReservationIcon" CardStyle="width:19vw;height:44vh" IsSmallView="@IsSmallView" Vertical="@(IsSmallView ? false : true )" />
                     </div>
                     <div class="d-flex align-items-center p-2" onclick="@OpenModalComunications">
-                        <CardReserGo Title="Inserisci comunicazione" Description="Il giorno xx lo studio resterà chiuso" Icon="@ComunicationIcon" CardStyle="width:19vw;height:44vh" IsSmallView="@IsSmallView" Vertical="@(IsSmallView ? false : true )" />
+                        <CardReserGo Title="@(t.Words["Inserisci comunicazione"])" Description="Il giorno xx lo studio resterà chiuso" Icon="@ComunicationIcon" CardStyle="width:19vw;height:44vh" IsSmallView="@IsSmallView" Vertical="@(IsSmallView ? false : true )" />
                     </div>
 
                 </div>

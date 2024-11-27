@@ -1,11 +1,13 @@
 ﻿@using MudBlazor
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 <MudDatePicker DisplayMonths="2" PickerVariant="PickerVariant.Static" DateChanged="OnDateChanged" FixYear="2024" Style="max-width:15vw"
 MaxDate="_maxDate" MinDate="_minDate" AdditionalDateClassesFunc="@((DateTime dt)=>(_disabledDate.Contains(dt) ? "red-text text-accent-4" : ""))">
     <PickerActions>
         @if (_disabledDate.Count() > 0)
         {
             var days = (MarkupString)string.Join(", ", _disabledDate.Select(d => $"<b>{d.ToString("dd/MM/yyyy")}</b>"));
-            <div class="w-100" style="text-align:left"><span style="color:red">Giorni disabilitati: </span><span>@days</span></div>
+            <div class="w-100" style="text-align:left"><span style="color:red">@(t.Words["Giorni disabilitati"]): </span><span>@days</span></div>
         }
     </PickerActions>
 </MudDatePicker>

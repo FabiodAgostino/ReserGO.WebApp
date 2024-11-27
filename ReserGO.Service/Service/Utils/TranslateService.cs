@@ -63,7 +63,7 @@ namespace ReserGO.Service.Service.Utils
                 if ((resources == null || !resources.Any()) || lang != culture)
                 {
                     if(loading)
-                        _event.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(true, "Caricamento lingua in corso...")));
+                        _event.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(true, "Caricamento lingua in corso")));
                     if (lang == null)
                         lang = "it";
                     else
@@ -78,7 +78,7 @@ namespace ReserGO.Service.Service.Utils
                         resources = new DictionaryTranslate<string, string>(result.Data.KeyValueResources);
                         await _localStorage.SetItemAsync("translation", resources);
                         if (loading)
-                            _event.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(false, "Caricamento lingua in corso...")));
+                            _event.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(false, "Caricamento lingua in corso")));
                     }
                     else
                         resources = new();

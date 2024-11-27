@@ -12,10 +12,12 @@ namespace ReserGO.ViewModel.ViewModel.Service
     public class ServiceViewModel : CompleteReserGOViewModell<DTOService, ServiceViewModel>, IServiceViewModel
     {
         private readonly IServiceService _service;
+        private readonly ITranslateService _t;
 
-        public ServiceViewModel(IBaseServicesReserGO<ServiceViewModel> baseServices, IServiceService service) : base(baseServices)
+        public ServiceViewModel(IBaseServicesReserGO<ServiceViewModel> baseServices, ITranslateService t, IServiceService service) : base(baseServices)
         {
             _service = service;
+            _t = t;
             Pagination = new() { Page = 1, PageSize = 10, Filter = new() };
         }
         private GenericPagedList<DTOService> _services { get; set; }
@@ -29,7 +31,7 @@ namespace ReserGO.ViewModel.ViewModel.Service
             {
                 IsLoading = true;
                 if (IsFirstLoad)
-                    Loading("Caricamento servizi in corso...");
+                    Loading(_t.Words["Caricamento servizi in corso"]);
 
                 var result = await _service.GetServices(Pagination);
                 if(result.Success)
@@ -64,7 +66,7 @@ namespace ReserGO.ViewModel.ViewModel.Service
                 var result = await _service.InsertService(service);
                 if (result.Success)
                 {
-                    Notification("Inserimento servizio avvenuto correttamente!", NotificationColor.Success);
+                    Notification(_t.Words["Inserimento servizio avvenuto correttamente"], NotificationColor.Success);
                     await GetServices();
                 }
             }
@@ -86,7 +88,7 @@ namespace ReserGO.ViewModel.ViewModel.Service
                 var result = await _service.UpdateService(service);
                 if (result.Success)
                 {
-                    Notification("Modifica servizio avvenuto correttamente!", NotificationColor.Success);
+                    Notification(_t.Words["Modifica servizio avvenuto correttamente"], NotificationColor.Success);
                     await GetServices();
                 }
             }
@@ -108,7 +110,7 @@ namespace ReserGO.ViewModel.ViewModel.Service
                 var result = await _service.DeleteService(service.Id);
                 if (result.Success)
                 {
-                    Notification("Servizio eliminato correttamente", NotificationColor.Success);
+                    Notification(_t.Words["Servizio eliminato correttamente"], NotificationColor.Success);
                     await GetServices();
                 }
                 else

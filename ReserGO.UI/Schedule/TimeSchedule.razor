@@ -9,6 +9,8 @@
 @using System.ComponentModel.DataAnnotations
 @using ReserGO.UI.Utils
 @using ReserGO.DTO.ListAvailability
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 
 <div class="d-flex timeScheduleContainer" style="@(IsSmallView ? "height: 53vh; !important":"")">
     @if (IsLoading)
@@ -39,13 +41,13 @@
     else if (IsFirstLoading)
     {
         <div class="d-flex w-100 h-100 align-items-center justify-content-center" >
-            <span class="descriptionDetails" style="font-size:x-large; opacity:0.5; margin-right:20px;"><i>Seleziona un'altra data'</i></span>
+            <span class="descriptionDetails" style="font-size:x-large; opacity:0.5; margin-right:20px;"><i>@(t.Words["Seleziona un'altra data"])'</i></span>
         </div>
     }
     else
     {
         <div class="d-flex w-100 h-100 align-items-center justify-content-center">
-            <span class="descriptionDetails" style="font-size:x-large; opacity:0.5; margin-right:20px;"><i>Orari non disponibili</i></span>
+            <span class="descriptionDetails" style="font-size:x-large; opacity:0.5; margin-right:20px;"><i>@(t.Words["Orari non disponibili"])</i></span>
         </div>
     }
 

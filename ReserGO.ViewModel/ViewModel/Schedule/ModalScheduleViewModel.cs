@@ -14,6 +14,7 @@ using ReserGO.Utils.DTO.ExtensionMethod;
 using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Schedule;
 using System.Collections.Generic;
+using ReserGO.Service.Interface.Service;
 
 namespace ReserGO.ViewModel.ViewModel.Schedule
 {
@@ -22,13 +23,15 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
         private readonly IBookingService _bookService;
         private readonly IResourceService _service;
         private readonly IMemoryCacheService _memoryCacheService;
+        private readonly ITranslateService _t;
 
-        public ModalScheduleViewModel(IBaseServicesReserGO<ModalScheduleViewModel> baseServices, IBookingService bookService, 
+        public ModalScheduleViewModel(IBaseServicesReserGO<ModalScheduleViewModel> baseServices, IBookingService bookService, ITranslateService t,
             IResourceService service, IMemoryCacheService memoryCacheService) : base(baseServices)
         {
             Aggregator.Subscribe<ObjectMessage<GenericModal<DTOResource>>>(GetType(), OpenModal);
             _bookService = bookService;
             _service = service;
+            _t = t;
             _memoryCacheService = memoryCacheService;
             IsFirstLoad = false;
         }
@@ -159,7 +162,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                 try
                 {
                     IsLoading = true;
-                    Loading("Salvataggio della prenotazione in corso...");
+                    Loading(_t.Words["Salvataggio della prenotazione in corso"]);
                     var bookingToInsert = (DTOBooking)Booking.Clone();
                     bookingToInsert.ResourceId= SelectedItem.Id.Value;
                     bookingToInsert.Resource.AvailabilityAdv = null;
@@ -181,9 +184,9 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                     var result = await _bookService.InsertBooking(bookingToInsert);
                     if(result.Success)
                     {
-                        Notification("Prenotazione inserita correttamente", NotificationColor.Success);
+                        Notification(_t.Words["Prenotazione inserita correttamente"], NotificationColor.Success);
                         IsOpen = false;
-                        await _memoryCacheService.AddReservation(bookingToInsert.Identifier.Value, $"Nuova prenotazione per la risorsa {bookingToInsert.Resource.ResourceName} il {bookingToInsert.StartDateTime:dd/MM/yyyy HH:mm}");
+                        await _memoryCacheService.AddReservation(bookingToInsert.Identifier.Value, $"{_t.Words["Nuova prenotazione per la risorsa"]} {bookingToInsert.Resource.ResourceName} - {bookingToInsert.StartDateTime:dd/MM/yyyy HH:mm}");
                     }
                     else
                         Notification(result.Message, NotificationColor.Warning);

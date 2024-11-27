@@ -1,16 +1,18 @@
 ﻿@using MudBlazor
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 @inject HttpClient httpClient
 
 <MudTable Items="@Elements" Hover="true" Style="width:100%" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Primary">
     <HeaderContent>
-        <MudTh>Nome</MudTh>
-        <MudTh>Cognome</MudTh>
-        <MudTh>Telefono</MudTh>
-        <MudTh>Email</MudTh>
-        <MudTh>Data</MudTh>
-        <MudTh>Ora inizio</MudTh>
-        <MudTh>Ora fine</MudTh>
-        <MudTh>Azioni</MudTh>
+        <MudTh>@(t.Words["Nome"])</MudTh>
+        <MudTh>@(t.Words["Cognome"])</MudTh>
+        <MudTh>@(t.Words["Telefono"])</MudTh>
+        <MudTh>@(t.Words["Email"])</MudTh>
+        <MudTh>@(t.Words["Data"])</MudTh>
+        <MudTh>@(t.Words["Ora inizio"])</MudTh>
+        <MudTh>@(t.Words["Ora fine"])</MudTh>
+        <MudTh>@(t.Words["Azioni"])</MudTh>
     </HeaderContent>
     <RowTemplate Context="element">
         <MudTd>@element.Nome</MudTd>
@@ -20,7 +22,7 @@
         <MudTd>@element.Data</MudTd>
         <MudTd>@element.OraInizio</MudTd>
         <MudTd>@element.OraFine</MudTd>
-        <MudTd><MudButton Color="Color.Primary">Modifica</MudButton></MudTd>
+        <MudTd><MudButton Color="Color.Primary">@(t.Words["Modifica"])</MudButton></MudTd>
     </RowTemplate>
 </MudTable>
 

@@ -6,6 +6,7 @@ using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
+using ReserGO.Service.Interface.Service;
 using ReserGO.Utils.DTO.Service;
 using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Historical;
@@ -18,12 +19,14 @@ namespace ReserGO.ViewModel.ViewModel.Historical
         private readonly IBaseServicesReserGO<HistoricalViewModel> _baseServices;
         private readonly IBookingService _service;
         private readonly NavigationManager _navigationManager;
+        private readonly ITranslateService _t;
 
-        public HistoricalViewModel(IBaseServicesReserGO<HistoricalViewModel> baseServices, IBookingService service, NavigationManager navigationManager) : base(baseServices)
+        public HistoricalViewModel(IBaseServicesReserGO<HistoricalViewModel> baseServices, ITranslateService t, IBookingService service, NavigationManager navigationManager) : base(baseServices)
         {
             _baseServices = baseServices;
             _service = service;
             _navigationManager = navigationManager;
+            _t = t;
             Pagination = new() { Page = 1, PageSize = 10, Filter = new() { GetAll = UserIs(RoleConst.ADMIN) } };
         }
         private GenericPagedList<DTOBooking> _bookings { get; set; }
@@ -45,7 +48,7 @@ namespace ReserGO.ViewModel.ViewModel.Historical
             {
                 IsLoading = true;
                 if (IsFirstLoad)
-                    Loading("Caricamento prenotazioni in corso...");
+                    Loading(_t.Words["Caricamento prenotazioni in corso"]);
                 var result = await _service.GetBookings(Pagination);
                 if (result.Success)
                 {
@@ -119,7 +122,7 @@ namespace ReserGO.ViewModel.ViewModel.Historical
                 var result=await _service.UpdateBookingState(booking);
                 if(result.Success)
                 {
-                    Notification("Prenotazione validata correttamente", NotificationColor.Success);
+                    Notification(_t.Words["Prenotazione validata correttamente"], NotificationColor.Success);
                     await Refresh();
                 }
             }
@@ -144,7 +147,7 @@ namespace ReserGO.ViewModel.ViewModel.Historical
                 var result = await _service.DeleteBooking(booking.Id);
                 if (result.Success)
                 {
-                    Notification("Prenotazione eliminata correttamente", NotificationColor.Success);
+                    Notification(_t.Words["Prenotazione eliminata correttamente"], NotificationColor.Success);
                     await Refresh();
                 }
                 else
