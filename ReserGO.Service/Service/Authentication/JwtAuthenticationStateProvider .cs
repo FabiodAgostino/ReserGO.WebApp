@@ -18,17 +18,19 @@ namespace ReserGO.Service.Service.Authentication
         private readonly HttpClient _httpClient;
         private readonly ILogger<JwtAuthenticationStateProvider> _logger;
         private readonly ILocalStorageService _localStorageService;
+        private readonly IFirstLoginService _authService;
 
         private DTOUserSession _user { get; set; }
         public DTOUserSession User { get => _user; set => _user = value; }
 
 
-        public JwtAuthenticationStateProvider(ISessionStorageService sessionStorage, HttpClient httpClient, ILogger<JwtAuthenticationStateProvider> logger, ILocalStorageService localStorageService)
+        public JwtAuthenticationStateProvider(ISessionStorageService sessionStorage, HttpClient httpClient, ILogger<JwtAuthenticationStateProvider> logger, ILocalStorageService localStorageService, IFirstLoginService authService)
         {
             _sessionStorage = sessionStorage;
             _httpClient = httpClient;
             _logger = logger;
             _localStorageService = localStorageService;
+            _authService = authService;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -44,9 +46,7 @@ namespace ReserGO.Service.Service.Authentication
             _logger.LogInformation("Token retrieved from session storage: {Token}", token);
 
             if (string.IsNullOrEmpty(token))
-            {
-                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-            }
+                token = await _authService.Login();
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var claims = ParseClaimsFromJwt(token);
@@ -57,8 +57,9 @@ namespace ReserGO.Service.Service.Authentication
             User.FirstName = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.GivenName)?.Value;
             User.LastName = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.FamilyName)?.Value;
             User.Roles = claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).FirstOrDefault().Trim(new char[] { '[', ']' }).Split(',').ToList().ToList();
-            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
-            return new AuthenticationState(user);
+
+            var state = new AuthenticationState(user);
+            return state;
         }
 
         public void NotifyUserAuthentication(string token)

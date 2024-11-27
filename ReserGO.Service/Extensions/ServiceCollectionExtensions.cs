@@ -23,6 +23,7 @@ namespace ReserGO.Service.Extensions
             services.AddScoped<ITranslateService, TranslateService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IMemoryCacheService, MemoryCacheService>();
+            services.AddScoped<IFirstLoginService, FirstLoginService>();
 
             return services;
         }

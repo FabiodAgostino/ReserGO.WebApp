@@ -39,7 +39,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource
             {
                 IsLoading = true;
                 if (IsFirstLoad)
-                    Loading(_t.Words["Caricamento risorse in corso"]);
+                    Loading("Caricamento risorse in corso");
 
                 var result = await _service.GetResourceByCompanyFiltered(Pagination);
                 if (result.Success)

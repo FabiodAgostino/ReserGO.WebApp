@@ -24,7 +24,8 @@ builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddRefitClients(builder.Configuration);
 builder.Services.AddReserGOServices();
-builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+builder.Services.AddScoped<JwtAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<JwtAuthenticationStateProvider>());
 builder.Services.AddReserGOViewModels();
 builder.Services.AddMudServices();
 builder.Services.AddScoped(sp => new HttpClient()

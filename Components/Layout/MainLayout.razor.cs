@@ -7,6 +7,8 @@ using ReserGO.Miscellaneous.Message;
 using ReserGO.Miscellaneous.Model;
 using ReserGO.ViewModel.ViewModel.Utils;
 using ReserGO.Service.Service.Utils;
+using ReserGO.DTO;
+using ReserGO.Service.Interface.Service;
 
 namespace ReserGO.WebApp.Components.Layout
 {
@@ -15,29 +17,37 @@ namespace ReserGO.WebApp.Components.Layout
         [CascadingParameter] private Task<AuthenticationState> Authentication { get; set; }
         [Inject] NavigationManager Navigation { get; set; }
         [Inject] IJwtAuthenticationStateProvider provider { get; set; }
+        [Inject] IAuthenticationService authenticationService { get; set; }
         [Inject] IEvent eventAggregator { get;set; }
+        [Inject] ITranslateService translateService { get; set; }
+
         public bool Render = false;
         public bool IsRedirect = false;
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                eventAggregator.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(true, "Loading...")), typeof(LoadingSpinnerViewModel));
-                var currentUrl = Navigation.Uri;
+                eventAggregator.Publish<LoadingSpinner, ObjectMessage<LoadingSpinner>>(new ObjectMessage<LoadingSpinner>(new LoadingSpinner(true, "Loading...", true)), typeof(LoadingSpinnerViewModel));
+                await translateService.Initialize(false);
 
+                var currentUrl = Navigation.Uri;
                 IsRedirect = currentUrl.Count(c => c == '/') > 3;
 
-                if(!IsRedirect)
+                if (!IsRedirect)
                 {
                     var authstate = await Authentication;
                     if (authstate != null)
                     {
-                        await provider.GetAuthenticationStateAsync();
                         Render = true;
+                        await provider.GetAuthenticationStateAsync();
                         StateHasChanged();
                     }
                 }
             }
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
         }
 
     }

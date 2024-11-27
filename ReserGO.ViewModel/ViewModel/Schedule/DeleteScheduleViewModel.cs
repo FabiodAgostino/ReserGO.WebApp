@@ -34,7 +34,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
             try
             {
                 IsLoading = true;
-                Loading(_t.Words["Eliminazione della prenotazione in corso"]);
+                Loading("Eliminazione della prenotazione in corso");
                 var res = await service.DeleteBookingEmail(deleteBooking);
                 if (res.Success)
                     await notification.PushToList(_t.Words["Eliminazione avvenuta con successo"], NotificationColor.Success,null, true);

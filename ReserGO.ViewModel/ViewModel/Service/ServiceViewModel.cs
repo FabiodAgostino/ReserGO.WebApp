@@ -31,7 +31,7 @@ namespace ReserGO.ViewModel.ViewModel.Service
             {
                 IsLoading = true;
                 if (IsFirstLoad)
-                    Loading(_t.Words["Caricamento servizi in corso"]);
+                    Loading("Caricamento servizi in corso");
 
                 var result = await _service.GetServices(Pagination);
                 if(result.Success)

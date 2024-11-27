@@ -162,7 +162,7 @@ namespace ReserGO.ViewModel.ViewModel.Schedule
                 try
                 {
                     IsLoading = true;
-                    Loading(_t.Words["Salvataggio della prenotazione in corso"]);
+                    Loading("Salvataggio della prenotazione in corso");
                     var bookingToInsert = (DTOBooking)Booking.Clone();
                     bookingToInsert.ResourceId= SelectedItem.Id.Value;
                     bookingToInsert.Resource.AvailabilityAdv = null;

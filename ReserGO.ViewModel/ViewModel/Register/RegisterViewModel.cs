@@ -37,7 +37,7 @@ namespace ReserGO.ViewModel.ViewModel.Register
             try
             {
                 IsLoading = true;
-                Loading(_t.Words["Conferma della mail in corso"]);
+                Loading("Conferma della mail in corso");
                 var result = await _authService.RegistrationConfirm(username);
                 if(result.Success)
                     await PushNotification(_t.Words["Conferma della mail effettuata con successo"], NotificationColor.Success,null,true);

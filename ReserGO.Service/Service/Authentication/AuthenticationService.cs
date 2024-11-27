@@ -54,8 +54,8 @@ namespace ReserGO.Service.Service.Authentication
                         await _sessionStorage.SetItemAsync("authToken", response.Data);
                         if (!loginRequest.IsGuest)
                             await _localStorageService.SetItemAsync("authToken", response.Data);
+
                         _authProvider.NotifyUserAuthentication(response.Data);
-                        await _authProvider.GetAuthenticationStateAsync();
                     }
                     return response;
                 }
@@ -84,8 +84,8 @@ namespace ReserGO.Service.Service.Authentication
                 await _localStorageService.RemoveItemAsync("authToken");
                 await Login(new DTOLoginRequest() { IsGuest = true });
             }
+            
             await _authProvider.GetAuthenticationStateAsync();
-
             if (_authProvider.User != null && _authProvider.User.Username == "system")
                 loggedIn = false;
 

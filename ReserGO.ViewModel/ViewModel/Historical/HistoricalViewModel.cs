@@ -48,7 +48,7 @@ namespace ReserGO.ViewModel.ViewModel.Historical
             {
                 IsLoading = true;
                 if (IsFirstLoad)
-                    Loading(_t.Words["Caricamento prenotazioni in corso"]);
+                    Loading("Caricamento prenotazioni in corso");
                 var result = await _service.GetBookings(Pagination);
                 if (result.Success)
                 {

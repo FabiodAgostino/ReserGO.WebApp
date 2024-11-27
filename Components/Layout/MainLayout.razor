@@ -15,7 +15,6 @@
 @using ReserGO.ViewModel.ViewModel.Utils
 @using ReserGO.WebApp.Components.Pages
 @inherits LayoutComponentBase
-@inject AuthenticationStateProvider AuthenticationStateProvider;
 
 <div class="pageContainer">
     <BaseComponent TViewModel="ILoadingSpinnerViewModel" TModel="object">
@@ -44,11 +43,6 @@
                     }
                 </Authorized>
                 <NotAuthorized>
-                    <BaseComponent TViewModel="ILoginViewModel" TModel="DTOLoginRequest">
-                        <Content>
-                            <Login />
-                        </Content>
-                    </BaseComponent>
                 </NotAuthorized>
             </AuthorizeView>
         }
@@ -65,9 +59,6 @@
 </div>
 
 @code {
-    protected override async Task OnInitializedAsync()
-    {
-    }
 
 
     private MudTheme _theme = new MudTheme
