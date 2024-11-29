@@ -1,4 +1,6 @@
 ﻿@using MudBlazor
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 
 <div class="d-flex flex-column shadow cardInformation" style="@Style" @onclick="@(()=> Click())">
     <div class="d-flex align-items-center cardInfoHeader">
@@ -6,10 +8,10 @@
         {
             <MudIcon Icon="@Icon" Class="iconInfoCardCss" />
         }
-        <span class="textInformation" style="padding-inline:1vw;">@Title</span>
+        <span class="textInformation" style="padding-inline:1vw;" title="@Title">@(t.TruncateText(Title, 30))</span>
     </div>
     <div class="d-flex p-4 cardBodyInformation">
-        @Description
+        @(t.TruncateText(Description, 400))
     </div>
 </div>
 

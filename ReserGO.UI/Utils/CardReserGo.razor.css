@@ -47,6 +47,7 @@
     color: #404040;
     font-size: x-large;
     padding-inline: 4vw !important;
+    word-wrap:break-word;
 }
 
 .cardBodyReserGoSmall {
@@ -57,6 +58,7 @@
     color: #404040;
     font-size: large;
     padding-inline: 4vw !important;
+    word-wrap:break-word;
 }
 
 
