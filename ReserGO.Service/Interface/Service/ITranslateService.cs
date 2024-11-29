@@ -8,5 +8,6 @@ namespace ReserGO.Service.Interface.Service
         DictionaryTranslate<string, string> Words { get; set; }
         Task<string> GetCurrentLanguage();
         Task ReInitialize(string culture, bool loading = true);
+        string TruncateText(string text, int maxLength = 100);
     }
 }

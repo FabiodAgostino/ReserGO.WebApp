@@ -41,7 +41,7 @@
                     <div class="dividerDetailsSchedule" style="width:82%"></div>
                     @if (String.IsNullOrEmpty(Description) && Resource != null && !IsLoading)
                     {
-                        <p class="bodyDescription">@Resource.Description</p>
+                        <p class="bodyDescription">@(t.TruncateText(Resource.Description,100))</p>
                     }
                     else
                     {
