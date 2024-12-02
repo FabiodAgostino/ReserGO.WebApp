@@ -1,41 +1,129 @@
 ﻿@using MudBlazor
+@using ReserGO.DTO
+@using ReserGO.DTO.ListAvailability
 @using ReserGO.Service.Interface.Service;
 @inject ITranslateService t
-<MudDatePicker DisplayMonths="2" PickerVariant="PickerVariant.Static" DateChanged="OnDateChanged" FixYear="2024" Style="max-width:15vw"
-MaxDate="_maxDate" MinDate="_minDate" AdditionalDateClassesFunc="@((DateTime dt)=>(_disabledDate.Contains(dt) ? "red-text text-accent-4" : ""))">
-    <PickerActions>
-        @if (_disabledDate.Count() > 0)
-        {
-            var days = (MarkupString)string.Join(", ", _disabledDate.Select(d => $"<b>{d.ToString("dd/MM/yyyy")}</b>"));
-            <div class="w-100" style="text-align:left"><span style="color:red">@(t.Words["Giorni disabilitati"]): </span><span>@days</span></div>
-        }
-    </PickerActions>
-</MudDatePicker>
+<div>
 
-@code {
-    private DateTime _minDate = new DateTime(DateTime.Now.Year, 1, 1); 
-    private DateTime _maxDate = new DateTime(DateTime.Now.Year, 12, 31);
-    private List<DateTime> _disabledDate = new();
-    private void OnDateChanged(DateTime? newDate)
+    <MudDatePicker @ref="picker" Orientation="Orientation.Landscape" PickerVariant="PickerVariant.Static" Class="w-100 shadow" @bind-Date="thisDate"
+                   MinDate="DateTime.Now" AdditionalDateClassesFunc="@((DateTime dt)=>(DisabledDate.Contains(dt) ? "red-text text-accent-4" : ""))">
+        <PickerActions>
+
+        </PickerActions>
+    </MudDatePicker>
+    @if (DisabledDate.Count() > 0)
     {
-        if (newDate.HasValue)
+        var days = (MarkupString)string.Join(", ", DisabledDate.Select(d => $"<b>{d.ToString("dd/MM/yyyy")}</b>"));
+        <div class="w-100" style="text-align:left"><span style="color:red">@(t.Words["Giorni disabilitati"]): </span><span>@days</span></div>
+    }
+</div>
+@code {
+
+    private List<DateTime> _disabledDate;
+    [Parameter]
+    public List<DateTime> DisabledDate
+    {
+        get
         {
-            if (!_disabledDate.Contains(newDate.Value))
-                _disabledDate.Add(newDate.Value);
-            else
-                _disabledDate = _disabledDate.Where(x => x != newDate.Value).ToList();
+            if(_disabledDate==null)
+                _disabledDate = new();
+            return _disabledDate;
+        }
+        set
+        {
+            if (_disabledDate != value)
+            {
+                _disabledDate = value;
+                DisabledDateChanged.InvokeAsync(value);
+            }
         }
     }
+
+    [Parameter]
+    public EventCallback<List<DateTime>> DisabledDateChanged { get; set; }
+
+    private DateTime? _thisDate { get; set; }
+    public DateTime? thisDate
+    {
+        get
+        {
+            if (!_thisDate.HasValue)
+                _thisDate = DateTime.Now.Date;
+            return _thisDate;
+        }
+        set
+        {
+            _thisDate = value;
+            if (_thisDate.HasValue && _thisDate.Value.Date == DateTime.Now.Date)
+                return;
+            if (_thisDate.HasValue && DisabledDate.Contains(_thisDate.Value) && DisabledDate.Count()==1)
+            {
+                DisabledDate = new();
+                _thisDate = null;
+                return;
+            }
+            if (!DisabledDate.Contains(_thisDate.Value))
+                DisabledDate.Add(_thisDate.Value);
+            else
+                DisabledDate = DisabledDate.Where(x => x != _thisDate.Value).ToList();
+        }
+    }
+    private MudDatePicker picker;
+    private bool _isFirstLoad = true;
+    private void OnDateChanged(DateTime? newDate)
+    {
+        if (newDate.HasValue && !_isFirstLoad)
+        {
+            if (!DisabledDate.Contains(newDate.Value))
+                DisabledDate.Add(newDate.Value);
+            else
+                DisabledDate = DisabledDate.Where(x => x != newDate.Value).ToList();
+
+            thisDate = newDate.Value;
+        }
+        _isFirstLoad = false;
+    }
+
+
 }
 
 
 
 <style>
-   /*  button.mud-picker-slide-transition.mud-picker-calendar-header-transition.mud-button-month {
-        display: none;
+    .mud-picker-static {
+        display: flex;
+        overflow: hidden;
+        flex-direction: column;
+        border: 1px solid lightgrey;
+        border-radius: 30px;
     }
 
-    button.mud-button-root.mud-button.mud-button-text.mud-button-text-inherit.mud-button-text-size-medium.mud-ripple.mud-button-year {
-        display: none;
-    } */
+    .mud-picker-static {
+        display: flex;
+        overflow: hidden;
+        min-width: 322px;
+        flex-direction: column;
+        background-color: white;
+    }
+
+    .mud-picker-toolbar.mud-picker-toolbar-landscape {
+        background: linear-gradient(45deg, #006, transparent);
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-picker-calendar-day.mud-day.mud-selected.mud-theme-primary {
+        background: linear-gradient(45deg, #006, transparent);
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-picker-calendar-day.mud-day.mud-current.mud-button-outlined.mud-button-outlined-primary.mud-primary-text {
+        border-color: #0066FF !important;
+    }
+
+    h5.mud-typography.mud-typography-h5.mud-picker-month-selected.mud-primary-text {
+        color: #0066FF !important;
+    }
+
+    h5.mud-typography.mud-typography-h5.mud-picker-year-selected.mud-primary-text {
+        color: #0066FF !important;
+    }
+
 </style>

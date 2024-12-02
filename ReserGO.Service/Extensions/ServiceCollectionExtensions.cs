@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ReserGO.Service.ComponentService;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Home;
@@ -14,6 +15,7 @@ namespace ReserGO.Service.Extensions
     {
         public static IServiceCollection AddReserGOServices(this IServiceCollection services)
         {
+            services.AddScoped<DaySliderService>();
             services.AddScoped(typeof(IBaseServicesReserGO<>), typeof(BaseServicesReserGO<>));
             services.AddScoped<IJwtAuthenticationStateProvider, JwtAuthenticationStateProvider>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();

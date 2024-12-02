@@ -59,6 +59,12 @@ namespace ReserGO.Miscellaneous.Model
             Data = data;
         }
 
+        public GenericModal(EventCallback<T> Event, T data)
+        {
+            this.Event = Event;
+            Data = data;
+        }
+
         public GenericModal(string title, T data)
         {
             Title = title;

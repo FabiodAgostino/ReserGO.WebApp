@@ -1,82 +1,42 @@
 ﻿@using Microsoft.JSInterop
 @using MudBlazor
 @using ReserGO.DTO.ListAvailability
+@using ReserGO.Service.ComponentService
 @using ReserGO.Service.Interface.Service;
 @inject ITranslateService t
-@inject IJSRuntime JS
+@inject IJSRuntime JSRuntime
+@inherits DaySliderService
+
 <div class="d-flex flex-column w-100 justify-content-around p-2">
     <div class="d-flex flex-row align-items-center justify-content-center w-100 h-50">
         <div id="slider" class="w-100"></div>
     </div>
-        <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
-            <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+
+    <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
+        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
             <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="RemoveStep" Disabled="HandleValues.Count <= 2" StartIcon="@Icons.Material.Filled.TimerOff">@(t.Words["Rimuovi range"])</MudButton>
-            </div>
-            <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
+        </div>
+        <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="AddStep" Disabled="DisableAdd()" StartIcon="@Icons.Material.Filled.MoreTime">@(t.Words["Aggiungi range"])</MudButton>
-            </div>
         </div>
-        <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
-            <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+    </div>
+    <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
+        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
             <MudButton Variant="Variant.Filled" Color="Color.Error" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="Annulla" StartIcon="@Icons.Material.Filled.Close">@(t.Words["Annulla"])</MudButton>
-            </div>
-            <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-            <MudButton Variant="Variant.Filled" Color="Color.Success" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="Save" StartIcon="@Icons.Material.Filled.FileDownloadDone">@(t.Words["Salva"])</MudButton>
-            </div>
         </div>
+        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="Save" StartIcon="@Icons.Material.Filled.FileDownloadDone">@(t.Words["Salva"])</MudButton>
+        </div>
+    </div>
+
 </div>
 
 @code {
-    private List<float> HandleValues = new List<float> { 540, 1080 }; // Intervallo dalle 9:00 alle 18:00
-    [Parameter]
-    public EventCallback<(List<DTOTimeSlot> slots, bool next)> Callback { get; set; }
-    [Parameter]
-    public EventCallback Reset { get; set; }
-    [Parameter]
-    public List<DTOTimeSlot> SelectedTimeSlot { get; set; }
-    
-	[Parameter]
-	public bool IsSmallView { get; set; }
 
 
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnInitialized()
     {
-        if (firstRender)
-        {
-            if (SelectedTimeSlot != null && SelectedTimeSlot.Count() > 0)
-            {
-                HandleValues = ConvertTimeSlotsToFloats(SelectedTimeSlot);
-            }
-            await JS.InvokeVoidAsync("initializeSlider", DotNetObjectReference.Create(this), HandleValues);
-        }
-    }
-
-    [JSInvokable]
-    public async Task UpdateHandleValues(List<string> values)
-    {
-        HandleValues = values.Select(v => ConvertTimeStringToFloat(v)).ToList();
-
-        if (Callback.HasDelegate)
-            await Callback.InvokeAsync((ConvertDoublesToTimeSlot(),false));
-
-        StateHasChanged();
-    }
-
-    private async Task AddStep()
-    {
-        HandleValues = HandleValues.Select(x => x * 60).ToList();
-        // Aggiunge un intervallo extra
-        if (HandleValues.Count % 2 == 0) // Aggiunge solo in coppia (inizio e fine)
-        {
-            var lastValue = HandleValues.OrderByDescending(x=> x).FirstOrDefault();
-            if ((lastValue + 120) < 1440)
-            {
-                HandleValues.Add(lastValue + 60);
-                HandleValues.Add(lastValue + 120);
-                await JS.InvokeVoidAsync("reinitializeSlider", DotNetObjectReference.Create(this), HandleValues);
-            }
-        }
+        SetJsRuntime(JSRuntime);
     }
 
     private async Task Save()
@@ -89,76 +49,6 @@
     {
         if (Reset.HasDelegate)
             await Reset.InvokeAsync();
-    }
-
-    private bool DisableAdd()
-    {
-        var lastValue = HandleValues.OrderByDescending(x => x).FirstOrDefault();
-        lastValue = lastValue < 60 ? lastValue * 60 : lastValue;
-        if ((lastValue + 120) >= 1440)
-            return true;
-        return false;
-    }
-    private async Task RemoveStep()
-    {
-
-        if (HandleValues.Count > 2) // Controlla che ci siano almeno due elementi da rimuovere
-        {
-            HandleValues = HandleValues.Select(x => x * 60).ToList();
-
-            HandleValues.RemoveRange(HandleValues.Count - 2, 2);
-
-            await JS.InvokeVoidAsync("reinitializeSlider", DotNetObjectReference.Create(this), HandleValues);
-        }
-    }
-
-    private List<DTOTimeSlot> ConvertDoublesToTimeSlot()
-    {
-        var timeSlots = new List<DTOTimeSlot>();
-
-        for (int i = 0; i < HandleValues.Count; i += 2)
-        {
-            if (i + 1 < HandleValues.Count)
-            {
-                // Converti i double in minuti a TimeSpan
-                var startTime = TimeSpan.FromHours(HandleValues[i]);
-                var endTime = TimeSpan.FromHours(HandleValues[i + 1]);
-
-                // Crea un nuovo DTOTimeSlot con i valori di inizio e fine
-                var timeSlot = new DTOTimeSlot
-                    {
-                        StartTime = startTime,
-                        EndTime = endTime
-                    };
-
-                timeSlots.Add(timeSlot);
-            }
-        }
-
-        return timeSlots;
-    }
-
-    private float ConvertTimeStringToFloat(string timeString)
-    {
-        var timeSpan = TimeSpan.Parse(timeString);
-        return (float)(timeSpan.Hours + timeSpan.Minutes / 60.0);
-    }
-
-    public List<float> ConvertTimeSlotsToFloats(List<DTOTimeSlot> timeSlots)
-    {
-        var floatList = new List<float>();
-
-        foreach (var slot in timeSlots)
-        {
-            // Calcola le ore in formato float (ore + minuti / 60)
-            float startHour = (float)slot.StartTime.TotalHours*60; // Converte StartTime in ore
-            float endHour = (float)slot.EndTime.TotalHours*60;     // Converte EndTime in ore
-
-            floatList.Add(startHour);
-            floatList.Add(endHour);
-        }
-
-        return floatList;
     }
 
 }

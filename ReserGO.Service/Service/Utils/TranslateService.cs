@@ -34,8 +34,12 @@ namespace ReserGO.Service.Service.Utils
             set => _words = value;
         }
 
-        public string TruncateText(string text, int maxLength = 100) => text.Length <= maxLength ? text : text.Substring(0, maxLength - 3) + "...";
-
+        public string TruncateText(string text, int maxLength = 100)
+        {
+            if (text == null)
+                text = "";
+            return text.Length <= maxLength ? text : text.Substring(0, maxLength - 3) + "...";
+        }
         public async Task<string> GetCurrentLanguage()
         {
             var lang = await _localStorage.GetItemAsync<string>("culture");

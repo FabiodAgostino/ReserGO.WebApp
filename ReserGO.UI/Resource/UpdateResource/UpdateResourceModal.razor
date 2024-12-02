@@ -1,5 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
 @using MudBlazor
+@using ReserGO.DTO.Extensions
+@using ReserGO.DTO.ListAvailability
+@using ReserGO.Utils.DTO.ExtensionMethod
 @using ReserGO.ViewModel.Interface.Resource.UpdateResource
 @using ReserGO.DTO
 @using ReserGO.Utils.UI
@@ -7,7 +10,10 @@
 @using ReserGO.UI.FiltersComponent
 @using ReserGO.ViewModel.Interface.FiltersComponent
 @using ReserGO.Service.Interface.Service;
+@using ReserGO.Utils.DTO.Utils;
+@using ReserGO.Miscellaneous.Model
 @inject ITranslateService t
+@inject IDialogService DialogService
 @inherits BaseComponentChild<IUpdateResourceViewModel, DTOResource>
 
 <MudDialog Class="@(CurrentViewModel.IsSmallView ? "resourceDialogCssSmall" : "resourceDialogCss")" Visible="CurrentViewModel.IsOpen" OnBackdropClick="OnBackdropClickHandler" Options="@Options">
@@ -75,7 +81,7 @@
                                 <span style="padding-left:1vw;">(La prenotazione dovrà essere confermata da Admin)</span>
                             }
                             <div class="d-flex flex-row" style="@(CurrentViewModel.IsSmallView ? "padding-inline:4vw;" : "")">
-                                <MudSwitch @bind-Value="CurrentViewModel.IsOpen" Label="Abilita risorsa" Color="Color.Success" />
+                                <MudSwitch @bind-Value="@CurrentViewModel.EnableResource" Label="Abilita risorsa" Color="Color.Success" />
                             </div>
                         </div>
 
@@ -85,7 +91,7 @@
                 </div>
                 <div class="d-flex flex-column justify-content-around align-items-center w-50 p-3">
                     <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 pt-4">
-                        <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask">
+                        <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask" @onclick="(() => OpenModal(AvailabilityType.UnavailableSpecificDay))">
                             <div class="d-flex p-2">
                                 <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
                             </div>
@@ -93,7 +99,7 @@
                         </div>
                     </div>
                     <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 pt-4">
-                        <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask">
+                        <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask" @onclick="(() => OpenModal(AvailabilityType.UnavailableByDaysOfTheWeek))">
                             <div class="d-flex p-2">
                                 <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
                             </div>
@@ -101,7 +107,7 @@
                         </div>
                     </div>
                     <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 pt-4">
-                        <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask">
+                        <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask" @onclick="(() => OpenModal(AvailabilityType.UnavailableTimeDateSlot))">
                             <div class="d-flex p-2">
                                 <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
                             </div>
@@ -155,6 +161,56 @@
         await CurrentViewModel.HandleFileSelected(file);
     }
 
+    private async Task OpenModal(AvailabilityType type)
+    {
+        var callback = EventCallback.Factory.Create<(DTOResource, bool)>(this, (((DTOResource value, bool isChanged) value) => EditRule(value, type)));
+        var modal = new EditRuleModal(callback, type, CurrentViewModel.SelectedItem, CurrentViewModel.IsSmallView);
+
+
+        var dialogParameters = new DialogParameters
+            {
+                { "Modal", modal },
+            };
+
+        var options = new DialogOptions
+            {
+                CloseOnEscapeKey = true,
+                Position = DialogPosition.Center
+            };
+
+        var result = await DialogService.Show<ModalEditResourceRule>("EditRule", dialogParameters, options).Result;
+    }
+
+    private void EditRule((DTOResource resource, bool isChanged) value, AvailabilityType type)
+    {
+        if(value.isChanged)
+        {
+            switch(type)
+            {
+                case AvailabilityType.UnavailableSpecificDay:
+                    break;
+                case AvailabilityType.UnavailableByDaysOfTheWeek:
+                    var daySelected = CurrentViewModel.SelectedItem.AvailabilityAdv.UnavailableByDaysOfTheWeek.Data;
+                    var days = daySelected.GetMissingDays();
+                    CurrentViewModel.SelectedItem.AvailabilityAdv.UnavailableByDaysOfTheWeek = new() { Data = days };
+
+                    var recurring = CurrentViewModel.SelectedItem.AvailabilityAdv.UnavailableRecurringTimeDays.FirstOrDefault().TimeSlots;
+                    if (recurring != null)
+                    {
+
+                        var recurringRules = DTOResourceExtension.ConvertAvailabilityToUnavailability(recurring);
+                        var unavailableRecurringTimeDays = new List<DTOUnavailableRecurringTimeDay>();
+                        daySelected.ForEach(day =>
+                        {
+                            unavailableRecurringTimeDays.Add(new DTOUnavailableRecurringTimeDay(day, recurringRules));
+                        });
+                        CurrentViewModel.SelectedItem.AvailabilityAdv.UnavailableRecurringTimeDays = unavailableRecurringTimeDays;
+                    }
+                    break;
+            }
+        }
+    }
+
     private async Task DeleteFile()
     {
         selectedFile = null;
@@ -162,6 +218,7 @@
         CurrentViewModel.SelectedItem.ImageContentType = String.Empty;
         CurrentViewModel.SelectedItem.ImageName = String.Empty;
     }
+
 }
 
 <style>

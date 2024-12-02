@@ -1,0 +1,208 @@
+﻿@using Microsoft.JSInterop
+@using MudBlazor
+@using ReserGO.DTO
+@using ReserGO.DTO.Extensions
+@using ReserGO.DTO.ListAvailability
+@using ReserGO.Miscellaneous.Model
+@using ReserGO.Service.ComponentService
+@using ReserGO.Utils.DTO.ExtensionMethod
+@using ReserGO.Utils.UI
+@using ReserGO.ViewModel.Interface.FiltersComponent
+@using ReserGO.ViewModel.ViewModel.FiltersComponent
+@using ReserGO.Service.Interface.Service
+@inject ITranslateService t
+@inject IJSRuntime JSRuntime
+@inherits DaySliderService
+
+
+<div class="containerDayOfWeek h-100 @(IsSmallView ? "w-100":"")">
+    @if (IsSmallView)
+    {
+        <div class="d-flex flex-column align-items-center justify-content-around w-100 p-2" style="height:34vh; overflow:auto;">
+
+            <div class="d-flex flex-wrap justify-content-center w-100 h-100">
+                @foreach (var day in DaysOfWeek)
+                {
+                    var dayName = @day.FullName.Substring(0, 3);
+                    <div class="d-flex p-1">
+                        <MudButton Class="@($"day-circle-small {(day.IsSelected ? "selected" : "")}")" OnClick="@(() => ToggleDaySelection(day))" Title="@day.FullName">
+                            @dayName
+                        </MudButton>
+                    </div>
+                }
+            </div>
+            <div class="d-flex flex-column w-100" style="height:80%">
+                <div class="d-flex flex-row align-items-center justify-content-center w-100 h-50">
+                    <div id="slider" class="w-100"></div>
+                </div>
+                <div class="d-flex flex-column w-100 justify-content-around p-2">
+                    <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
+                        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+                            <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="RemoveStep" Disabled="HandleValues.Count <= 2" StartIcon="@Icons.Material.Filled.TimerOff">@(t.Words["Rimuovi range"])</MudButton>
+                        </div>
+                        <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="AddStep" Disabled="DisableAdd()" StartIcon="@Icons.Material.Filled.MoreTime">@(t.Words["Aggiungi range"])</MudButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <MudGrid>
+            <MudItem>
+                <div class="days-container">
+                    @foreach (var day in DaysOfWeek)
+                    {
+                        <MudButton Class="@($"day-circle {(day.IsSelected ? "selected" : "")}")" OnClick="@(() => ToggleDaySelection(day))" Title="@day.FullName">
+                            @day.Initial
+                        </MudButton>
+                    }
+                </div>
+            </MudItem>
+        </MudGrid>
+        <div class="d-flex flex-column w-100 justify-content-around p-2">
+            <div class="d-flex flex-column w-100" style="height:80%">
+                <div class="d-flex flex-row align-items-center justify-content-center w-100 h-50">
+                    <div id="slider" class="w-100"></div>
+                </div>
+                <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
+                    <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+                        <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="RemoveStep" Disabled="HandleValues.Count <= 2" StartIcon="@Icons.Material.Filled.TimerOff">@(t.Words["Rimuovi range"])</MudButton>
+                    </div>
+                    <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="AddStep" Disabled="DisableAdd()" StartIcon="@Icons.Material.Filled.MoreTime">@(t.Words["Aggiungi range"])</MudButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="d-flex justify-content-around p-4 w-100">
+        <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => AdvHasChanged(false)">@(t.Words["Chiudi"])</MudButton>
+        <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="() => AdvHasChanged(true)" Disabled="_error">@(t.Words["Modifica"])</MudButton>
+    </div>
+</div>
+
+
+
+@code {
+
+    [Parameter]
+    public DTOAvailabilityAdv AvailabilityAdv { get; set; }
+    [Parameter]
+    public EventCallback<(DTOAvailabilityAdv, bool)> OnChange { get; set; }
+
+    private DTOAvailabilityAdv NewAvailabilityAdv { get; set; }
+    private bool _error
+    {
+        get
+        {
+            if (NewAvailabilityAdv != null && NewAvailabilityAdv.UnavailableByDaysOfTheWeek != null)
+                return NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data.Count() == 0;
+            else
+                return true;
+        }
+    } 
+
+    protected override async Task OnInitializedAsync()
+    {
+        SetJsRuntime(JSRuntime);
+        NewAvailabilityAdv = new() { UnavailableByDaysOfTheWeek = new(), UnavailableRecurringTimeDays = new() };
+
+    }
+
+    private List<DTODayOfWeekWizard> DaysOfWeek = new()
+    {
+        new DTODayOfWeekWizard { FullName = "Lunedì"},
+        new DTODayOfWeekWizard { FullName = "Martedì" },
+        new DTODayOfWeekWizard { FullName = "Mercoledì" },
+        new DTODayOfWeekWizard { FullName = "Giovedì" },
+        new DTODayOfWeekWizard { FullName = "Venerdì" },
+        new DTODayOfWeekWizard { FullName = "Sabato" },
+        new DTODayOfWeekWizard { FullName = "Domenica" }
+    };
+
+    // Metodo per gestire la selezione dei giorni
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (AvailabilityAdv.UnavailableByDaysOfTheWeek != null && AvailabilityAdv.UnavailableByDaysOfTheWeek.Data.Count() > 0)
+        {
+            //per la scelta dei giorni
+            NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data = AvailabilityAdv.UnavailableByDaysOfTheWeek.Data.GetMissingDays();
+            var d = NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data.ToList().Select(x => x.ToLower());
+            DaysOfWeek.ForEach(day =>
+            {
+                if (d.Contains(day.FullName.ToLower()))
+                    day.IsSelected = true;
+            });
+
+
+            //per la selezione degli orari
+            NewAvailabilityAdv.UnavailableRecurringTimeDays = AvailabilityAdv.UnavailableRecurringTimeDays;
+            var recurringRules = NewAvailabilityAdv.UnavailableRecurringTimeDays.FirstOrDefault().TimeSlots;
+            SelectedTimeSlot = DTOResourceExtension.ConvertUnavailabilityToAvailability(recurringRules);
+
+        }
+    }
+
+    private async Task ToggleDaySelection(DTODayOfWeekWizard day)
+    {
+        day.IsSelected = !day.IsSelected;
+        if (day.IsSelected)
+            NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data.Add(day.FullName);
+        else
+            NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data = NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data.Where(d => d.ToLower() != day.FullName.ToLower()).ToList();
+    }
+
+
+    private async Task AdvHasChanged(bool value)
+    {
+        NewAvailabilityAdv.UnavailableRecurringTimeDays.ForEach(x =>
+      {
+          x.TimeSlots = ConvertDoublesToTimeSlot();
+      });
+        if (OnChange.HasDelegate)
+        {
+            await OnChange.InvokeAsync((NewAvailabilityAdv, value));
+        }
+    }
+
+}
+<style>
+    .days-container {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .day-circle {
+        width: 4vw;
+        height: 7vh;
+        background-color: whitesmoke !important;
+        border: 1px solid lightgrey !important;
+    }
+
+    .day-circle-small {
+        width: 30vw;
+        height: 7vh;
+        background-color: whitesmoke !important;
+        border: 1px solid lightgrey !important;
+    }
+
+        .day-circle-small:hover {
+            background-color: #bdbdbd;
+        }
+
+    .day-circle:hover {
+        background-color: #bdbdbd;
+    }
+
+    .selected {
+        background-color: #0066FF !important;
+        color: white !important;
+    }
+</style>

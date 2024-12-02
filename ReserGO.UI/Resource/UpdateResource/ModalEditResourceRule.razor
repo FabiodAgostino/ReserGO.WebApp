@@ -1,0 +1,134 @@
+﻿@using MudBlazor
+@using ReserGO.DTO.Extensions
+@using ReserGO.DTO.ListAvailability
+@using ReserGO.Utils.DTO.ExtensionMethod
+@using ReserGO.Utils.DTO.Utils;
+@using ReserGO.DTO
+@using ReserGO.Miscellaneous.Model;
+@using ReserGO.UI.Utils;
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
+<MudDialog Options="@Options" Class="@(Modal.IsSmallView ? "dialogServiceModalSmall":"dialogServiceModal")" OnBackdropClick="@HandleBackdropClick">
+    <TitleContent>
+        <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
+            <b>@t.Words[Modal.Type.ToString() + " titleModal"]</b>
+            <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Default" OnClick="() => Close(false)" />
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <div class="d-flex flex-column justify-content-center p-5" style="text-align:center; font-size:large">
+            @t.Words[Modal.Type.ToString() + " textModal"]
+        </div>
+        <div class="d-flex flex-column justify-content-center">
+            @if (Modal.Type == AvailabilityType.UnavailableSpecificDay)
+            {
+                if (Modal.Data.AvailabilityAdv.UnavailableSpecificDays == null)
+                    Modal.Data.AvailabilityAdv.UnavailableSpecificDays = new() { Data = new() };
+
+                <div class="d-flex justify-content-center">
+                    <DaySpecificDisabler @bind-DisabledDate="@Modal.Data.AvailabilityAdv.UnavailableSpecificDays.Data" />
+                </div>
+            }
+
+
+            @if (Modal.Type == AvailabilityType.UnavailableByDaysOfTheWeek)
+            {
+                if (Modal.Data.AvailabilityAdv.UnavailableByDaysOfTheWeek == null)
+                    Modal.Data.AvailabilityAdv.UnavailableByDaysOfTheWeek = new() { Data = new() };
+
+                <DaySliderDaysWeek AvailabilityAdv="@Modal.Data.AvailabilityAdv" OnChange="(((DTOAvailabilityAdv adv, bool IsChanged) value) => OnChangeDaySliderDaysWeek(value))" />
+
+            }
+
+
+            @if (Modal.Type == AvailabilityType.UnavailableTimeDateSlot)
+            {
+                <span>UnavailableTimeDateSlot</span>
+                <DaySliderSpecificDay AvailabilityAdv="@Modal.Data.AvailabilityAdv" OnChange="(((DTOAvailabilityAdv adv, bool IsChanged) value) => OnChangeDaySliderDaysWeek(value))" />
+            }
+        </div>
+    </DialogContent>
+    <DialogActions>
+
+        @if (Modal.Type == AvailabilityType.UnavailableSpecificDay)
+        {
+            <div class="d-flex justify-content-around p-4 w-100">
+                <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">@(t.Words["Chiudi"])</MudButton>
+                <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="() => Close(true)">@(t.Words["Modifica"])</MudButton>
+            </div>
+        }
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public EditRuleModal Modal { get; set; }
+    private DTOResource _resource { get; set; }
+    public DialogOptions Options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            NoHeader = true,
+
+        };
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _resource = Modal.Data;
+        if (Modal.Data.AvailabilityAdv == null)
+            Modal.Data.AvailabilityAdv = new();
+    }
+
+    public async Task Close(bool isChanged)
+    {
+
+        if (Modal.Event.HasDelegate)
+            await Modal.Event.InvokeAsync((_resource, isChanged));
+        MudDialog.Close();
+    }
+
+    public async void OnChangeDaySliderDaysWeek((DTOAvailabilityAdv adv, bool IsChanged) value)
+    {
+        if (value.IsChanged)
+        {
+            _resource.AvailabilityAdv = value.adv;
+        }
+        await Close(value.IsChanged);
+    }
+
+    void HandleBackdropClick(MouseEventArgs eArgs)
+    {
+        MudDialog.Close();
+    }
+
+
+}
+
+<style>
+    .titleContentConfirmValidate {
+        background: #0066FF;
+        color: white;
+        padding: 15px;
+        font-size: x-large;
+    }
+
+    .mud-dialog .mud-dialog-title {
+        padding: 0 !important;
+    }
+
+    .mud-dialog .mud-dialog-actions {
+        justify-content: space-around !important;
+    }
+
+    .dialogServiceModal {
+        border-radius: 30px !important;
+        width: 100vw !important;
+        height: 80vh !important;
+    }
+
+    .dialogServiceModalSmall {
+        border-radius: 30px !important;
+        height: 75vh !important;
+    }
+</style>

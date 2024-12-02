@@ -78,7 +78,7 @@
                                                         </span>
                                                     </div>
                                                     <div class="d-flex w-100" style="height:80%">
-                                                        <DaysSliderComponent CurrentViewModel.IsSmallView="true" Callback="@(((List<DTOTimeSlot> slots, bool next)values) => UpdateRecurringRules(values))" Reset="@(() => Reset())" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
+                                                        <DaysSliderComponent IsSmallView="true" Callback="@(((List<DTOTimeSlot> slots, bool next)values) => UpdateRecurringRules(values))" Reset="@(() => Reset())" SelectedTimeSlot="CurrentViewModel.Stepper.RecurringRules" />
                                                     </div>
                                                 </div>
 
