@@ -1,29 +1,39 @@
 ﻿@using MudBlazor
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 
 @if (IsSmallView)
 {
     <div class="d-flex flex-column w-100 shadow cardDetails" style="@Style" @onclick="@(()=> Click())">
         <div class="d-flex p-1 justify-content-center align-items-center cardDetailsHeaderSmall">
-            <span class="textDetails"><b>@Title</b></span>
+            <span class="textDetails" title="@Title"><b>@(t.TruncateText(Title, 20))</b></span>
         </div>
+        @{
+            var s = (MarkupString)Description;
+        }
         <div class="d-flex p-4 cardBodyDetails">
-            @TruncateText(Description, 35)
+            @s
         </div>
     </div>
 }
 else
 {
-    <div class="d-flex flex-column shadow cardDetails" style="@Style" @onclick="@(()=> Click())">
+    <div class="d-flex flex-column w-100 shadow cardDetails" style="@Style" @onclick="@(()=> Click())">
         <div class="d-flex align-items-center cardDetailsHeader">
-            <span class="textDetails"><b>@Title</b></span>
+            <span class="textDetails" title="@Title"><b>@(t.TruncateText(Title, 30))</b></span>
         </div>
         <div class="d-flex p-4 cardBodyDetails">
-            @Description
+                @{
+                var s = (MarkupString)Description;
+                }
+            <div class="d-flex cardBodyDetails">
+                @s
+            </div>
         </div>
     </div>
 }
 
-<ModalSmallDetails ShowModal="@ShowModal" Title="@Title" Desc="@Description" />
+<ModalSmallDetails ShowModal="@ShowModal" Title="@Title" Description="@CompleteDescription" />
 
 @code {
 
@@ -34,7 +44,10 @@ else
     public string Title { get; set; } = "Titolo";
 
     [Parameter]
-    public string Description { get; set; } = "Descrizione...";
+    public string Description { get; set; }
+
+    [Parameter]
+    public string CompleteDescription { get; set; }
 
     [Parameter]
     public string Icon { get; set; } = "";
@@ -53,15 +66,18 @@ else
 
     protected override void OnInitialized()
     {
+        CompleteDescription = t.TruncateText(CompleteDescription, 300);
+        CompleteDescription = CompleteDescription.Replace("°", "<br/>");
     }
 
     private async Task Click()
     {
 
-        if(IsSmallView){
+        if (IsSmallView)
+        {
             ShowModal = true;
         }
-        
+
         if (Callback.HasDelegate)
         {
             await Callback.InvokeAsync();
@@ -72,8 +88,8 @@ else
     {
         if (text.Length <= maxLength)
         {
-            return text; 
+            return text;
         }
-        return text.Substring(0, maxLength - 3) + "..."; 
+        return text.Substring(0, maxLength - 3) + "...";
     }
 }

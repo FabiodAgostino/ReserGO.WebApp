@@ -84,6 +84,7 @@
     color: #747474;
     font-size: medium;
     padding-block: 2vh;
+    word-wrap:break-word;
 }
 
 .dividerSectionSchedule {

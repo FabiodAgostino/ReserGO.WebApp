@@ -13,7 +13,7 @@
             <div class="d-flex justify-content-center align-items-center cardScheduleDetailsHeaderSmall" style="background-color:#0066FF;">
                 <MudIcon Icon="@Icons.Material.Filled.Today" Class="smallIconCardscheduleDetailsCss" />
             </div>
-            <div class="textSmall" >@ResourceDetails.Resource.ResourceName</div>
+            <div class="textSmall">@(t.TruncateText(ResourceDetails.Resource.ResourceName, 25))</div>
             <span class="d-flex align-items-center" style="width:10%;height:100%;" onclick="@(() => Close())">
                 <MudIcon Icon="@Icons.Material.Filled.Close" Style="font-size: x-large; color:white;" />
             </span>
@@ -27,7 +27,7 @@
                     <div class="dividerDetailsScheduleSmall"></div>
                     @if (ResourceDetails.Resource != null)
                     {
-                        <p class="bodyDescriptionSmall">@ResourceDetails.Resource.Description</p>
+                        <p class="bodyDescriptionSmall">@(t.TruncateText(ResourceDetails.Resource.Description, 100))</p>
                     }
                     else
                     {
@@ -43,7 +43,7 @@
                         {
                             @foreach (var service in ResourceDetails.Resource.Services)
                             {
-                                <span class="serviceDescriptionSmall">@service.ServiceName</span>
+                                <span class="serviceDescriptionSmall" title="@service.ServiceName"> @(t.TruncateText(service.ServiceName, 25))</span>
                             }
                         }
                         else
@@ -66,7 +66,7 @@
                                 @foreach (var giorniConRegole in ResourceDetails.Resource.AvailabilityAdv.UnavailableRecurringTimeDays)
                                 {
                                     <div>
-                                        <span><b>@giorniConRegole.DayOfTheWeek: </b>@giorniConRegole.RangeAvailability</span><br />
+                                        <span title="@giorniConRegole.RangeAvailability"><b>@giorniConRegole.DayOfTheWeek: </b>@(t.TruncateText(giorniConRegole.RangeAvailability, 25))</span><br />
                                     </div>
                                 }
                             }

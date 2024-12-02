@@ -18,7 +18,7 @@
 
         @if (!String.IsNullOrEmpty(Title) || Resource != null)
         {
-            <span class="text" style="padding-inline:1vw;">@(Resource != null ? Resource.ResourceName : Title)</span>
+            <span class="text" style="padding-inline:1vw;">@(Resource != null ? t.TruncateText(Resource.ResourceName, 25) : Title)</span>
         }
     </div>
     
@@ -41,7 +41,7 @@
                     <div class="dividerDetailsSchedule" style="width:82%"></div>
                     @if (String.IsNullOrEmpty(Description) && Resource != null && !IsLoading)
                     {
-                        <p class="bodyDescription">@(t.TruncateText(Resource.Description,100))</p>
+                        <p class="bodyDescription" title="@Resource.Description">@(t.TruncateText(Resource.Description, 100))</p>
                     }
                     else
                     {
@@ -55,8 +55,8 @@
                         @if (Resource.Services != null && Resource != null && !IsLoading)
                         {
                             @foreach (var service in Resource.Services)
-                            {  
-                                <span class="serviceDescription">@service.ServiceName</span>
+                            {
+                                <span class="serviceDescription" title="@service.ServiceName">@(t.TruncateText(service.ServiceName, 25))</span>
                             }
                         }
                         else
@@ -80,7 +80,7 @@
                             @foreach (var giorniConRegole in Resource.AvailabilityAdv.UnavailableRecurringTimeDays)
                             {   
                                 <div>
-                                    <span><b>@giorniConRegole.DayOfTheWeek: </b>@giorniConRegole.RangeAvailability</span><br/>
+                                    <span title="@giorniConRegole.RangeAvailability"><b>@giorniConRegole.DayOfTheWeek: </b>@(t.TruncateText(giorniConRegole.RangeAvailability, 25))</span><br />
                                 </div>
                             }
                         }

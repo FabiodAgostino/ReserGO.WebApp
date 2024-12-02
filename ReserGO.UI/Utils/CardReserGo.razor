@@ -1,4 +1,6 @@
 ﻿@using MudBlazor
+@using ReserGO.Service.Interface.Service;
+@inject ITranslateService t
 
 <div class="d-flex flex-column shadow @(ZoomEffect ? "cardAction":"cardActionNoZoom")" @onclick="@(()=> Click())" style="@CardStyle">
     <div class="d-flex justify-content-center align-items-center @(ZoomEffect ? "cardHeader":"cardHeaderNoEffect")" style="background-color:#0066FF;" >
@@ -10,7 +12,7 @@
         {
             if(Vertical)
             {
-                <span class="text" style="padding-inline: 0.5vw; font-size: 1.3vw;">@Title</span>
+                <span class="text" style="padding-inline: 0.5vw; font-size: 1.3vw;" title="@Title">@(t.TruncateText(Title, 50))</span>
             }
             else
             {
@@ -23,7 +25,18 @@
         {
             <img src="@Image" />
         }
-        @Description
+        @if (IsSmallView)
+        {
+            <span title="@Description" >
+                @(t.TruncateText(Description, 70))
+            </span>
+        }
+        else
+        {
+            <span title="@Description" >
+                @(t.TruncateText(Description, 100))
+            </span>
+        }
     </div>
 </div>
 
