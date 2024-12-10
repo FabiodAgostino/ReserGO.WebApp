@@ -40,7 +40,7 @@
                             </div>
                         </div>
 
-                        <div class="d-flex p-2 @(CurrentViewModel.IsSmallView ? "flex-column" : "flex-row")" style="@(CurrentViewModel.IsSmallView ? "height:22vh;" : "height:10vh;")">
+                        <div class="d-flex p-2 @(CurrentViewModel.IsSmallView ? "flex-column" : "flex-row")" style="@(CurrentViewModel.IsSmallView ? "height:27vh;" : "height:10vh;")">
                             <div class="d-flex align-items-center" style="@(CurrentViewModel.IsSmallView ? "width:100%;" : "width:50%;")">
                                 <BaseComponent TViewModel="IServicesComboViewModel" TModel="DTOService">
                                     <Content>
@@ -84,11 +84,44 @@
                                 <MudSwitch @bind-Value="@CurrentViewModel.EnableResource" Label="Abilita risorsa" Color="Color.Success" />
                             </div>
                         </div>
+                        @if (CurrentViewModel.IsSmallView)
+                        {
+
+                        <div>
+                            <div class="d-flex w-100 justify-content-center align-items-center p-2 pt-4">
+                                <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask" @onclick="(() => OpenModal(AvailabilityType.UnavailableSpecificDay))">
+                                    <div class="d-flex p-2">
+                                        <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
+                                    </div>
+                                    <span class="p-3">Disabilita giorno specifico</span>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 justify-content-center align-items-center p-2 pt-4">
+                                <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask" @onclick="(() => OpenModal(AvailabilityType.UnavailableByDaysOfTheWeek))">
+                                    <div class="d-flex p-2">
+                                        <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
+                                    </div>
+                                    <span class="p-3">Modifica regole giornaliere</span>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 justify-content-center align-items-center p-2 pt-4">
+                                <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask" @onclick="(() => OpenModal(AvailabilityType.UnavailableTimeDateSlot))">
+                                    <div class="d-flex p-2">
+                                        <MudIcon Icon="@Icons.Material.Filled.ControlPoint"></MudIcon>
+                                    </div>
+                                    <span class="p-3">Modifica orari giorno specifico</span>
+                                </div>
+                            </div>
+                        </div>
+                        }
 
 
                     </div>
 
                 </div>
+                @if (!CurrentViewModel.IsSmallView)
+                {
+
                 <div class="d-flex flex-column justify-content-around align-items-center w-50 p-3">
                     <div class="d-flex w-100 justify-content-center align-items-center h-100 p-2 pt-4">
                         <div class="d-flex w-100 flex-column align-items-center justify-content-center shadow ruleMask" @onclick="(() => OpenModal(AvailabilityType.UnavailableSpecificDay))">
@@ -114,21 +147,8 @@
                             <span class="p-3">Modifica orari giorno specifico</span>
                         </div>
                     </div>
-                    
-                    @* <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
-                        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-                            <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(CurrentViewModel.IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" >Disabilita giorno specifico</MudButton>
-                        </div>
-                        <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
-                            <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(CurrentViewModel.IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")">Modifica regole giornaliere</MudButton>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
-                        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-                            <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(CurrentViewModel.IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")">Modifica orari giorno specifico</MudButton>
-                        </div>
-                    </div> *@
                 </div>
+                }
             </div>
 
         }
