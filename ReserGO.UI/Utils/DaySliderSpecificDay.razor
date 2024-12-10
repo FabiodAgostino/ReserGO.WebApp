@@ -24,7 +24,7 @@
             <div class="d-flex flex-wrap justify-content-center w-100 h-100">
                 <div>
                     <p>Aggiungi regola oraria</p>
-                    <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" @onclick="() => AddRule()" />
                 </div>
                 <MudDatePicker Orientation="Orientation.Landscape" PickerVariant="PickerVariant.Static" Class="w-100 shadow"
                                MinDate="DateTime.Now">
@@ -64,22 +64,28 @@
     {
         <div class="d-flex flex-column justify-content-center w-100 h-100">
             <div class="d-flex justify-content-end">
-                <p>Aggiungi regola oraria</p>
-                <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" />
+                @if (!_addRuleMode)
+                {
+
+                        <p>Aggiungi regola oraria</p>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" @onclick="() => AddRule()" />
+
+                }
             </div>
             <div class="d-flex justify-content-center">
                 <MudDatePicker Orientation="Orientation.Landscape" PickerVariant="PickerVariant.Static" Class="w-100 shadow justify-content-center"
-                               MinDate="DateTime.Now">
+                               MinDate="DateTime.Now" @bind-Date="newDate" IsDateDisabledFunc="@DisabledWhen()" >
                     <PickerActions>
-                        @if(_switchDate)
+                        @if (_switchDate && !_addRuleMode)
                         {
                             <div class="d-flex justify-content-center w-100 mt-3 mb-10">
                                 <div class="d-flex justify-content-center flex-column">
                                     <p>Scorri regole orarie</p>
                                     <div class="">
                                         <MudIconButton Icon="@Icons.Material.Filled.ArrowBackIos" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" @onclick="() => SelectRule(false)" />
-                                        <span>@timeSlot.SpecificDate</span>
+                                        <span>@timeSlot.SpecificDate.ToString("dd/MM/yyyy")</span>
                                         <MudIconButton Icon="@Icons.Material.Filled.ArrowForwardIos" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" @onclick="() => SelectRule(true)" />
+                                        <MudButton Icon="@Icons.Material.Filled.AutoDelete" Variant="Variant.Outlined" Color="Color.Error" Size="Size.Medium" @onclick="() => DeleteRule()" >Elimina regola </MudButton>
                                     </div>
                                 </div>
                             </div>
@@ -88,7 +94,7 @@
                 </MudDatePicker>
             </div>
         </div>
-        <div class="d-flex flex-column w-100 justify-content-around p-2">
+        <div class="d-flex flex-column w-100 justify-content-around p-2" style="visibility: @(_addRuleMode || NewAvailabilityAdv.UnavailableTimeDatesSlot.Count() > 0 ? "visible" : "hidden")">
             <div class="d-flex flex-column w-100" style="height:80%">
                 <div class="d-flex flex-row align-items-center justify-content-center w-100 h-50">
                     <div id="slider" class="w-100"></div>
@@ -104,10 +110,20 @@
             </div>
         </div>
     }
-    <div class="d-flex justify-content-around p-4 w-100">
-        <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => AdvHasChanged(false)">@(t.Words["Chiudi"])</MudButton>
-        <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="() => AdvHasChanged(true)" Disabled="_error">@(t.Words["Modifica"])</MudButton>
-    </div>
+    @if (_addRuleMode)
+    {
+        <div class="d-flex justify-content-around p-4 w-100">
+            <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => AdvHasChanged(false)">@(t.Words["Cancella"])</MudButton>
+            <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="() => AddNewRule()">@(t.Words["Aggiungi"])</MudButton>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-around p-4 w-100">
+            <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => AdvHasChanged(false)">@(t.Words["Chiudi"])</MudButton>
+            <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="() => AdvHasChanged(true)" Disabled="!EnableButtonUpdate()">@(t.Words["Modifica"])</MudButton>
+        </div>
+    }
 </div>
 
 
@@ -119,25 +135,8 @@
     [Parameter]
     public EventCallback<(DTOAvailabilityAdv, bool)> OnChange { get; set; }
 
-    private DTOAvailabilityAdv NewAvailabilityAdv { get; set; }
 
-    private DTOUnavailableTimeDateSlot? _timeSlot { get; set; }
-    private DTOUnavailableTimeDateSlot? timeSlot
-    {
-        get
-        {
-            if (_timeSlot == null)
-                _timeSlot = new() { SpecificDate = DateTime.Now, TimeSlots = new() };
-
-            return _timeSlot;
-        }
-        set
-        {
-            _timeSlot = value;
-        }
-    }
-    private bool _error = true;
-
+    private bool _addRuleMode = false;
     private bool _switchDate
     {
         get
@@ -152,7 +151,6 @@
     {
         SetJsRuntime(JSRuntime);
         NewAvailabilityAdv = new() { UnavailableTimeDatesSlot = new() };
-
     }
 
     protected override async Task OnParametersSetAsync()
@@ -179,16 +177,21 @@
             await OnChange.InvokeAsync((NewAvailabilityAdv, value));
         }
     }
+    private bool DisableAddButton() => NewAvailabilityAdv.UnavailableTimeDatesSlot.Any(x => x.SpecificDate == newDate.Value);
 
     private void SelectRule(bool forward)
     {
-        int idx = NewAvailabilityAdv.UnavailableTimeDatesSlot.IndexOf(timeSlot);
+        var ts = NewAvailabilityAdv.UnavailableTimeDatesSlot.OrderBy(x=> x.SpecificDate).SingleOrDefault(x => x.SpecificDate == timeSlot.SpecificDate);
+        int idx = NewAvailabilityAdv.UnavailableTimeDatesSlot.IndexOf(ts);
         if (idx != -1)
         {
             try
             {
-                idx = forward ? idx++ : idx--;
+                idx = forward ? idx + 1 : idx - 1;
                 timeSlot = NewAvailabilityAdv.UnavailableTimeDatesSlot.ToList()[idx];
+                newDate = timeSlot.SpecificDate;
+                SelectedTimeSlot = timeSlot.TimeSlots;
+                UpdateSlider();
             }
             catch (Exception)
             {
@@ -196,6 +199,140 @@
             }
         }
     }
+
+    private void AddRule()
+    {
+        _addRuleMode = true;
+        if (DisableAddButton())
+            SetNextAvailableDate();
+
+        if (!newDate.HasValue)
+            newDate = DateTime.Now.AddDays(1).Date;
+    }
+
+    private void AddNewRule()
+    {
+        timeSlot = new(newDate.Value, ConvertDoublesToTimeSlot(), "");
+        NewAvailabilityAdv.UnavailableTimeDatesSlot.Add((DTOUnavailableTimeDateSlot)timeSlot.Clone());
+        _addRuleMode = false;
+    }
+
+    private void DeleteRule()
+    {
+        var ts = NewAvailabilityAdv.UnavailableTimeDatesSlot
+            .OrderBy(x => x.SpecificDate)
+            .SingleOrDefault(x => x.SpecificDate == timeSlot.SpecificDate);
+
+        if (ts != null)
+        {
+            int idx = NewAvailabilityAdv.UnavailableTimeDatesSlot.IndexOf(ts);
+
+            NewAvailabilityAdv.UnavailableTimeDatesSlot = NewAvailabilityAdv
+                .UnavailableTimeDatesSlot
+                .Where(x => x.SpecificDate != timeSlot.SpecificDate)
+                .ToList();
+
+            // Cerca il nuovo timeSlot in base all'indice
+            timeSlot = GetTimeSlotByIndex(idx - 1) ?? GetTimeSlotByIndex(0) ?? new();
+
+            if (timeSlot.SpecificDate != new DateTime())
+                newDate = timeSlot.SpecificDate;
+            else
+                newDate = DateTime.Now.Date;
+        }
+    }
+
+    private DTOUnavailableTimeDateSlot? GetTimeSlotByIndex(int index)
+    {
+        return (index >= 0 && index < NewAvailabilityAdv.UnavailableTimeDatesSlot.Count)
+            ? NewAvailabilityAdv.UnavailableTimeDatesSlot[index]
+            : null;
+    }
+
+    private void SetNextAvailableDate()
+    {
+        // Ottieni le date non disponibili in un HashSet per ricerche rapide
+        var unavailableDates = NewAvailabilityAdv.UnavailableTimeDatesSlot
+            .Select(sd => sd.SpecificDate.Date)
+            .ToHashSet();
+
+        // Inizia dal giorno successivo al giorno selezionato
+        DateTime nextDate = newDate.Value.AddDays(1);
+
+        // Trova il primo giorno disponibile
+        while (unavailableDates.Contains(nextDate))
+        {
+            nextDate = nextDate.AddDays(1); // Incrementa il giorno
+        }
+
+        newDate = nextDate;
+    }
+
+    private Func<DateTime, bool> DisabledWhen()
+    {
+        // Prepara l'elenco delle date disabilitate
+        var unavailableDates = NewAvailabilityAdv.UnavailableTimeDatesSlot
+            .Select(sd => sd.SpecificDate.Date) // Accedi alla proprietà SpecificDate
+            .ToHashSet(); // Migliora la ricerca
+
+        // Ritorna la funzione
+        return date => _addRuleMode
+            ? unavailableDates.Contains(date.Date) // Modalità aggiunta: disabilita se la data è già nell'elenco
+            : !unavailableDates.Contains(date.Date); // Modalità normale: abilita solo se non è nell'elenco
+    }
+
+
+
+    private bool EnableButtonUpdate()
+    {
+        if (AvailabilityAdv.UnavailableTimeDatesSlot == null && NewAvailabilityAdv.UnavailableTimeDatesSlot.Count() == 0)
+            return false;
+
+        if (AvailabilityAdv.UnavailableTimeDatesSlot == null && NewAvailabilityAdv.UnavailableTimeDatesSlot.Count() > 0)
+            return true;
+
+        int NAA = NewAvailabilityAdv.UnavailableTimeDatesSlot.Count();
+        int AA = AvailabilityAdv.UnavailableTimeDatesSlot.Count();
+        //Se il count della lista nuova è maggiore o minore di quella passata come parametro vuol dire che sono state aggiunte o sottratte regole
+        if (NAA != AA)
+            return true;
+
+        //se il count è uguale andiamo a vedere se ci sono state modifiche all'interno delle regole
+        if (NAA == AA && AA != 0)
+        {
+            foreach (var x in NewAvailabilityAdv.UnavailableTimeDatesSlot)
+            {
+                // Cerca la corrispondenza nella lista originale
+                var ts = AvailabilityAdv.UnavailableTimeDatesSlot
+                    .FirstOrDefault(tsx => x.SpecificDate == tsx.SpecificDate);
+
+                // Se non esiste una regola corrispondente
+                if (ts == null)
+                {
+                    return true; // Modifica rilevata
+                }
+
+                // Confronta il numero di TimeSlots
+                if (x.TimeSlots.Count != ts.TimeSlots.Count)
+                {
+                    return true; // Modifica rilevata
+                }
+
+                // Confronta ogni TimeSlot
+                for (int i = 0; i < x.TimeSlots.Count; i++)
+                {
+                    if (x.TimeSlots[i].StartTime != ts.TimeSlots[i].StartTime ||
+                        x.TimeSlots[i].EndTime != ts.TimeSlots[i].EndTime)
+                    {
+                        return true; // Modifica rilevata
+                    }
+                }
+            }
+        }
+        return false;
+
+    }
+
 
 }
 <style>

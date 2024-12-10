@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Newtonsoft.Json.Linq;
+using ReserGO.DTO;
 using ReserGO.DTO.ListAvailability;
 
 namespace ReserGO.Service.ComponentService
@@ -14,20 +15,53 @@ namespace ReserGO.Service.ComponentService
         public EventCallback Reset { get; set; }
         [Parameter]
         public List<DTOTimeSlot> SelectedTimeSlot { get; set; }
-
         [Parameter]
         public bool IsSmallView { get; set; }
+
+
+        //Solo se usato dal componente DaySliderSpecificDay
+        public DTOAvailabilityAdv NewAvailabilityAdv { get; set; }
+        private DateTime? _newDate { get; set; }
+        public DateTime? newDate { get => _newDate; set
+            {
+                _newDate = value;
+                UpdateTimeSlot();
+            }
+        }
+        private DTOUnavailableTimeDateSlot? _timeSlot { get; set; }
+        public DTOUnavailableTimeDateSlot? timeSlot
+        {
+            get
+            {
+                if (_timeSlot == null)
+                    _timeSlot = new() { SpecificDate = DateTime.Now, TimeSlots = new() };
+
+                return _timeSlot;
+            }
+            set
+            {
+                _timeSlot = value;
+            }
+        }
+        //
+
+
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                if (SelectedTimeSlot != null && SelectedTimeSlot.Count() > 0)
-                {
-                    HandleValues = ConvertTimeSlotsToFloats(SelectedTimeSlot);
-                }
-                await JSRuntime.InvokeVoidAsync("initializeSlider", DotNetObjectReference.Create(this), HandleValues);
+                await InitializeBar();
             }
+        }
+
+        public async Task InitializeBar()
+        {
+            if (SelectedTimeSlot != null && SelectedTimeSlot.Count() > 0)
+            {
+                HandleValues = ConvertTimeSlotsToFloats(SelectedTimeSlot);
+            }
+            await JSRuntime.InvokeVoidAsync("initializeSlider", DotNetObjectReference.Create(this), HandleValues);
         }
 
         public void SetJsRuntime(IJSRuntime jsRuntime)
@@ -41,6 +75,13 @@ namespace ReserGO.Service.ComponentService
         public async Task UpdateHandleValues(List<string> values)
         {
             HandleValues = values.Select(v => ConvertTimeStringToFloat(v)).ToList();
+            if(NewAvailabilityAdv!=null)
+            {
+                var ts =NewAvailabilityAdv.UnavailableTimeDatesSlot.SingleOrDefault(x => x.SpecificDate == newDate.Value);
+                int idx = NewAvailabilityAdv.UnavailableTimeDatesSlot.IndexOf(ts);
+                if (idx != -1)
+                    NewAvailabilityAdv.UnavailableTimeDatesSlot[idx].TimeSlots = ConvertDoublesToTimeSlot();
+            }
             StateHasChanged();
         }
 
@@ -130,6 +171,31 @@ namespace ReserGO.Service.ComponentService
                     HandleValues.Add(lastValue + 60);
                     HandleValues.Add(lastValue + 120);
                     await JSRuntime.InvokeVoidAsync("reinitializeSlider", DotNetObjectReference.Create(this), HandleValues);
+                }
+            }
+        }
+
+        public async Task UpdateSlider()
+        {
+            HandleValues = ConvertTimeSlotsToFloats(SelectedTimeSlot);
+            await JSRuntime.InvokeVoidAsync("reinitializeSlider", DotNetObjectReference.Create(this), HandleValues);
+        }
+
+        private void UpdateTimeSlot()
+        {
+            var ts = NewAvailabilityAdv.UnavailableTimeDatesSlot.SingleOrDefault(x => x.SpecificDate == newDate);
+            int idx = NewAvailabilityAdv.UnavailableTimeDatesSlot.IndexOf(ts);
+            if (idx != -1)
+            {
+                try
+                {
+                    timeSlot = NewAvailabilityAdv.UnavailableTimeDatesSlot.ToList()[idx];
+                    SelectedTimeSlot = timeSlot.TimeSlots;
+                    UpdateSlider();
+                }
+                catch (Exception)
+                {
+
                 }
             }
         }

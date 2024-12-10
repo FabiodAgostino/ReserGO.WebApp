@@ -9,6 +9,7 @@ using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Authentication;
 using ReserGO.Service.Interface.Home;
 using ReserGO.Service.Interface.Service;
+using ReserGO.Service.Interface.Utils;
 using ReserGO.Service.Service.Utils;
 using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Home;
@@ -22,14 +23,17 @@ namespace ReserGO.ViewModel.ViewModel.Home
         private readonly ISessionStorageService _sessionStorage;
         private readonly NavigationManager navigationManager;
         private readonly IAuthenticationService _authService;
-        private readonly ITranslateService _translationService;
+        private readonly ICleanerService _cleanerService;
         private const string SettingsMenuKey = "settingsMenu";
-        public HomeViewModel(IBaseServicesReserGO<HomeViewModel> baseService, IHomeService service, ISessionStorageService sessionStorage, NavigationManager navigationManager, IAuthenticationService authService) : base(baseService)
+        public HomeViewModel(IBaseServicesReserGO<HomeViewModel> baseService, IHomeService service, 
+            ISessionStorageService sessionStorage, NavigationManager navigationManager, 
+            IAuthenticationService authService, ICleanerService cleanerService) : base(baseService)
         {
             _service = service;
             _sessionStorage = sessionStorage;
             this.navigationManager = navigationManager;
             _authService = authService;
+            _cleanerService = cleanerService;
             Aggregator.Subscribe<ObjectMessage<bool>>(GetType(), async (ObjectMessage<bool> message) => await OnInitialize());
 
 
@@ -101,6 +105,12 @@ namespace ReserGO.ViewModel.ViewModel.Home
                 }
                 catch (Exception ex)
                 {
+                    if(ex.Message.Contains("401"))
+                    {
+                        await _cleanerService.CleanAllAndRedirect();
+                        return;
+                    }
+
                     navigationManager.NavigateTo("/Manutenzione", forceLoad: true);
                     Notification(ex.Message, NotificationColor.Error);
                 }

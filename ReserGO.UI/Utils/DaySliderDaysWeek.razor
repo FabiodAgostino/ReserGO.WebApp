@@ -93,13 +93,13 @@
     [Parameter]
     public EventCallback<(DTOAvailabilityAdv, bool)> OnChange { get; set; }
 
-    private DTOAvailabilityAdv NewAvailabilityAdv { get; set; }
+    private DTOAvailabilityAdv NewAvailability { get; set; }
     private bool _error
     {
         get
         {
-            if (NewAvailabilityAdv != null && NewAvailabilityAdv.UnavailableByDaysOfTheWeek != null)
-                return NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data.Count() == 0;
+            if (NewAvailability != null && NewAvailability.UnavailableByDaysOfTheWeek != null)
+                return NewAvailability.UnavailableByDaysOfTheWeek.Data.Count() == 0;
             else
                 return true;
         }
@@ -108,7 +108,7 @@
     protected override async Task OnInitializedAsync()
     {
         SetJsRuntime(JSRuntime);
-        NewAvailabilityAdv = new() { UnavailableByDaysOfTheWeek = new(), UnavailableRecurringTimeDays = new() };
+        NewAvailability = new() { UnavailableByDaysOfTheWeek = new(), UnavailableRecurringTimeDays = new() };
 
     }
 
@@ -130,8 +130,8 @@
         if (AvailabilityAdv.UnavailableByDaysOfTheWeek != null && AvailabilityAdv.UnavailableByDaysOfTheWeek.Data.Count() > 0)
         {
             //per la scelta dei giorni
-            NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data = AvailabilityAdv.UnavailableByDaysOfTheWeek.Data.GetMissingDays();
-            var d = NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data.ToList().Select(x => x.ToLower());
+            NewAvailability.UnavailableByDaysOfTheWeek.Data = AvailabilityAdv.UnavailableByDaysOfTheWeek.Data.GetMissingDays();
+            var d = NewAvailability.UnavailableByDaysOfTheWeek.Data.ToList().Select(x => x.ToLower());
             DaysOfWeek.ForEach(day =>
             {
                 if (d.Contains(day.FullName.ToLower()))
@@ -140,8 +140,8 @@
 
 
             //per la selezione degli orari
-            NewAvailabilityAdv.UnavailableRecurringTimeDays = AvailabilityAdv.UnavailableRecurringTimeDays;
-            var recurringRules = NewAvailabilityAdv.UnavailableRecurringTimeDays.FirstOrDefault().TimeSlots;
+            NewAvailability.UnavailableRecurringTimeDays = AvailabilityAdv.UnavailableRecurringTimeDays;
+            var recurringRules = NewAvailability.UnavailableRecurringTimeDays.FirstOrDefault().TimeSlots;
             SelectedTimeSlot = DTOResourceExtension.ConvertUnavailabilityToAvailability(recurringRules);
 
         }
@@ -151,21 +151,26 @@
     {
         day.IsSelected = !day.IsSelected;
         if (day.IsSelected)
-            NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data.Add(day.FullName);
+            NewAvailability.UnavailableByDaysOfTheWeek.Data.Add(day.FullName);
         else
-            NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data = NewAvailabilityAdv.UnavailableByDaysOfTheWeek.Data.Where(d => d.ToLower() != day.FullName.ToLower()).ToList();
+            NewAvailability.UnavailableByDaysOfTheWeek.Data = NewAvailability.UnavailableByDaysOfTheWeek.Data.Where(d => d.ToLower() != day.FullName.ToLower()).ToList();
     }
 
 
     private async Task AdvHasChanged(bool value)
     {
-        NewAvailabilityAdv.UnavailableRecurringTimeDays.ForEach(x =>
-      {
-          x.TimeSlots = ConvertDoublesToTimeSlot();
-      });
+        if (NewAvailability.UnavailableByDaysOfTheWeek != null && NewAvailability.UnavailableByDaysOfTheWeek.Data.Count() > 0)
+        {
+            NewAvailability.UnavailableByDaysOfTheWeek.Data.ForEach(x =>
+                  {
+                      NewAvailability.UnavailableRecurringTimeDays.Add(new DTOUnavailableRecurringTimeDay(x, ConvertDoublesToTimeSlot()));
+
+                  });
+        }
+
         if (OnChange.HasDelegate)
         {
-            await OnChange.InvokeAsync((NewAvailabilityAdv, value));
+            await OnChange.InvokeAsync((NewAvailability, value));
         }
     }
 

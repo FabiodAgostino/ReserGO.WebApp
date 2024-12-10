@@ -185,16 +185,17 @@
     {
         if(value.isChanged)
         {
+            var resource = value.resource;
             switch(type)
             {
                 case AvailabilityType.UnavailableSpecificDay:
                     break;
                 case AvailabilityType.UnavailableByDaysOfTheWeek:
-                    var daySelected = CurrentViewModel.SelectedItem.AvailabilityAdv.UnavailableByDaysOfTheWeek.Data;
+                    var daySelected = resource.AvailabilityAdv.UnavailableByDaysOfTheWeek.Data;
                     var days = daySelected.GetMissingDays();
-                    CurrentViewModel.SelectedItem.AvailabilityAdv.UnavailableByDaysOfTheWeek = new() { Data = days };
+                    resource.AvailabilityAdv.UnavailableByDaysOfTheWeek = new() { Data = days };
 
-                    var recurring = CurrentViewModel.SelectedItem.AvailabilityAdv.UnavailableRecurringTimeDays.FirstOrDefault().TimeSlots;
+                    var recurring = resource.AvailabilityAdv.UnavailableRecurringTimeDays.FirstOrDefault().TimeSlots;
                     if (recurring != null)
                     {
 
@@ -204,10 +205,14 @@
                         {
                             unavailableRecurringTimeDays.Add(new DTOUnavailableRecurringTimeDay(day, recurringRules));
                         });
-                        CurrentViewModel.SelectedItem.AvailabilityAdv.UnavailableRecurringTimeDays = unavailableRecurringTimeDays;
+                        resource.AvailabilityAdv.UnavailableRecurringTimeDays = unavailableRecurringTimeDays;
                     }
                     break;
+                case AvailabilityType.UnavailableTimeDateSlot:
+                    break;
+
             }
+            CurrentViewModel.SelectedItem = resource;
         }
     }
 
