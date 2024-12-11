@@ -8,5 +8,7 @@ namespace ReserGO.ViewModel.Interface.Resource.UpdateResource
         public bool IsOpen { get; set; }
         Task HandleFileSelected(IBrowserFile file);
         bool EnableResource { get; set; }
+        Task UpdateResource();
+        List<string> RulesChanged { get; set; }
     }
 }

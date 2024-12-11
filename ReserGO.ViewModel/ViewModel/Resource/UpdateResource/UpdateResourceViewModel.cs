@@ -4,6 +4,7 @@ using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
+using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Resource.UpdateResource;
 
 namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
@@ -17,6 +18,8 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
             Aggregator.Subscribe(GetType(), (ObjectMessage<DTOResource> message) => OpenModal(message));
             _service = service;
         }
+
+        private bool _oldEnableResource;
         public bool EnableResource
         {
             get
@@ -31,7 +34,11 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
             {
                 if (SelectedItem.AvailabilityAdv == null)
                     SelectedItem.AvailabilityAdv = new();
+
                 SelectedItem.AvailabilityAdv.Unavailable = !value;
+
+                if(!RulesChanged.Contains(AvailabilityType.UnavailableGeneral.ToString()))
+                    RulesChanged.Add(AvailabilityType.UnavailableGeneral.ToString());
             }
         }
 
@@ -45,6 +52,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
                 if (result.Success)
                 {
                     SelectedItem = result.Data;
+                    _oldEnableResource = SelectedItem.AvailabilityAdv != null && SelectedItem.AvailabilityAdv.Unavailable ? SelectedItem.AvailabilityAdv.Unavailable : true;
                     IsOpen = true;
                 }
                 else
@@ -69,6 +77,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
             }
         }
         public bool IsOpen { get; set; }
+        public List<string> RulesChanged { get; set; } = new();
 
         public async Task HandleFileSelected(IBrowserFile file)
         {
@@ -79,6 +88,20 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
                 SelectedItem.ImageData = memoryStream.ToArray();
                 SelectedItem.ImageContentType = file.ContentType;
                 SelectedItem.ImageName = file.Name;
+            }
+        }
+
+        public async Task UpdateResource()
+        {
+            try
+            {
+                SelectedItem.ResourcesAvailability = null;
+                if(SelectedItem.AvailabilityAdv!=null)
+                    SelectedItem.AvailabilityAdv.RulesChanged = RulesChanged;
+                var r = await _service.UpdateResource(SelectedItem);
+            }catch(Exception ex)
+            {
+                Notification(ex.Message, NotificationColor.Error);
             }
         }
     }
