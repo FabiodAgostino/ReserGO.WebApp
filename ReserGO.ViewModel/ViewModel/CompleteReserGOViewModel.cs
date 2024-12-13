@@ -54,18 +54,21 @@ namespace ReserGO.ViewModel.ViewModel
 
         public virtual bool UserIs(RoleConst role)
         {
-            var roles = _baseServices.Session.User.Roles;
-            if (User!=null && User.Roles!=null)
+            if(_baseServices.Session.User!=null)
             {
-                switch (role)
+                var roles = _baseServices.Session.User.Roles;
+                if (User != null && User.Roles != null)
                 {
-                    case RoleConst.ADMIN:
-                        return roles.HasPermission(RoleConst.ADMIN);
-                    case RoleConst.CUSTOMER:
-                        return roles.HasPermission(RoleConst.CUSTOMER) && !roles.HasPermission(RoleConst.ADMIN);
-                    case RoleConst.GUEST:
-                        return roles.HasPermission(RoleConst.GUEST) && !roles.HasPermission(RoleConst.CUSTOMER);
-                    default: return false;
+                    switch (role)
+                    {
+                        case RoleConst.ADMIN:
+                            return roles.HasPermission(RoleConst.ADMIN);
+                        case RoleConst.CUSTOMER:
+                            return roles.HasPermission(RoleConst.CUSTOMER) && !roles.HasPermission(RoleConst.ADMIN);
+                        case RoleConst.GUEST:
+                            return roles.HasPermission(RoleConst.GUEST) && !roles.HasPermission(RoleConst.CUSTOMER);
+                        default: return false;
+                    }
                 }
             }
             return false;

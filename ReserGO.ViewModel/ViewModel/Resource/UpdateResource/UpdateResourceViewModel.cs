@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using ReserGO.DTO;
+using ReserGO.DTO.Extensions;
+using ReserGO.DTO.ListAvailability;
 using ReserGO.Miscellaneous.Enum;
 using ReserGO.Miscellaneous.Message;
 using ReserGO.Service.Interface;
 using ReserGO.Service.Interface.Schedule;
+using ReserGO.Utils.DTO.ExtensionMethod;
 using ReserGO.Utils.DTO.Utils;
 using ReserGO.ViewModel.Interface.Resource.UpdateResource;
 
@@ -24,7 +27,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
         {
             get
             {
-                if(SelectedItem.AvailabilityAdv!=null)
+                if (SelectedItem.AvailabilityAdv != null)
                 {
                     return !SelectedItem.AvailabilityAdv.Unavailable;
                 }
@@ -37,7 +40,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
 
                 SelectedItem.AvailabilityAdv.Unavailable = !value;
 
-                if(!RulesChanged.Contains(AvailabilityType.UnavailableGeneral.ToString()))
+                if (!RulesChanged.Contains(AvailabilityType.UnavailableGeneral.ToString()))
                     RulesChanged.Add(AvailabilityType.UnavailableGeneral.ToString());
             }
         }
@@ -59,7 +62,8 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
                     Notification(result.Message, NotificationColor.Warning);
                 OnPropertyChanged();
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Notification(ex.Message, NotificationColor.Error);
             }
@@ -71,7 +75,7 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
         }
         private async void OpenModal(ObjectMessage<DTOResource> message)
         {
-            if(message.Value!=null && message.Value.Id.HasValue)
+            if (message.Value != null && message.Value.Id.HasValue)
             {
                 await GetFullResource(message.Value.Id.Value);
             }
@@ -96,10 +100,19 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
             try
             {
                 SelectedItem.ResourcesAvailability = null;
-                if(SelectedItem.AvailabilityAdv!=null)
+                if (SelectedItem.AvailabilityAdv != null)
                     SelectedItem.AvailabilityAdv.RulesChanged = RulesChanged;
+
+                if (RulesChanged.Contains(AvailabilityType.UnavailableByDaysOfTheWeek.ToString()))
+                {
+
+                    
+                }
+
+
                 var r = await _service.UpdateResource(SelectedItem);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Notification(ex.Message, NotificationColor.Error);
             }

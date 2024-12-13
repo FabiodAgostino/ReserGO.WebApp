@@ -120,18 +120,21 @@ namespace ReserGO.Service.ComponentService
         public List<float> ConvertTimeSlotsToFloats(List<DTOTimeSlot> timeSlots)
         {
             var floatList = new List<float>();
-
-            foreach (var slot in timeSlots)
+            if(timeSlots != null)
             {
-                // Calcola le ore in formato float (ore + minuti / 60)
-                float startHour = (float)slot.StartTime.TotalHours * 60; // Converte StartTime in ore
-                float endHour = (float)slot.EndTime.TotalHours * 60;     // Converte EndTime in ore
+                foreach (var slot in timeSlots)
+                {
+                    // Calcola le ore in formato float (ore + minuti / 60)
+                    float startHour = (float)slot.StartTime.TotalHours * 60; // Converte StartTime in ore
+                    float endHour = (float)slot.EndTime.TotalHours * 60;     // Converte EndTime in ore
 
-                floatList.Add(startHour);
-                floatList.Add(endHour);
+                    floatList.Add(startHour);
+                    floatList.Add(endHour);
+                }
+                return floatList;
             }
-
-            return floatList;
+            else
+                return new List<float> { 540, 1080 };
         }
 
 
@@ -179,6 +182,7 @@ namespace ReserGO.Service.ComponentService
         {
             HandleValues = ConvertTimeSlotsToFloats(SelectedTimeSlot);
             await JSRuntime.InvokeVoidAsync("reinitializeSlider", DotNetObjectReference.Create(this), HandleValues);
+            StateHasChanged();
         }
 
         private void UpdateTimeSlot()

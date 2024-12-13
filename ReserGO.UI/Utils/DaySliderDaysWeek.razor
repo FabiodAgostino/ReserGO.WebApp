@@ -107,9 +107,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SetJsRuntime(JSRuntime);
         NewAvailability = new() { UnavailableByDaysOfTheWeek = new(), UnavailableRecurringTimeDays = new() };
+        SetJsRuntime(JSRuntime);
+    }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await UpdateSlider();
+        }
     }
 
     private List<DTODayOfWeekWizard> DaysOfWeek = new()
@@ -130,8 +137,9 @@
         if (AvailabilityAdv.UnavailableByDaysOfTheWeek != null && AvailabilityAdv.UnavailableByDaysOfTheWeek.Data.Count() > 0)
         {
             //per la scelta dei giorni
-            NewAvailability.UnavailableByDaysOfTheWeek.Data = AvailabilityAdv.UnavailableByDaysOfTheWeek.Data.GetMissingDays();
+            NewAvailability.UnavailableByDaysOfTheWeek.Data.AddRange(AvailabilityAdv.UnavailableByDaysOfTheWeek.Data);
             var d = NewAvailability.UnavailableByDaysOfTheWeek.Data.ToList().Select(x => x.ToLower());
+
             DaysOfWeek.ForEach(day =>
             {
                 if (d.Contains(day.FullName.ToLower()))
@@ -140,10 +148,14 @@
 
 
             //per la selezione degli orari
-            NewAvailability.UnavailableRecurringTimeDays = AvailabilityAdv.UnavailableRecurringTimeDays;
-            var recurringRules = NewAvailability.UnavailableRecurringTimeDays.FirstOrDefault().TimeSlots;
-            SelectedTimeSlot = DTOResourceExtension.ConvertUnavailabilityToAvailability(recurringRules);
+            NewAvailability.UnavailableRecurringTimeDays = AvailabilityAdv.UnavailableRecurringTimeDays.Select(x => (DTOUnavailableRecurringTimeDay)x.Clone()).ToList();
 
+            NewAvailability.UnavailableRecurringTimeDays.ForEach(specific =>
+                       {
+                           specific.TimeSlots = DTOResourceExtension.ConvertUnavailabilityToAvailability(specific.TimeSlots);
+                       });
+            var recurringRules = NewAvailability.UnavailableRecurringTimeDays.FirstOrDefault().TimeSlots;
+            SelectedTimeSlot = recurringRules;
         }
     }
 
@@ -161,6 +173,7 @@
     {
         if (NewAvailability.UnavailableByDaysOfTheWeek != null && NewAvailability.UnavailableByDaysOfTheWeek.Data.Count() > 0)
         {
+            NewAvailability.UnavailableRecurringTimeDays = new();
             NewAvailability.UnavailableByDaysOfTheWeek.Data.ForEach(x =>
                   {
                       NewAvailability.UnavailableRecurringTimeDays.Add(new DTOUnavailableRecurringTimeDay(x, ConvertDoublesToTimeSlot()));
