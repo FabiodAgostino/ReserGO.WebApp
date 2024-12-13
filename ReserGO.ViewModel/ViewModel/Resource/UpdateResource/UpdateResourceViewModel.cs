@@ -99,22 +99,30 @@ namespace ReserGO.ViewModel.ViewModel.Resource.UpdateResource
         {
             try
             {
+                IsLoading = true;
+                Loading();
                 SelectedItem.ResourcesAvailability = null;
                 if (SelectedItem.AvailabilityAdv != null)
                     SelectedItem.AvailabilityAdv.RulesChanged = RulesChanged;
 
-                if (RulesChanged.Contains(AvailabilityType.UnavailableByDaysOfTheWeek.ToString()))
+                var result = await _service.UpdateResource(SelectedItem);
+                if (result.Success)
                 {
-
-                    
+                    Notification("Risorsa modificata correttamente", NotificationColor.Success);
+                    Aggregator.Publish<bool, ObjectMessage<bool>>(new ObjectMessage<bool>(true), typeof(ResourceViewModel));
+                    IsOpen = false;
                 }
-
-
-                var r = await _service.UpdateResource(SelectedItem);
+                else
+                    Notification(result.Message, NotificationColor.Warning);
             }
             catch (Exception ex)
             {
                 Notification(ex.Message, NotificationColor.Error);
+            }
+            finally
+            { 
+                IsLoading = false;
+                Loading();
             }
         }
     }
