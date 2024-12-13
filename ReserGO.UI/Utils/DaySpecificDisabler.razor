@@ -3,10 +3,10 @@
 @using ReserGO.DTO.ListAvailability
 @using ReserGO.Service.Interface.Service;
 @inject ITranslateService t
-<div>
 
-    <MudDatePicker @ref="picker" Orientation="Orientation.Landscape" PickerVariant="PickerVariant.Static" Class="w-100 shadow" @bind-Date="thisDate"
-                   MinDate="DateTime.Now" AdditionalDateClassesFunc="@((DateTime dt)=>(DisabledDate.Contains(dt) ? "red-text text-accent-4" : ""))">
+<div class="d-flex flex-column w-100">
+    <MudDatePicker @ref="picker" PickerVariant="PickerVariant.Static" Class="w-100 shadow" @bind-Date="thisDate"
+    MinDate="DateTime.Now" AdditionalDateClassesFunc="@((DateTime dt)=>(DisabledDate.Contains(dt) ? "red-text text-accent-4" : ""))">
         <PickerActions>
 
         </PickerActions>
@@ -18,6 +18,9 @@
     }
 </div>
 @code {
+
+    [Parameter]
+    public bool IsSmallView { get; set; }
 
     private List<DateTime> _disabledDate;
     [Parameter]

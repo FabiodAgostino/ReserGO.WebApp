@@ -16,53 +16,62 @@
 @inherits DaySliderService
 
 
-<div class="containerDayOfWeek h-100 @(IsSmallView ? "w-100":"")">
+<div class="d-flex flex-column containerDayOfWeek h-100 @(IsSmallView ? "w-100":"")">
     @if (IsSmallView)
     {
-        <div class="d-flex flex-column align-items-center justify-content-around w-100 p-2" style="height:34vh; overflow:auto;">
+        <div class="d-flex w-100">
+            <span class="p-2" >UnavailableTimeDateSlot</span>
+        </div>
 
-            <div class="d-flex flex-wrap justify-content-center w-100 h-100">
-                <div>
-                    <p>Aggiungi regola oraria</p>
+            <div class="d-flex flex-column align-items-center justify-content-around w-100" style="height:57vh; overflow:auto;">
+
+            <div class="d-flex flex-column w-100 h-100">
+                <div class="d-flex flex-row align-items-center justify-content-center w-100 pb-3" >
+                    <span class="p-2" >Aggiungi regola oraria</span>
                     <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" @onclick="() => AddRule()" />
                 </div>
-                <MudDatePicker Orientation="Orientation.Landscape" PickerVariant="PickerVariant.Static" Class="w-100 shadow"
-                               MinDate="DateTime.Now">
-                    <PickerActions>
-                        @if (_switchDate)
-                        {
-                            <div>
-                                <p>Scorri regole orarie</p>
+                <div class="d-flex w-100" >
+                    <MudDatePicker PickerVariant="PickerVariant.Static" Class="w-100 shadow"
+                                   MinDate="DateTime.Now">
+                        <PickerActions>
+                            @if (_switchDate)
+                            {
                                 <div>
-                                    <MudIconButton Icon="@Icons.Material.Filled.ArrowBackIos" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" @onclick="() => SelectRule(false)" />
-                                    <span>@timeSlot.SpecificDate</span>
-                                    <MudIconButton Icon="@Icons.Material.Filled.ArrowForwardIos" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" @onclick="() => SelectRule(true)" />
+                                    <span>Scorri regole orarie</span>
+                                    <div>
+                                        <MudIconButton Icon="@Icons.Material.Filled.ArrowBackIos" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" @onclick="() => SelectRule(false)" />
+                                        <span>@timeSlot.SpecificDate</span>
+                                        <MudIconButton Icon="@Icons.Material.Filled.ArrowForwardIos" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Medium" @onclick="() => SelectRule(true)" />
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                    </PickerActions>
-                </MudDatePicker>
-            </div>
-            <div class="d-flex flex-column w-100" style="height:80%">
-                <div class="d-flex flex-row align-items-center justify-content-center w-100 h-50">
-                    <div id="slider" class="w-100"></div>
+                            }
+                        </PickerActions>
+                    </MudDatePicker>
                 </div>
-                <div class="d-flex flex-column w-100 justify-content-around p-2">
-                    <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
-                        <div class="d-flex w-100 p-2 align-items-center justify-content-center">
-                            <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="RemoveStep" Disabled="HandleValues.Count <= 2" StartIcon="@Icons.Material.Filled.TimerOff">@(t.Words["Rimuovi range"])</MudButton>
+
+                        <div class="d-flex flex-column align-items-center w-100" style="height:80%;padding-top: 8vh;">
+                        <div class="d-flex flex-row align-items-center  justify-content-center h-50" style="width:90%;" >
+                            <div id="slider" class="w-100"></div>
                         </div>
-                        <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="AddStep" Disabled="DisableAdd()" StartIcon="@Icons.Material.Filled.MoreTime">@(t.Words["Aggiungi range"])</MudButton>
+                    <div class="d-flex flex-column w-100 justify-content-around pt-5">
+                        <div class="d-flex flex-row w-100 h-50 justify-content-around align-items-center">
+                            <div class="d-flex w-100 p-2 align-items-center justify-content-center">
+                                <MudButton Variant="Variant.Filled" Color="Color.Info" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="RemoveStep" Disabled="HandleValues.Count <= 2" StartIcon="@Icons.Material.Filled.TimerOff">@(t.Words["Rimuovi range"])</MudButton>
+                            </div>
+                            <div class="d-flex w-100 p-2 align-items-center justify-content-center ">
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="@(IsSmallView ? "width:35vw;height:7vh":"width:10vw;height:5vh")" @onclick="AddStep" Disabled="DisableAdd()" StartIcon="@Icons.Material.Filled.MoreTime">@(t.Words["Aggiungi range"])</MudButton>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
         </div>
     }
     else
     {
         <div class="d-flex flex-column justify-content-center w-100 h-100">
+                <span>UnavailableTimeDateSlot</span>
             <div class="d-flex justify-content-end">
                 @if (!_addRuleMode)
                 {
@@ -73,7 +82,7 @@
                 }
             </div>
             <div class="d-flex justify-content-center">
-                <MudDatePicker Orientation="Orientation.Landscape" PickerVariant="PickerVariant.Static" Class="w-100 shadow justify-content-center"
+                <MudDatePicker PickerVariant="PickerVariant.Static" Class="w-100 shadow justify-content-center"
                                MinDate="DateTime.Now" @bind-Date="newDate" IsDateDisabledFunc="@DisabledWhen()" >
                     <PickerActions>
                         @if (_switchDate && !_addRuleMode)
@@ -110,7 +119,9 @@
             </div>
         </div>
     }
-    @if (_addRuleMode)
+   
+</div>
+@if (_addRuleMode)
     {
         <div class="d-flex justify-content-around p-4 w-100">
             <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => AdvHasChanged(false)">@(t.Words["Cancella"])</MudButton>
@@ -124,8 +135,6 @@
             <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="() => AdvHasChanged(true)" Disabled="!EnableButtonUpdate()">@(t.Words["Modifica"])</MudButton>
         </div>
     }
-</div>
-
 
 
 @code {
@@ -375,5 +384,42 @@
         display: flex;
         justify-content: center;
     }
+
+     .mud-picker-static {
+        display: flex;
+        overflow: hidden;
+        flex-direction: column;
+        border: 1px solid lightgrey;
+        border-radius: 30px;
+    }
+
+    .mud-picker-static {
+        display: flex;
+        overflow: hidden;
+        min-width: 291px !important;
+        flex-direction: column;
+        background-color: white;
+    }
+
+    .mud-picker-toolbar.mud-picker-toolbar-landscape {
+        background: linear-gradient(45deg, #006, transparent);
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-picker-calendar-day.mud-day.mud-selected.mud-theme-primary {
+        background: linear-gradient(45deg, #006, transparent);
+    }
+
+    button.mud-button-root.mud-icon-button.mud-ripple.mud-ripple-icon.mud-picker-calendar-day.mud-day.mud-current.mud-button-outlined.mud-button-outlined-primary.mud-primary-text {
+        border-color: #0066FF !important;
+    }
+
+    h5.mud-typography.mud-typography-h5.mud-picker-month-selected.mud-primary-text {
+        color: #0066FF !important;
+    }
+
+    h5.mud-typography.mud-typography-h5.mud-picker-year-selected.mud-primary-text {
+        color: #0066FF !important;
+    }
+
 
 </style>

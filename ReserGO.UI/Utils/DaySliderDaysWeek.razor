@@ -15,10 +15,10 @@
 @inherits DaySliderService
 
 
-<div class="containerDayOfWeek h-100 @(IsSmallView ? "w-100":"")">
+<div class="containerDayOfWeek h-100 @(IsSmallView ? "w-100":"")" >
     @if (IsSmallView)
     {
-        <div class="d-flex flex-column align-items-center justify-content-around w-100 p-2" style="height:34vh; overflow:auto;">
+        <div class="d-flex flex-column align-items-center justify-content-around w-100 p-2" style="height:57vh; overflow:auto;">
 
             <div class="d-flex flex-wrap justify-content-center w-100 h-100">
                 @foreach (var day in DaysOfWeek)

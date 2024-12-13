@@ -8,25 +8,27 @@
 @using ReserGO.UI.Utils;
 @using ReserGO.Service.Interface.Service;
 @inject ITranslateService t
-<MudDialog Options="@Options" Class="@(Modal.IsSmallView ? "dialogServiceModalSmall":"dialogServiceModal")" OnBackdropClick="@HandleBackdropClick">
+
+<MudDialog Options="@Options" Class="@(Modal.IsSmallView ? "dialogServiceModalSmall h-100":"dialogServiceModal")" OnBackdropClick="@HandleBackdropClick">
     <TitleContent>
-        <div class="d-flex justify-content-between align-items-center w-100 titleContentConfirmValidate">
+        <div class="d-flex justify-content-between align-items-center w-100 @(Modal.IsSmallView ? "titleContentConfirmValidateSmall":"titleContentConfirmValidate")">
             <b>@t.Words[Modal.Type.ToString() + " titleModal"]</b>
             <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Default" OnClick="() => Close(false)" />
         </div>
     </TitleContent>
     <DialogContent>
-        <div class="d-flex flex-column justify-content-center p-5" style="text-align:center; font-size:large">
+        <div class="d-flex flex-column justify-content-center @(Modal.IsSmallView ? "pt-3":"p-5")" style="text-align:center; font-size:large">
             @t.Words[Modal.Type.ToString() + " textModal"]
         </div>
-        <div class="d-flex flex-column justify-content-center">
+
+        <div class="d-flex flex-column" style="height:90%;" >
             @if (Modal.Type == AvailabilityType.UnavailableSpecificDay)
             {
                 if (Modal.Data.AvailabilityAdv.UnavailableSpecificDays == null)
                     Modal.Data.AvailabilityAdv.UnavailableSpecificDays = new() { Data = new() };
 
-                <div class="d-flex justify-content-center">
-                    <DaySpecificDisabler @bind-DisabledDate="@Modal.Data.AvailabilityAdv.UnavailableSpecificDays.Data" />
+                <div class="d-flex justify-content-center @(Modal.IsSmallView ? "w-100 p-2":"w-50")">
+                    <DaySpecificDisabler IsSmallView="Modal.IsSmallView" @bind-DisabledDate="@Modal.Data.AvailabilityAdv.UnavailableSpecificDays.Data" />
                 </div>
             }
 
@@ -36,15 +38,18 @@
                 if (Modal.Data.AvailabilityAdv.UnavailableByDaysOfTheWeek == null)
                     Modal.Data.AvailabilityAdv.UnavailableByDaysOfTheWeek = new() { Data = new() };
 
-                <DaySliderDaysWeek AvailabilityAdv="@Modal.Data.AvailabilityAdv" OnChange="(((DTOAvailabilityAdv adv, bool IsChanged) value) => OnChangeDaySliderDaysWeek(value))" />
+                <div class="d-flex justify-content-center @(Modal.IsSmallView ? "w-100 p-2 h-100":"w-50")">
+                    <DaySliderDaysWeek IsSmallView="Modal.IsSmallView"  AvailabilityAdv="@Modal.Data.AvailabilityAdv" OnChange="(((DTOAvailabilityAdv adv, bool IsChanged) value) => OnChangeDaySliderDaysWeek(value))" />
+                </div>
 
             }
 
 
             @if (Modal.Type == AvailabilityType.UnavailableTimeDateSlot)
             {
-                <span>UnavailableTimeDateSlot</span>
-                <DaySliderSpecificDay AvailabilityAdv="@Modal.Data.AvailabilityAdv" OnChange="(((DTOAvailabilityAdv adv, bool IsChanged) value) => OnChangeDaySliderDaysWeek(value))" />
+                <div class="d-flex flex-column @(Modal.IsSmallView ? "w-100 p-2":"w-50")">
+                    <DaySliderSpecificDay IsSmallView="Modal.IsSmallView" AvailabilityAdv="@Modal.Data.AvailabilityAdv" OnChange="(((DTOAvailabilityAdv adv, bool IsChanged) value) => OnChangeDaySliderDaysWeek(value))" />
+                </div>
             }
         </div>
     </DialogContent>
@@ -109,8 +114,14 @@
     .titleContentConfirmValidate {
         background: #0066FF;
         color: white;
-        padding: 15px;
         font-size: x-large;
+    }
+
+    .titleContentConfirmValidateSmall{
+        background: #0066FF;
+        color: white;
+        font-size: large;
+        padding: 15px;
     }
 
     .mud-dialog .mud-dialog-title {
@@ -129,6 +140,5 @@
 
     .dialogServiceModalSmall {
         border-radius: 30px !important;
-        height: 75vh !important;
     }
 </style>
