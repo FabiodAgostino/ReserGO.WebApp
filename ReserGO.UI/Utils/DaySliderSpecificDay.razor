@@ -167,7 +167,7 @@
         if (AvailabilityAdv.UnavailableTimeDatesSlot != null && AvailabilityAdv.UnavailableTimeDatesSlot.Count() > 0)
         {
             //per la scelta dei giorni
-            NewAvailabilityAdv.UnavailableTimeDatesSlot = AvailabilityAdv.UnavailableTimeDatesSlot.OrderByDescending(x => x.SpecificDate).Select(x => (DTOUnavailableTimeDateSlot)x.Clone()).ToList();
+            NewAvailabilityAdv.UnavailableTimeDatesSlot = AvailabilityAdv.UnavailableTimeDatesSlot.OrderBy(x => x.SpecificDate).Select(x => (DTOUnavailableTimeDateSlot)x.Clone()).ToList();
 
             NewAvailabilityAdv.UnavailableTimeDatesSlot.ForEach(specific =>
             {
@@ -175,6 +175,8 @@
             });
 
             timeSlot = NewAvailabilityAdv.UnavailableTimeDatesSlot.FirstOrDefault();
+            newDate = timeSlot.SpecificDate;
+            SelectedTimeSlot = timeSlot.TimeSlots;
         }
     }
 
