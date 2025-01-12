@@ -21,7 +21,7 @@
             @t.Words[Modal.Type.ToString() + " textModal"]
         </div>
 
-        <div class="d-flex flex-column" style="height:90%;" >
+        <div class="d-flex flex-column" style="height:100%; overflow:auto;" >
             @if (Modal.Type == AvailabilityType.UnavailableSpecificDay)
             {
                 if (Modal.Data.AvailabilityAdv.UnavailableSpecificDays == null)
@@ -57,7 +57,7 @@
 
         @if (Modal.Type == AvailabilityType.UnavailableSpecificDay)
         {
-            <div class="d-flex justify-content-around p-4 w-100">
+            <div class="d-flex justify-content-around p-2 w-100">
                 <MudButton Color="Color.Default" Variant="Variant.Filled" OnClick="() => Close(false)">@(t.Words["Chiudi"])</MudButton>
                 <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="() => Close(true)">@(t.Words["Modifica"])</MudButton>
             </div>

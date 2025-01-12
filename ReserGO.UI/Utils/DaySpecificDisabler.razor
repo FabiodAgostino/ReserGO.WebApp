@@ -4,18 +4,20 @@
 @using ReserGO.Service.Interface.Service;
 @inject ITranslateService t
 
-<div class="d-flex flex-column w-100">
-    <MudDatePicker @ref="picker" PickerVariant="PickerVariant.Static" Class="w-100 shadow" @bind-Date="thisDate"
-    MinDate="DateTime.Now" AdditionalDateClassesFunc="@((DateTime dt)=>(DisabledDate.Contains(dt) ? "red-text text-accent-4" : ""))">
-        <PickerActions>
+<div class="d-flex flex-column w-100" >
+    <div class="d-flex flex-column w-100">
+        <MudDatePicker @ref="picker" PickerVariant="PickerVariant.Static" Class="w-100 shadow" @bind-Date="thisDate"
+        MinDate="DateTime.Now" AdditionalDateClassesFunc="@((DateTime dt)=>(DisabledDate.Contains(dt) ? "red-text text-accent-4" : ""))">
+            <PickerActions>
 
-        </PickerActions>
-    </MudDatePicker>
-    @if (DisabledDate.Count() > 0)
-    {
-        var days = (MarkupString)string.Join(", ", DisabledDate.Select(d => $"<b>{d.ToString("dd/MM/yyyy")}</b>"));
-        <div class="w-100" style="text-align:left"><span style="color:red">@(t.Words["Giorni disabilitati"]): </span><span>@days</span></div>
-    }
+            </PickerActions>
+        </MudDatePicker>
+        @if (DisabledDate.Count() > 0)
+        {
+            var days = (MarkupString)string.Join(", ", DisabledDate.Select(d => $"<b>{d.ToString("dd/MM/yyyy")}</b>"));
+            <div class="w-100 p-3" style="text-align:left;min-height: 30%;"><span style="color:red">@(t.Words["Giorni disabilitati"]): </span><span>@days</span></div>
+        }
+    </div>
 </div>
 @code {
 
