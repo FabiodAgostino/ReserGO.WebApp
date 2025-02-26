@@ -3,7 +3,7 @@ Un'applicazione per la gestione delle prenotazioni, appuntamenti e risorse preno
 
 L'applicativo ReserGO permette di gestire in modo dettagliato le prenotazioni dei clienti, appuntamenti e risorse prenotabili. Scritto in Blazor Server con il pattern MVVM, il sistema include SignalR per le notifiche in tempo reale e Refit per le chiamate HTTP. Il sistema si integra con il server ReserGO, che gestisce le comunicazioni con un database SQL Server privato.
 
-✨ Funzionalità principali
+✨ Funzionalità principali <br>
 📅 Gestione delle prenotazioni e appuntamenti dei clienti
 🛠 Gestione delle risorse prenotabili e configurazioni per ogni tipologia di prenotazione
 🔔 Notifiche in tempo reale tramite SignalR per aggiornamenti sulle prenotazioni
