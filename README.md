@@ -11,7 +11,7 @@ L'applicativo ReserGO permette di gestire in modo dettagliato le prenotazioni de
 🔄 Chiamate HTTP efficienti tramite Refit per comunicare con il backend server<br><br>
 
 📦 Tecnologie utilizzate<br>
-Blazor Server - Framework per applicazioni web interattive<br>
+Blazor Server - Framework per applicazioni web interattive (.NET 9 CORE)<br>
 MVVM - Pattern architetturale per la separazione delle preoccupazioni<br>
 SignalR - Per la gestione delle notifiche in tempo reale<br>
 Refit - Per la gestione delle chiamate HTTP<br>
